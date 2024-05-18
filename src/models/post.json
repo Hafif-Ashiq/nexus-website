@@ -1,0 +1,22 @@
+{
+    "postId": "",
+    "userId": "",
+    "description": "",
+    "images": [],
+    "totalLikes": 0,
+    "totalComments": 0,
+    "totalShares": 0,
+    "permissions": {
+        "isPrivate": false,
+        "comments": false,
+        "likes": false,
+        "share": false
+    },
+    "likedBy": [],
+    "comments": [
+        {
+            "userId": "",
+            "text": ""
+        }
+    ]
+}

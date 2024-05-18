@@ -8,11 +8,42 @@ const config: Config = {
   ],
   theme: {
     extend: {
-      backgroundImage: {
-        "gradient-radial": "radial-gradient(var(--tw-gradient-stops))",
-        "gradient-conic":
-          "conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))",
+      colors: {
+        primaryColorLight: "#2A4E8F",
+        backgroundColorLight: "#FFFFFF",
+        accentColorLight: "#F4F6F9",
+        borderColor: "#CBD5E4",
+
+        confirmColor: "#2B9F03",
+        warningColor: "#B50202",
+
+        primaryColorDark: "#1D385C",
+        backgroundColorDark: "#151515",
+        accentColorDark: "#0A0A0A",
+
+        textColorDark: "#000000",
+        textColorLight: "#FFFFFF",
+        textColorDarkBlue: "#1E1B39"
       },
+      fontFamily: {
+        poppins: ["Poppins", "sans-serif"],
+      },
+      linearGradientColors: {
+        'transparent-left': 'transparent, #F7F7F7',
+        'transparent-right': '#F7F7F7, transparent',
+      },
+      boxShadow: {
+        'normal': '0 0 25px rgba(0, 0, 0, 0.02), 0 0 4px rgba(0, 0, 0, 0.02)',
+      },
+
+    },
+    screens: {
+      xs: "480px",
+      ss: "620px",
+      sm: "768px",
+      md: "1060px",
+      lg: "1200px",
+      xl: "1700px",
     },
   },
   plugins: [],

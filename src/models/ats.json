@@ -1,0 +1,16 @@
+{
+    "standardModel": {
+        "modelId": "",
+        "modelName": "",
+        "activeStatus": false,
+        "totalLikes": 0,
+        "totalDislikes": 0
+    },
+    "premiumModel": {
+        "modelId": "",
+        "modelName": "",
+        "activeStatus": false,
+        "totalLikes": 0,
+        "totalDislikes": 0
+    }
+}

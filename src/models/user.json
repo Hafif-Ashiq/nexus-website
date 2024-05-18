@@ -1,0 +1,27 @@
+{
+    "userId": "",
+    "email": "",
+    "password": "",
+    "firstName": "",
+    "lastName": "",
+    "accountStatus": {
+        "isPremium": false,
+        "isDeactivated": false
+    },
+    "profilePic": "",
+    "bio": "",
+    "community": {
+        "posts": [],
+        "savedPosts": []
+    },
+    "guides": {
+        "viewedGuides": []
+    },
+    "appCustomization": {
+        "isDark": true,
+        "notificationSettings": {
+            "communityNotisEnabled": true,
+            "appNotisEnabled": true
+        }
+    }
+}

@@ -1,0 +1,38 @@
+{
+    "userId": "",
+    "issueOpenedTime": "",
+    "category": {
+        "allCategories": [
+            {
+                "name": "",
+                "description": ""
+            }
+        ],
+        "selectedCategory": ""
+    },
+    "userMessages": [
+        {
+            "messageId": "",
+            "timeStamp": "",
+            "message": "",
+            "images": [],
+            "status": {
+                "isDelivered": true,
+                "isSeen": false
+            }
+        }
+    ],
+    "adminMessages": [
+        {
+            "adminId": "",
+            "messageId": "",
+            "timeStamp": "",
+            "message": "",
+            "images": [],
+            "status": {
+                "isDelivered": true,
+                "isSeen": false
+            }
+        }
+    ]
+}

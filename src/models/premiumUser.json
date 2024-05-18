@@ -1,0 +1,14 @@
+{
+    "billingInfos": [
+        {
+            "name": "",
+            "cardNumber": "",
+            "cvv": "",
+            "expiryDate": "",
+            "isActivated": true
+        }
+    ],
+    "subscriptionPlan": "",
+    "startDate": "",
+    "lastPaymentDate": ""
+}

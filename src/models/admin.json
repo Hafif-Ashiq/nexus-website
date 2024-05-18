@@ -1,0 +1,11 @@
+{
+    "adminId": "",
+    "email": "",
+    "password": "",
+    "firstName": "",
+    "lastName": "",
+    "profilePic": "",
+    "supportRequests": [
+        "list of support ids"
+    ]
+}

@@ -1,0 +1,15 @@
+{
+    "models": [
+        {
+            "modelId": "",
+            "modelName": "",
+            "language": {
+                "to": "",
+                "from": ""
+            },
+            "activeStatus": false,
+            "totalLikes": 0,
+            "totalDislikes": 0
+        }
+    ]
+}
