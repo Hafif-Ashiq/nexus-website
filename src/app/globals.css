@@ -4,5 +4,15 @@
 
 
 .input-field{
-    @apply px-[15px] py-[13px]  text-[16px] text-primaryColorLight border-[2.5px] border-solid border-[#CBD5E4] focus:border-primaryColorLight rounded-[15px] font-semibold focus:outline-none;
+    @apply px-[10px] py-[13px] text-[16px] text-primaryColorLight border-[2.5px] border-solid border-[#CBD5E4] focus:border-primaryColorLight rounded-[15px] font-semibold focus:outline-none;
 }
+
+@layer base {
+    input[type='number']::-webkit-outer-spin-button,
+    input[type='number']::-webkit-inner-spin-button,
+    input[type='number'] {
+      -webkit-appearance: none;
+      margin: 0;
+      -moz-appearance: textfield !important;
+    }
+ }

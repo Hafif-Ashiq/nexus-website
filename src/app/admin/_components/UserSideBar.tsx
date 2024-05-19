@@ -1,15 +1,73 @@
 import React from 'react'
-import AccountDetailsSide from './AccountDetailsSide'
+import AccountDetailsSide from '../users/_components/AccountDetailsSide'
+import BillingDetails from '../users/_components/BillingDetails'
+import { addDoc, collection, getDocs } from 'firebase/firestore';
+import { db } from '@/services/firebase';
+import { chat, users } from '@/services/abc';
+import firebase from 'firebase/compat/app';
 
 const UserSideBar = () => {
+
+    const fetchAllUsers = async () => {
+        try {
+            const usersCollection = collection(db, 'users');
+            const usersSnapshot = await getDocs(usersCollection);
+            const usersList = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+            console.log(usersList);
+            return usersList;
+        } catch (error) {
+            console.error("Error fetching users:", error);
+        }
+    };
+
+    const addAllUsers = async () => {
+
+
+        users.forEach(async (user, index) => {
+            try {
+                const docRef = await addDoc(collection(db, "users"), user);
+                console.log("Document written with ID: ", docRef.id);
+            } catch (e) {
+                console.error("Error adding document: ", e);
+            }
+        })
+    }
+
+    const addChat = async () => {
+
+
+
+        try {
+            // Xjp0Hi2CK0LD1a9i3KPt
+            const docRef = await addDoc(collection(db, "users", 'Xjp0Hi2CK0LD1a9i3KPt', "chat"), chat);
+
+            // contentArray.forEach(async (content, index) => {
+            //     try {
+            //         const docRef = await addDoc(collection(db, "users", 'Xjp0Hi2CK0LD1a9i3KPt', "content"), content);
+            //         console.log("Document written with ID: ", docRef.id);
+            //     } catch (e) {
+            //         console.error("Error adding document: ", e);
+            //     }
+            // })
+
+            // console.log("Document written with ID: ", d.id);
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
+
+    }
+
+    // Call the function
+
+
     return (
         <div className='flex flex-col gap-[20px] h-full'>
             <div className='flex gap-[15px]'>
-                <button className='flex-1 shadow-normal bg-primaryColorLight text-white px-[32px] py-[18px] flex justify-center items-center gap-[7px] text-[16px] font-semibold rounded-[15px]'>
+                <button onClick={addChat} className='flex-1 shadow-normal bg-primaryColorLight text-white px-[25px] py-[18px] flex justify-center items-center gap-[7px] text-[16px] font-semibold rounded-[15px]'>
                     <img src="/assets/add.svg" alt="" />
                     <p>Add New User</p>
                 </button>
-                <button className='flex-1 shadow-normal bg-white text-black px-[32px] py-[18px] flex justify-center items-center gap-[7px] text-[16px] font-semibold rounded-[15px]'>
+                <button className='flex-1 shadow-normal bg-white text-black px-[25px] py-[18px] flex justify-center items-center gap-[7px] text-[16px] font-semibold rounded-[15px]'>
                     <img src="/assets/arrow-down.svg" alt="" />
                     <p>Download Report</p>
                 </button>
@@ -40,7 +98,8 @@ const UserSideBar = () => {
                 </div>
                 <div className='w-full h-[1px] border-[#EBEEF4] border-[1px] border-solid'></div>
                 <div className='flex-1'>
-                    <AccountDetailsSide firstName='Emily' lastName='Clark' biography='Emily baji k aagy koi bol sakta hai kia!' email='emily@gmail.com' password='hellojee' />
+                    {/* <AccountDetailsSide firstName='Emily' lastName='Clark' biography='Emily baji k aagy koi bol sakta hai kia!' email='emily@gmail.com' password='hellojee' /> */}
+                    <BillingDetails />
                 </div>
             </div>
         </div>

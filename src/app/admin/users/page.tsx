@@ -94,7 +94,7 @@ const page = () => {
         <div className="flex flex-col gap-[30px]">
             <Header />
             <div className='flex gap-[40px]'>
-                <div className='basis-[70%] flex flex-col gap-[20px]'>
+                <div className='basis-[75%] flex flex-col gap-[20px]'>
                     <div className='flex justify-between items-center gap-[20px]'>
                         {tiles.map((stat, index) => (
                             <LargeButton
@@ -113,7 +113,7 @@ const page = () => {
                     <GraphInfo data={tiles[activeTile].data} title={tiles[activeTile].title} value={tiles[activeTile].value} change={tiles[activeTile].change} increase={tiles[activeTile].increase} />
                     <RecentUsers />
                 </div>
-                <div className='basis-[30%]'>
+                <div className='basis-[25%]'>
                     <UserSideBar />
                 </div>
             </div>

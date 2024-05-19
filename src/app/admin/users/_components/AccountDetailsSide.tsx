@@ -40,17 +40,17 @@ const AccountDetailsSide: React.FC<DetailProps> = ({ firstName, lastName, biogra
             <div className='flex flex-col gap-[10px] '>
                 <label htmlFor="username" className='flex flex-col gap-[10px]'>
                     <p className='text-[16px] font-bold text-primaryColorLight'>Username</p>
-                    <div className='flex justify-between gap-[15px]'>
+                    <div className='flex justify-between gap-[10px]'>
                         <input
                             type="text"
                             name='username'
-                            className='input-field flex-1'
+                            className='input-field w-full'
                             value={first}
                             onChange={(event) => setFirst(event.target.value)}
                         />
                         <input
                             type="text"
-                            className='input-field flex-1'
+                            className='input-field w-full'
                             value={last}
                             onChange={(event) => setLast(event.target.value)} />
                     </div>
@@ -71,7 +71,7 @@ const AccountDetailsSide: React.FC<DetailProps> = ({ firstName, lastName, biogra
                         type="email"
                         name='email'
                         className='input-field w-full'
-                        value={email}
+                        value={mail}
                         onChange={(event) => setMail(event.target.value)}
                     />
                 </label>
