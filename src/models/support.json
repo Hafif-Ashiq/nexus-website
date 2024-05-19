@@ -1,37 +1,37 @@
 {
-    "userId": "",
-    "issueOpenedTime": "",
+    "user_id": "",
+    "issue_opened_time": "",
     "category": {
-        "allCategories": [
+        "all_categories": [
             {
                 "name": "",
                 "description": ""
             }
         ],
-        "selectedCategory": ""
+        "selected_category": ""
     },
-    "userMessages": [
+    "user_messages": [
         {
-            "messageId": "",
-            "timeStamp": "",
+            "message_id": "",
+            "time_stamp": "",
             "message": "",
             "images": [],
             "status": {
-                "isDelivered": true,
-                "isSeen": false
+                "is_delivered": true,
+                "is_seen": false
             }
         }
     ],
-    "adminMessages": [
+    "admin_messages": [
         {
-            "adminId": "",
-            "messageId": "",
-            "timeStamp": "",
+            "admin_id": "",
+            "message_id": "",
+            "time_stamp": "",
             "message": "",
             "images": [],
             "status": {
-                "isDelivered": true,
-                "isSeen": false
+                "is_delivered": true,
+                "is_seen": false
             }
         }
     ]

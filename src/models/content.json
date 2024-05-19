@@ -1,24 +1,24 @@
 {
-    "contentId": "",
-    "extractedText": "",
-    "dateUpdated": "",
+    "content_id": "",
+    "extracted_text": "",
+    "date_updated": "",
     "translation": {
         "text": "",
         "status": {
-            "isLiked": false,
-            "isDisliked": false
+            "is_liked": false,
+            "is_disliked": false
         }
     },
     "summarization": {
         "text": "",
         "status": {
-            "isLiked": false,
-            "isDisliked": false
+            "is_liked": false,
+            "is_disliked": false
         }
     },
     "type": "",
     "title": "",
-    "folderId": "",
+    "folder_id": "",
     "thumbnail": "",
     "link": "",
     "tags": []

@@ -1,0 +1,25 @@
+{
+    "user_id": "",
+    "all_translations": [
+        {
+            "original_text": "",
+            "response_text": "",
+            "datetime": "",
+            "response_status": {
+                "is_liked": false,
+                "is_disliked": false
+            }
+        }
+    ],
+    "all_summarizations": [
+        {
+            "original_text": "",
+            "response_text": "",
+            "datetime": "",
+            "response_status": {
+                "is_liked": false,
+                "is_disliked": false
+            }
+        }
+    ]
+}

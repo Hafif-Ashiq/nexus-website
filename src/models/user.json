@@ -1,27 +1,28 @@
 {
-    "userId": "",
+    "user_id": "",
     "email": "",
     "password": "",
-    "firstName": "",
-    "lastName": "",
-    "accountStatus": {
-        "isPremium": false,
-        "isDeactivated": false
+    "first_name": "",
+    "last_name": "",
+    "account_status": {
+        "is_premium": false,
+        "is_deactivated": false
     },
-    "profilePic": "",
-    "bio": "",
+    "profile_pic": "",
+    "background_pic": "",
+    "biography": "",
     "community": {
         "posts": [],
-        "savedPosts": []
+        "saved_posts": []
     },
     "guides": {
-        "viewedGuides": []
+        "viewed_guides": []
     },
-    "appCustomization": {
-        "isDark": true,
-        "notificationSettings": {
-            "communityNotisEnabled": true,
-            "appNotisEnabled": true
+    "app_customization": {
+        "is_dark": true,
+        "notification_settings": {
+            "community_notis_enabled": true,
+            "app_notis_enabled": true
         }
     }
 }
