@@ -1,6 +1,6 @@
 "use client"
 import React, { useState } from 'react'
-import ActiveUsers from '../_components/ActiveUsers'
+import GraphInfo from '../_components/GraphInfo'
 import Header from './_components/Header'
 import LargeButton from '../_components/LargeButton'
 import UserSideBar from '../_components/UserSideBar'
@@ -110,7 +110,7 @@ const page = () => {
                             />
                         ))}
                     </div>
-                    <ActiveUsers data={tiles[activeTile].data} title={tiles[activeTile].title} value={tiles[activeTile].value} change={tiles[activeTile].change} increase={tiles[activeTile].increase} />
+                    <GraphInfo data={tiles[activeTile].data} title={tiles[activeTile].title} value={tiles[activeTile].value} change={tiles[activeTile].change} increase={tiles[activeTile].increase} />
                     <RecentUsers />
                 </div>
                 <div className='basis-[30%]'>

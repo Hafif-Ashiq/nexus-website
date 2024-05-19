@@ -2,7 +2,7 @@
 import React from 'react'
 import Header from './_components/Header'
 import Guides from './_components/Guides'
-import ActiveUsers from '../_components/ActiveUsers'
+import GraphInfo from '../_components/GraphInfo'
 import StatPerformance from './_components/StatPerformance'
 import RecentUsers from '../_components/RecentUsers'
 
@@ -29,7 +29,7 @@ const page = () => {
             <Header />
             <Guides />
             <div className='flex gap-[20px]'>
-                <ActiveUsers data={dataUsers} title='Active Users' value='6245' change='5.4%' increase />
+                <GraphInfo data={dataUsers} title='Active Users' value='6245' change='5.4%' increase />
                 <StatPerformance />
             </div>
             <RecentUsers />

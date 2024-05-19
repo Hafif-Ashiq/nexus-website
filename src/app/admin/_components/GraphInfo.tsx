@@ -64,7 +64,7 @@ interface UsersDataProps {
 }
 
 
-const ActiveUsers: React.FC<UsersDataProps> = ({ data, increase = false, change = "", title, value }) => {
+const GraphInfo: React.FC<UsersDataProps> = ({ data, increase = false, change = "", title, value }) => {
     return (
         <div className='flex flex-col bg-white px-[35px] py-[32px] rounded-[15px] gap-[22px] shadow-normal basis-[40%]'>
             <div className='flex justify-between items-center '>
@@ -96,4 +96,4 @@ const ActiveUsers: React.FC<UsersDataProps> = ({ data, increase = false, change 
     )
 }
 
-export default ActiveUsers
+export default GraphInfo
