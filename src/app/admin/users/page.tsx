@@ -10,6 +10,22 @@ const page = () => {
 
     const [activeTile, setActiveTile] = useState(0)
 
+    const labelsUsers = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+
+    const dataUsers = {
+        labels: labelsUsers,
+        datasets: [
+            {
+                label: '',
+                data: [62, 100, 500, 650, 230, 324, 234],
+                borderColor: '#2A4E8F',
+                backgroundColor: '#93AAFD30',
+                fill: true
+            }
+        ],
+    };
+
+
     const tiles = [
         {
             title: "Active Users",
@@ -17,7 +33,19 @@ const page = () => {
             activeSvg: "users-white",
             inActiveSvg: "users-blue",
             increase: true,
-            change: "5.4%"
+            change: "5.4%",
+            data: {
+                labels: labelsUsers,
+                datasets: [
+                    {
+                        label: '',
+                        data: [62, 100, 500, 650, 30, 324, 234],
+                        borderColor: '#2A4E8F',
+                        backgroundColor: '#93AAFD30',
+                        fill: true
+                    }
+                ],
+            }
         },
         {
             title: "Premium Users",
@@ -25,7 +53,19 @@ const page = () => {
             activeSvg: "users-white",
             inActiveSvg: "users-blue",
             increase: true,
-            change: "2.14%"
+            change: "2.14%",
+            data: {
+                labels: labelsUsers,
+                datasets: [
+                    {
+                        label: '',
+                        data: [62, 100, 500, 650, 30, 724, 1044],
+                        borderColor: '#2A4E8F',
+                        backgroundColor: '#93AAFD30',
+                        fill: true
+                    }
+                ],
+            }
         },
         {
             title: "Issues Reported",
@@ -33,7 +73,19 @@ const page = () => {
             activeSvg: "issues-white",
             inActiveSvg: "issues-blue",
             increase: false,
-            change: "1.24%"
+            change: "1.24%",
+            data: {
+                labels: labelsUsers,
+                datasets: [
+                    {
+                        label: '',
+                        data: [262, 100, 50, 250, 30, 34, 64],
+                        borderColor: '#2A4E8F',
+                        backgroundColor: '#93AAFD30',
+                        fill: true
+                    }
+                ],
+            }
         },
     ]
 
@@ -58,7 +110,7 @@ const page = () => {
                             />
                         ))}
                     </div>
-                    <ActiveUsers />
+                    <ActiveUsers data={tiles[activeTile].data} title={tiles[activeTile].title} value={tiles[activeTile].value} change={tiles[activeTile].change} increase={tiles[activeTile].increase} />
                     <RecentUsers />
                 </div>
                 <div className='basis-[30%]'>
