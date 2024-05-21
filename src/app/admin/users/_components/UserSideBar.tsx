@@ -1,24 +1,20 @@
-import React from 'react'
-import AccountDetailsSide from '../users/_components/AccountDetailsSide'
-import BillingDetails from '../users/_components/BillingDetails'
+import React, { useState } from 'react'
+import AccountDetailsSide from './AccountDetailsSide'
+import BillingDetails from './BillingDetails'
 import { addDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase';
 import { chat, users } from '@/services/abc';
-import firebase from 'firebase/compat/app';
+import SubscriptionPlanSide from './SubscriptionPlanSide';
+
+enum CardDisplay {
+    userInfo, billingInfo, subscriptionInfo
+}
 
 const UserSideBar = () => {
 
-    const fetchAllUsers = async () => {
-        try {
-            const usersCollection = collection(db, 'users');
-            const usersSnapshot = await getDocs(usersCollection);
-            const usersList = usersSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
-            console.log(usersList);
-            return usersList;
-        } catch (error) {
-            console.error("Error fetching users:", error);
-        }
-    };
+    const [activeCard, setActiveCard] = useState(CardDisplay.userInfo)
+
+
 
     const addAllUsers = async () => {
 
@@ -61,9 +57,9 @@ const UserSideBar = () => {
 
 
     return (
-        <div className='flex flex-col gap-[20px] h-full'>
+        <div className='flex flex-col gap-[20px] h-[80vh]'>
             <div className='flex gap-[15px]'>
-                <button onClick={addChat} className='flex-1 shadow-normal bg-primaryColorLight text-white px-[25px] py-[18px] flex justify-center items-center gap-[7px] text-[16px] font-semibold rounded-[15px]'>
+                <button onClick={addAllUsers} className='flex-1 shadow-normal bg-primaryColorLight text-white px-[25px] py-[18px] flex justify-center items-center gap-[7px] text-[16px] font-semibold rounded-[15px]'>
                     <img src="/assets/add.svg" alt="" />
                     <p>Add New User</p>
                 </button>
@@ -98,8 +94,25 @@ const UserSideBar = () => {
                 </div>
                 <div className='w-full h-[1px] border-[#EBEEF4] border-[1px] border-solid'></div>
                 <div className='flex-1'>
-                    {/* <AccountDetailsSide firstName='Emily' lastName='Clark' biography='Emily baji k aagy koi bol sakta hai kia!' email='emily@gmail.com' password='hellojee' /> */}
-                    <BillingDetails />
+                    {
+                        activeCard == CardDisplay.userInfo && <AccountDetailsSide
+                            onBillingClick={() => setActiveCard(CardDisplay.billingInfo)}
+                            onSubsClick={() => setActiveCard(CardDisplay.subscriptionInfo)}
+                            firstName='Emily'
+                            lastName='Clark'
+                            biography='Emily baji k aagy koi bol sakta hai kia!'
+                            email='emily@gmail.com'
+                            password='hellojee'
+                        />
+                    }
+                    {
+                        activeCard == CardDisplay.billingInfo && <BillingDetails onBack={() => setActiveCard(CardDisplay.userInfo)} />
+                    }
+                    {
+                        activeCard == CardDisplay.subscriptionInfo && <SubscriptionPlanSide onBack={() => setActiveCard(CardDisplay.userInfo)} />
+                    }
+
+
                 </div>
             </div>
         </div>

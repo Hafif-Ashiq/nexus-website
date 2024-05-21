@@ -1,13 +1,16 @@
 "use client"
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import GraphInfo from '../_components/GraphInfo'
 import Header from './_components/Header'
 import LargeButton from '../_components/LargeButton'
-import UserSideBar from '../_components/UserSideBar'
-import RecentUsers from '../_components/RecentUsers'
+import UserSideBar from './_components/UserSideBar'
+import UsersList from '../_components/UsersList'
+import { fetchAllUsers } from '@/firebaseFunctions/users'
 
 const page = () => {
 
+    const [isLoading, setIsLoading] = useState(true)
+    const [allUsers, setAllUsers] = useState([])
     const [activeTile, setActiveTile] = useState(0)
 
     const labelsUsers = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
@@ -24,6 +27,16 @@ const page = () => {
             }
         ],
     };
+
+    useEffect(() => {
+        setIsLoading(true)
+        fetchAllUsers().then((result: any) => {
+            setAllUsers(result)
+            setIsLoading(false)
+
+        })
+
+    }, [])
 
 
     const tiles = [
@@ -91,31 +104,28 @@ const page = () => {
 
     return (
 
-        <div className="flex flex-col gap-[30px]">
-            <Header />
-            <div className='flex gap-[40px]'>
-                <div className='basis-[75%] flex flex-col gap-[20px]'>
-                    <div className='flex justify-between items-center gap-[20px]'>
-                        {tiles.map((stat, index) => (
-                            <LargeButton
-                                key={index}
-                                activeIcon={stat.activeSvg}
-                                inActiveIcon={stat.inActiveSvg}
-                                text={stat.value}
-                                title={stat.title}
-                                increase={stat.increase}
-                                change={stat.change}
-                                onClick={() => setActiveTile(index)}
-                                active={index == activeTile}
-                            />
-                        ))}
-                    </div>
-                    <GraphInfo data={tiles[activeTile].data} title={tiles[activeTile].title} value={tiles[activeTile].value} change={tiles[activeTile].change} increase={tiles[activeTile].increase} />
-                    <RecentUsers />
+        <div className="flex flex-col gap-[30px] flex-1 ">
+            {/* <Header /> */}
+            {/* <div className='flex gap-[40px]'> */}
+            <div className='basis-[75%] flex flex-col gap-[20px]'>
+                <div className='flex justify-between items-center gap-[20px]'>
+                    {tiles.map((stat, index) => (
+                        <LargeButton
+                            key={index}
+                            activeIcon={stat.activeSvg}
+                            inActiveIcon={stat.inActiveSvg}
+                            text={stat.value}
+                            title={stat.title}
+                            increase={stat.increase}
+                            change={stat.change}
+                            onClick={() => setActiveTile(index)}
+                            active={index == activeTile}
+                        />
+                    ))}
                 </div>
-                <div className='basis-[25%]'>
-                    <UserSideBar />
-                </div>
+                <GraphInfo data={tiles[activeTile].data} title={tiles[activeTile].title} value={tiles[activeTile].value} change={tiles[activeTile].change} increase={tiles[activeTile].increase} />
+                <UsersList users={allUsers.slice(0, 3)} showSelect />
+
             </div>
 
         </div>

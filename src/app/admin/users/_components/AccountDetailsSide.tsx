@@ -1,14 +1,20 @@
 import React, { useEffect, useState } from 'react'
+import DropDown from '../../_components/DropDown';
 
 interface DetailProps {
     firstName: string;
     lastName: string;
     biography: string;
     email: string;
-    password: string
+    password: string;
+    onBillingClick: () => void;
+    onSubsClick: () => void
 }
 
-const AccountDetailsSide: React.FC<DetailProps> = ({ firstName, lastName, biography, email, password }) => {
+const AccountDetailsSide: React.FC<DetailProps> = ({ firstName, lastName, biography, email, password, onBillingClick, onSubsClick }) => {
+
+    const [moreOpen, setMoreOpen] = useState(false)
+
     const [first, setFirst] = useState("")
     const [last, setLast] = useState("")
     const [bio, setBio] = useState("")
@@ -24,20 +30,32 @@ const AccountDetailsSide: React.FC<DetailProps> = ({ firstName, lastName, biogra
         setPass(password)
     }, [])
 
+    const dropDownActions = [
+        {
+            title: "Billing Information",
+            onClick: onBillingClick
+        },
+        {
+            title: "Subscription Info",
+            onClick: onSubsClick
+        },
+    ]
+
     return (
-        <div className='flex flex-col gap-[10px] h-full justify-between'>
+        <div className='flex flex-col gap-[10px] h-full justify-between box-content'>
             <div className='flex justify-between items-center'>
                 <h3 className='text-[20px] font-semibold text-black'>Account Details</h3>
-                <div className='flex items-center justify-end gap-[20px]'>
+                <div className='flex items-center justify-end gap-[20px] relative'>
                     <button>
                         <img src="/assets/support.svg" alt="" />
                     </button>
-                    <button>
+                    <button onClick={() => setMoreOpen(!moreOpen)}>
                         <img src="/assets/more-circle.svg" alt="" />
                     </button>
+                    {moreOpen && <DropDown actions={dropDownActions} />}
                 </div>
             </div>
-            <div className='flex flex-col gap-[10px] '>
+            <div className='flex flex-col gap-[14px] '>
                 <label htmlFor="username" className='flex flex-col gap-[10px]'>
                     <p className='text-[16px] font-bold text-primaryColorLight'>Username</p>
                     <div className='flex justify-between gap-[10px]'>

@@ -1,20 +1,17 @@
 import React, { useEffect, useState } from 'react'
 
-interface DetailProps {
-    firstName: string;
-    lastName: string;
-    biography: string;
-    email: string;
-    password: string
+
+interface billingDetailsProps {
+    onBack: () => void;
 }
 
-const BillingDetails = () => {
-    // const BillingDetails: React.FC<DetailProps> = ({ firstName, lastName, biography, email, password }) => {
+
+const BillingDetails: React.FC<billingDetailsProps> = ({ onBack }) => {
     const [name, setName] = useState("")
-    const [last, setLast] = useState("")
+
     const [cardNumber, setCardNumber] = useState("")
-    const [mail, setMail] = useState("")
-    const [pass, setPass] = useState("")
+    const [expiry, setExpiry] = useState("")
+    const [cvv, setCVV] = useState("")
 
 
     interface billingCard {
@@ -37,19 +34,12 @@ const BillingDetails = () => {
     ]
 
 
-    // useEffect(() => {
-    //     setFirst(firstName)
-    //     setLast(lastName)
-    //     setBio(biography)
-    //     setMail(email)
-    //     setPass(password)
-    // }, [])
 
     return (
         <div className='flex flex-col gap-[10px] h-full justify-between'>
             <div className='flex justify-between items-center'>
                 <div className='flex justify-start items-center gap-[14px]'>
-                    <button>
+                    <button onClick={onBack}>
                         <img src="/assets/small-arrow-left-black.svg" alt="" />
                     </button>
                     <h3 className='text-[20px] font-semibold text-black'>Billing Details</h3>
@@ -63,7 +53,7 @@ const BillingDetails = () => {
                     </button>
                 </div>
             </div>
-            <div className='flex flex-col gap-[10px] '>
+            <div className='flex flex-col gap-[10px]  '>
                 <label htmlFor="username" className='flex flex-col gap-[10px]'>
                     <p className='text-[16px] font-bold text-primaryColorLight'>Full Name</p>
 
@@ -98,8 +88,8 @@ const BillingDetails = () => {
                             type="date"
                             name='date'
                             className='input-field flex-1'
-                            value={""}
-                            onChange={(event) => setMail(event.target.value)}
+                            value={expiry}
+                            onChange={(event) => setExpiry(event.target.value)}
                             placeholder='December 12, 2028'
                             autoComplete='off'
                         />
@@ -111,8 +101,8 @@ const BillingDetails = () => {
                             type="email"
                             name='email'
                             className='input-field flex-1'
-                            value={""}
-                            onChange={(event) => setMail(event.target.value)}
+                            value={cvv}
+                            onChange={(event) => setCVV(event.target.value)}
                             placeholder='123'
                             autoComplete='off'
 
@@ -126,8 +116,8 @@ const BillingDetails = () => {
             <div className='flex flex-col gap-[10px]'>
                 <p className='text-[16px] font-bold text-primaryColorLight'>Existing Accounts</p>
                 {
-                    cards.length !== 0 ? cards.map(card => (
-                        <div className='px-[15px] py-[13px] text-[16px] text-primaryColorLight border-[1px] border-solid border-[#CBD5E4]  rounded-[15px] font-semibold flex gap-[15px]'>
+                    cards.length !== 0 ? cards.map((card, index) => (
+                        <div key={index} className='px-[15px] py-[13px] text-[16px] text-primaryColorLight border-[1px] border-solid border-[#CBD5E4]  rounded-[15px] font-semibold flex gap-[15px]'>
                             <img src={`/assets/${card.cardType}.svg`} alt="" />
                             <div className='w-[1px] flex items-stretch border-[#EBEEF4] border-[1px] border-solid'></div>
                             <div className='flex-1 flex justify-between items-center '>

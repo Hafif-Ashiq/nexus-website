@@ -1,13 +1,6 @@
 "use client"
 
-import type { Metadata } from "next";
-import { Poppins } from "next/font/google";
-
 import SideBar from "./_components/SideBar";
-
-const poppins = Poppins({ subsets: ["latin"], weight: '400' });
-
-
 
 export default function RootLayout({
     children,

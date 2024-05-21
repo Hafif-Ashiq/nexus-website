@@ -1,12 +1,23 @@
 "use client"
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import Header from './_components/Header'
 import Guides from './_components/Guides'
 import GraphInfo from '../_components/GraphInfo'
 import StatPerformance from './_components/StatPerformance'
-import RecentUsers from '../_components/RecentUsers'
+import UsersList from '../_components/UsersList'
+import { fetchAllUsers } from '@/firebaseFunctions/users'
 
 const page = () => {
+    const [allUsers, setAllUsers] = useState([])
+
+
+    useEffect(() => {
+
+        fetchAllUsers().then((result: any) => {
+            setAllUsers(result)
+        })
+
+    }, [])
 
 
     const labelsUsers = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
@@ -32,7 +43,7 @@ const page = () => {
                 <GraphInfo data={dataUsers} title='Active Users' value='6245' change='5.4%' increase />
                 <StatPerformance />
             </div>
-            <RecentUsers />
+            <UsersList users={allUsers.slice(0, 2)} />
         </div>
     )
 }
