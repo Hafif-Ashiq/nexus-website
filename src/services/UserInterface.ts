@@ -4,12 +4,12 @@ interface AccountStatus {
 }
 
 interface Community {
-    posts: any[];  // Adjust the type of posts if a specific structure is known
-    saved_posts: any[];  // Adjust the type of saved_posts if a specific structure is known
+    posts: string[];  // Adjust the type of posts if a specific structure is known
+    saved_posts: string[];  // Adjust the type of saved_posts if a specific structure is known
 }
 
 interface Guides {
-    viewed_guides: any[];  // Adjust the type of viewed_guides if a specific structure is known
+    viewed_guides: string[];  // Adjust the type of viewed_guides if a specific structure is known
 }
 
 interface NotificationSettings {
@@ -23,7 +23,7 @@ interface AppCustomization {
 }
 
 export interface UserProfile {
-    id: string;
+    id?: string;
     email: string;
     password: string;
     first_name: string;

@@ -5,6 +5,7 @@ import { addDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase';
 import { chat, users } from '@/services/abc';
 import SubscriptionPlanSide from './SubscriptionPlanSide';
+import { UserProfile } from '@/services/UserInterface';
 
 enum CardDisplay {
     userInfo, billingInfo, subscriptionInfo
@@ -13,8 +14,26 @@ enum CardDisplay {
 const UserSideBar = () => {
 
     const [activeCard, setActiveCard] = useState(CardDisplay.userInfo)
+    const [addUser, setAddUser] = useState(false)
+
+    const [firstName, setFirstName] = useState("")
+    const [lastName, setLastName] = useState("")
+    const [biography, setBiography] = useState("")
+    const [password, setPassword] = useState("")
+    const [email, setEmail] = useState("")
 
 
+    const addUserToFirebase = async (user: UserProfile) => {
+
+        try {
+            const docRef = await addDoc(collection(db, "users"), user);
+            console.log("Document written with ID: ", docRef.id);
+            alert("User added")
+        } catch (e) {
+            console.error("Error adding document: ", e);
+        }
+
+    }
 
     const addAllUsers = async () => {
 
@@ -28,6 +47,7 @@ const UserSideBar = () => {
             }
         })
     }
+
 
     const addChat = async () => {
 
@@ -59,7 +79,10 @@ const UserSideBar = () => {
     return (
         <div className='flex flex-col gap-[20px] h-[80vh]'>
             <div className='flex gap-[15px]'>
-                <button onClick={addAllUsers} className='flex-1 shadow-normal bg-primaryColorLight text-white px-[25px] py-[18px] flex justify-center items-center gap-[7px] text-[16px] font-semibold rounded-[15px]'>
+                <button onClick={() => {
+                    setAddUser(true)
+                    setActiveCard(CardDisplay.userInfo)
+                }} className='flex-1 shadow-normal bg-primaryColorLight text-white px-[25px] py-[18px] flex justify-center items-center gap-[7px] text-[16px] font-semibold rounded-[15px]'>
                     <img src="/assets/add.svg" alt="" />
                     <p>Add New User</p>
                 </button>
@@ -96,13 +119,15 @@ const UserSideBar = () => {
                 <div className='flex-1'>
                     {
                         activeCard == CardDisplay.userInfo && <AccountDetailsSide
+                            onAddClick={(user) => { addUserToFirebase(user) }}
                             onBillingClick={() => setActiveCard(CardDisplay.billingInfo)}
                             onSubsClick={() => setActiveCard(CardDisplay.subscriptionInfo)}
-                            firstName='Emily'
-                            lastName='Clark'
-                            biography='Emily baji k aagy koi bol sakta hai kia!'
-                            email='emily@gmail.com'
-                            password='hellojee'
+                            addUser={addUser}
+                            firstName={firstName}
+                            lastName={lastName}
+                            biography={biography}
+                            email={email}
+                            password={password}
                         />
                     }
                     {

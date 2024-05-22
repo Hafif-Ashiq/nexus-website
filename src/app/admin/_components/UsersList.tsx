@@ -22,16 +22,17 @@ const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, show
     const [anySelected, setAnySelected] = useState(false)
 
     useEffect(() => {
-        Object.keys(selectedUsers).length === 0 && !allSelected ? setAnySelected(false) : setAnySelected(true)
+        // Object.keys(selectedUsers).length === 0 && !allSelected ? setAnySelected(false) : setAnySelected(true)
+        // Object.keys(selectedUsers).length === users.length ? setAllSelected(true) : setAllSelected(false)
+        // console.log(Object.keys(selectedUsers).length)
     }, [key])
 
     const selectUser = (index: number) => {
-        console.log(selectedUsers[index]);
 
         const sels = selectedUsers
         if (sels[index]) {
             delete sels[index]
-
+            allSelected ? setAllSelected(false) : null
         }
         else {
             sels[index] = true
@@ -42,7 +43,7 @@ const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, show
 
     const selectAll = () => {
         setAllSelected(!allSelected)
-        setSelectedUsers({})
+        // setSelectedUsers({})
         setKey(key + 1)
     }
 
@@ -79,7 +80,7 @@ const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, show
 
             <table className='bg-white w-full rounded-[15px] flex-1 h-full'>
                 <thead>
-                    <tr className={`flex ${allSelected ? "justify-between" : "justify-between"} text-left px-[100px] py-[17px] text-ellipsis overflow-hidden rounded-[15px] bg-primaryColorLight text-white text-[18px]`}>
+                    <tr className={`flex justify-between text-left px-[100px] py-[17px] text-ellipsis overflow-hidden rounded-[15px] bg-primaryColorLight text-white text-[18px]`}>
                         {showSelect && <>
                             <th className='flex gap-[30px] items-center justify-start' style={{ width: anySelected ? "200px" : "30px" }}>
                                 <Select selected={allSelected} onSelect={selectAll} />

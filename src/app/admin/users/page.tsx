@@ -124,7 +124,7 @@ const page = () => {
                     ))}
                 </div>
                 <GraphInfo data={tiles[activeTile].data} title={tiles[activeTile].title} value={tiles[activeTile].value} change={tiles[activeTile].change} increase={tiles[activeTile].increase} />
-                <UsersList users={allUsers.slice(0, 3)} showSelect />
+                <UsersList users={allUsers.slice(0, 3)} />
 
             </div>
 

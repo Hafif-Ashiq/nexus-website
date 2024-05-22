@@ -1,17 +1,20 @@
 import React, { useEffect, useState } from 'react'
 import DropDown from '../../_components/DropDown';
+import { UserProfile } from '@/services/UserInterface';
 
 interface DetailProps {
+    addUser?: boolean;
     firstName: string;
     lastName: string;
     biography: string;
     email: string;
     password: string;
     onBillingClick: () => void;
-    onSubsClick: () => void
+    onSubsClick: () => void;
+    onAddClick: (user: UserProfile) => void;
 }
 
-const AccountDetailsSide: React.FC<DetailProps> = ({ firstName, lastName, biography, email, password, onBillingClick, onSubsClick }) => {
+const AccountDetailsSide: React.FC<DetailProps> = ({ firstName, lastName, biography, email, password, onBillingClick, onSubsClick, addUser = false, onAddClick }) => {
 
     const [moreOpen, setMoreOpen] = useState(false)
 
@@ -29,6 +32,44 @@ const AccountDetailsSide: React.FC<DetailProps> = ({ firstName, lastName, biogra
         setMail(email)
         setPass(password)
     }, [])
+
+
+    const addUserClicked = () => {
+        const user: UserProfile = {
+            email: mail,
+            password: pass,
+            first_name: first,
+            last_name: last,
+            account_status: {
+                is_premium: false,
+                is_deactivated: false
+            },
+            profile_pic: "",
+            background_pic: "",
+            biography: bio,
+            app_customization: {
+                is_dark: false,
+                notification_settings: {
+                    community_notis_enabled: true,
+                    app_notis_enabled: true
+                }
+            },
+            community: {
+                posts: [],
+                saved_posts: []
+            },
+            guides: {
+                viewed_guides: []
+            }
+
+        }
+        onAddClick(user)
+        setFirst("")
+        setLast("")
+        setMail("")
+        setBio("")
+        setPass("")
+    }
 
     const dropDownActions = [
         {
@@ -100,13 +141,13 @@ const AccountDetailsSide: React.FC<DetailProps> = ({ firstName, lastName, biogra
                         name='password'
                         className='input-field w-full'
                         value={pass}
-                        disabled
+                        disabled={!addUser}
                         onChange={(event) => setPass(event.target.value)}
                     />
                 </label>
             </div>
 
-            <button className='bg-warningColor py-[14px] w-full flex justify-center items-center rounded-[15px] text-[16px] font-semibold text-white'>Delete User</button>
+            <button onClick={addUser ? addUserClicked : () => { }} className={`${addUser ? "bg-primaryColorLight" : "bg-warningColor"} py-[14px] w-full flex justify-center items-center rounded-[15px] text-[16px] font-semibold text-white`}>{addUser ? "Add User" : "Delete User"}</button>
 
         </div>
     )
