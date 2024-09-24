@@ -16,7 +16,7 @@ const UserSideBar = () => {
     const [activeCard, setActiveCard] = useState(CardDisplay.userInfo)
     const [addUser, setAddUser] = useState(false)
 
-    const [firstName, setFirstName] = useState("")
+    const [firstName, setFirstName] = useState("hello")
     const [lastName, setLastName] = useState("")
     const [biography, setBiography] = useState("")
     const [password, setPassword] = useState("")

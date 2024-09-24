@@ -105,12 +105,15 @@ const AccountDetailsSide: React.FC<DetailProps> = ({ firstName, lastName, biogra
                             name='username'
                             className='input-field w-full'
                             value={first}
+                            placeholder='First Name'
                             onChange={(event) => setFirst(event.target.value)}
                         />
                         <input
                             type="text"
                             className='input-field w-full'
                             value={last}
+                            name="username2"
+                            placeholder='Last Name'
                             onChange={(event) => setLast(event.target.value)} />
                     </div>
                 </label>
@@ -121,6 +124,7 @@ const AccountDetailsSide: React.FC<DetailProps> = ({ firstName, lastName, biogra
                         name='biography'
                         className='input-field w-full'
                         value={bio}
+                        placeholder='About'
                         onChange={(event) => setBio(event.target.value)}
                     />
                 </label>
@@ -131,6 +135,7 @@ const AccountDetailsSide: React.FC<DetailProps> = ({ firstName, lastName, biogra
                         name='email'
                         className='input-field w-full'
                         value={mail}
+                        placeholder='email@gmail.com'
                         onChange={(event) => setMail(event.target.value)}
                     />
                 </label>
@@ -141,6 +146,7 @@ const AccountDetailsSide: React.FC<DetailProps> = ({ firstName, lastName, biogra
                         name='password'
                         className='input-field w-full'
                         value={pass}
+                        placeholder='*********'
                         disabled={!addUser}
                         onChange={(event) => setPass(event.target.value)}
                     />
