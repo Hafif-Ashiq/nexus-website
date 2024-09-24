@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
+    "@svgr/webpack": "^8.1.0",
     "chart.js": "^4.4.3",
     "faker": "^6.6.6",
     "firebase": "^10.12.0",

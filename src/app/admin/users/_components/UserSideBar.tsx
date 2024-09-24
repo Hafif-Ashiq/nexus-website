@@ -87,7 +87,7 @@ const UserSideBar = () => {
                     <p>Add New User</p>
                 </button>
                 <button className='flex-1 shadow-normal bg-white text-black px-[25px] py-[18px] flex justify-center items-center gap-[7px] text-[16px] font-semibold rounded-[15px]'>
-                    <img src="/assets/arrow-down.svg" alt="" />
+                    <img src="/assets/arrow-down-black.svg" alt="" />
                     <p>Download Report</p>
                 </button>
             </div>

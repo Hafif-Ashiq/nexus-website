@@ -105,8 +105,7 @@ const page = () => {
     return (
 
         <div className="flex flex-col gap-[30px] flex-1 ">
-            {/* <Header /> */}
-            {/* <div className='flex gap-[40px]'> */}
+
             <div className='basis-[75%] flex flex-col gap-[20px]'>
                 <div className='flex justify-between items-center gap-[20px]'>
                     {tiles.map((stat, index) => (

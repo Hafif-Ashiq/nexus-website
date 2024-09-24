@@ -2,6 +2,7 @@
 
 import UserSideBar from "./_components/UserSideBar";
 import Header from "./_components/Header";
+import HeadCrumbHeader from "../_components/HeadCrumbHeader";
 
 
 
@@ -12,12 +13,12 @@ export default function RootLayout({
 }>) {
     return (
         <div className="flex flex-col gap-[30px] h-full">
-            <Header />
+            <HeadCrumbHeader subtitle="Checkout the user's performance." />
             <div className="flex gap-[40px]">
-                <div className='basis-[75%] flex flex-col gap-[20px]'>
+                <div className='basis-[70%] flex flex-col gap-[20px]'>
                     {children}
                 </div>
-                <div className='basis-[25%]'>
+                <div className='basis-[30%]'>
                     <UserSideBar />
                 </div>
             </div>
