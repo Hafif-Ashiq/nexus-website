@@ -85,7 +85,7 @@ const BillingDetails: React.FC<billingDetailsProps> = ({ onBack }) => {
                     <label htmlFor="date" className='flex flex-col gap-[10px] w-[70%]'>
                         <p className='text-[16px] font-bold text-primaryColorLight'>Expiration Date</p>
                         <input
-                            type="date"
+                            type="month"
                             name='date'
                             className='input-field flex-1'
                             value={expiry}
@@ -95,11 +95,13 @@ const BillingDetails: React.FC<billingDetailsProps> = ({ onBack }) => {
                         />
 
                     </label>
-                    <label htmlFor="email" className='flex flex-col gap-[10px] max-w-[30%]'>
+                    <label htmlFor="cvv" className='flex flex-col gap-[10px] max-w-[30%]'>
                         <p className='text-[16px] font-bold text-primaryColorLight'>CVV</p>
                         <input
-                            type="email"
-                            name='email'
+                            type="number"
+                            maxLength={3}
+                            minLength={3}
+                            name='cvv'
                             className='input-field flex-1'
                             value={cvv}
                             onChange={(event) => setCVV(event.target.value)}

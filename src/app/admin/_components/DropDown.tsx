@@ -10,10 +10,10 @@ interface DropDownProps {
 
 const DropDown: React.FC<DropDownProps> = ({ actions }) => {
     return (
-        <div className='absolute top-[25px] right-0 bg-accentColorLight shadow-2xl rounded-[10px] flex flex-col justify-between items-center gap-[15px] py-[15px] w-[250px] z-10'>
+        <div className='absolute top-[25px] right-0 bg-accentColorLight shadow-2xl rounded-[10px] flex flex-col justify-between items-center   w-[250px] z-10 overflow-hidden'>
             {actions.map((act, index) => (
                 <>
-                    <button key={index} onClick={act.onClick} className='text-[18px] font-medium hover:text-primaryColorLight '>{act.title}</button>
+                    <button key={index} onClick={act.onClick} className='py-[15px] text-[18px] w-full font-medium hover:bg-primaryColorLight hover:text-white'>{act.title}</button>
                     {
                         index !== actions.length - 1 && <div key={index} className='w-full h-[1px] border-[#EBEEF4] border-[1px] border-solid'></div>
                     }

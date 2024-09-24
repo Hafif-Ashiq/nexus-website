@@ -1,4 +1,4 @@
-export const users = [
+export const users2 = [
     {
         "user_id": "1",
         "email": "user1@example.com",
@@ -336,3 +336,148 @@ const folder = {
     ],
     "date_updated": "2024-05-21"
 }
+
+
+export const users = [
+    {
+      "user_id": "001",
+      "email": "john.doe@example.com",
+      "password": "Passw0rd123!",
+      "first_name": "John",
+      "last_name": "Doe",
+      "account_status": {
+        "is_premium": false,
+        "is_deactivated": false
+      },
+      "profile_pic": "https://example.com/profiles/john.jpg",
+      "background_pic": "https://example.com/backgrounds/john.jpg",
+      "biography": "Tech enthusiast and outdoor adventurer.",
+      "community": {
+        "posts": ["Post 1", "Post 2"],
+        "saved_posts": ["Post 3"]
+      },
+      "guides": {
+        "viewed_guides": ["Guide 1", "Guide 2"]
+      },
+      "app_customization": {
+        "is_dark": true,
+        "notification_settings": {
+          "community_notis_enabled": true,
+          "app_notis_enabled": true
+        }
+      }
+    },
+    {
+      "user_id": "002",
+      "email": "jane.smith@example.com",
+      "password": "Secur3Pass!",
+      "first_name": "Jane",
+      "last_name": "Smith",
+      "account_status": {
+        "is_premium": true,
+        "is_deactivated": false
+      },
+      "profile_pic": "https://example.com/profiles/jane.jpg",
+      "background_pic": "https://example.com/backgrounds/jane.jpg",
+      "biography": "Marketing professional and avid reader.",
+      "community": {
+        "posts": ["Post A", "Post B"],
+        "saved_posts": ["Post C", "Post D"]
+      },
+      "guides": {
+        "viewed_guides": ["Guide A"]
+      },
+      "app_customization": {
+        "is_dark": false,
+        "notification_settings": {
+          "community_notis_enabled": true,
+          "app_notis_enabled": true
+        }
+      }
+    },
+    {
+      "user_id": "003",
+      "email": "alice.wong@example.com",
+      "password": "Alice$SecurePass",
+      "first_name": "Alice",
+      "last_name": "Wong",
+      "account_status": {
+        "is_premium": false,
+        "is_deactivated": false
+      },
+      "profile_pic": "https://example.com/profiles/alice.jpg",
+      "background_pic": "https://example.com/backgrounds/alice.jpg",
+      "biography": "Software engineer passionate about AI.",
+      "community": {
+        "posts": ["Post X", "Post Y", "Post Z"],
+        "saved_posts": ["Post W"]
+      },
+      "guides": {
+        "viewed_guides": ["Guide X", "Guide Y"]
+      },
+      "app_customization": {
+        "is_dark": true,
+        "notification_settings": {
+          "community_notis_enabled": false,
+          "app_notis_enabled": true
+        }
+      }
+    },
+    {
+      "user_id": "004",
+      "email": "david.kim@example.com",
+      "password": "D@v1dK1m#Pass",
+      "first_name": "David",
+      "last_name": "Kim",
+      "account_status": {
+        "is_premium": true,
+        "is_deactivated": false
+      },
+      "profile_pic": "https://example.com/profiles/david.jpg",
+      "background_pic": "https://example.com/backgrounds/david.jpg",
+      "biography": "Fitness coach and healthy lifestyle advocate.",
+      "community": {
+        "posts": ["Post Q", "Post R"],
+        "saved_posts": ["Post S"]
+      },
+      "guides": {
+        "viewed_guides": ["Guide Q"]
+      },
+      "app_customization": {
+        "is_dark": false,
+        "notification_settings": {
+          "community_notis_enabled": true,
+          "app_notis_enabled": false
+        }
+      }
+    },
+    {
+      "user_id": "005",
+      "email": "emily.jones@example.com",
+      "password": "Em1lyJ@nesPass",
+      "first_name": "Emily",
+      "last_name": "Jones",
+      "account_status": {
+        "is_premium": false,
+        "is_deactivated": true
+      },
+      "profile_pic": "https://example.com/profiles/emily.jpg",
+      "background_pic": "https://example.com/backgrounds/emily.jpg",
+      "biography": "Artist and creative thinker.",
+      "community": {
+        "posts": ["Post M", "Post N"],
+        "saved_posts": ["Post O"]
+      },
+      "guides": {
+        "viewed_guides": ["Guide M"]
+      },
+      "app_customization": {
+        "is_dark": true,
+        "notification_settings": {
+          "community_notis_enabled": false,
+          "app_notis_enabled": true
+        }
+      }
+    }
+  ]
+  

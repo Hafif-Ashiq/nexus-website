@@ -16,7 +16,7 @@ const UserSideBar = () => {
     const [activeCard, setActiveCard] = useState(CardDisplay.userInfo)
     const [addUser, setAddUser] = useState(false)
 
-    const [firstName, setFirstName] = useState("")
+    const [firstName, setFirstName] = useState("hello")
     const [lastName, setLastName] = useState("")
     const [biography, setBiography] = useState("")
     const [password, setPassword] = useState("")
@@ -86,7 +86,7 @@ const UserSideBar = () => {
                     <img src="/assets/add.svg" alt="" />
                     <p>Add New User</p>
                 </button>
-                <button className='flex-1 shadow-normal bg-white text-black px-[25px] py-[18px] flex justify-center items-center gap-[7px] text-[16px] font-semibold rounded-[15px]'>
+                <button  className='flex-1 shadow-normal bg-white text-black px-[25px] py-[18px] flex justify-center items-center gap-[7px] text-[16px] font-semibold rounded-[15px]'>
                     <img src="/assets/arrow-down.svg" alt="" />
                     <p>Download Report</p>
                 </button>
