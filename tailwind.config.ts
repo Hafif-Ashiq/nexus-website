@@ -8,6 +8,15 @@ const config: Config = {
   ],
   theme: {
     extend: {
+      // Custom utilities for hiding scrollbars
+      scrollbar: {
+        hide: {
+          '::-webkit-scrollbar': { display: 'none' }, /* Chrome, Safari, Opera */
+          '-ms-overflow-style': 'none',  /* IE and Edge */
+          'scrollbar-width': 'none',  /* Firefox */
+        },
+      },
+      // Other
       colors: {
         primaryColorLight: "#2A4E8F",
         backgroundColorLight: "#FFFFFF",
@@ -35,6 +44,7 @@ const config: Config = {
       boxShadow: {
         'normal': '0 0 25px rgba(0, 0, 0, 0.02), 0 0 4px rgba(0, 0, 0, 0.02)',
       },
+
 
     },
     screens: {

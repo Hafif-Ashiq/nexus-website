@@ -4,25 +4,49 @@ import Header from '../_components/Header'
 import Search from '../_components/Search'
 import SupportChatLists from './_components/SupportChatList'
 import HeaderButton from '../_components/HeaderButton'
-import { fetchAllSupportChats } from '@/firebaseFunctions/support'
+// import { fetchAllSupportChats } from '@/firebaseFunctions/support'
 import { SupportInterface } from '@/services/SupportInterface'
 import SupportChat from './_components/SupportChat'
+import { useDispatch } from 'react-redux'
+import { setSupportChat } from '@/redux/slices/adminSlice'
+import { listenToSupportChats } from '@/firebaseFunctions/support'
 
 const page = () => {
 
 
-    const [allSupportChats, setAllSupportChats] = useState([])
+    const [allSupportChats, setAllSupportChats] = useState<SupportInterface[]>([])
+
+    const dispatch = useDispatch()
 
 
     useEffect(() => {
 
-        fetchAllSupportChats().then((result: any) => {
+        let sChats = listenToSupportChats((result) => {
             console.log(result);
+            setAllSupportChats(result);
 
-            setAllSupportChats(result)
-        })
+
+            // Dispatch the first chat (or any other logic as needed)
+            if (result.length > 0) {
+
+            }
+        });
+
+        // fetchAllSupportChats().then((result: SupportInterface[]) => {
+        //     console.log(result);
+
+        //     setAllSupportChats(result)
+        //     dispatch(setSupportChat(result[0]))
+        // })
+        return () => sChats();
 
     }, [])
+
+    useEffect(() => {
+        if (allSupportChats.length > 0) {
+            dispatch(setSupportChat(allSupportChats[0]));
+        }
+    }, [allSupportChats])
 
 
 

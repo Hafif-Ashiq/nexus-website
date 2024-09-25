@@ -3,11 +3,11 @@ import { configureStore } from '@reduxjs/toolkit';
 import { useDispatch } from 'react-redux';
 
 // Example slice reducer (you can replace this with your actual reducers)
-import counterReducer from './slices/adminSlice'; 
+import adminReducer from './slices/adminSlice';
 
 export const store = configureStore({
   reducer: {
-    counter: counterReducer, // Add your slice reducers here
+    adminReducer: adminReducer, // Add your slice reducers here
   },
 });
 

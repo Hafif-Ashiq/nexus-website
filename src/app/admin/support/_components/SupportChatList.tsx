@@ -6,6 +6,8 @@ import Select from '@/components/Select'
 import DropDown from '../../_components/DropDown'
 import { SupportInterface } from '@/services/SupportInterface'
 import { getStatusColor } from '@/utils/support'
+import { useDispatch } from 'react-redux'
+import { setSupportChat } from '@/redux/slices/adminSlice'
 
 interface SupportChatTableProps {
     issues: SupportInterface[],
@@ -15,7 +17,7 @@ interface SupportChatTableProps {
 
 const SupportChatLists: React.FC<SupportChatTableProps> = ({ issues, showSelect = false, showViewAll = true }) => {
 
-
+    const dispatch = useDispatch()
 
     const [actionsOpen, setActionsOpen] = useState(-1)
     const [allSelected, setAllSelected] = useState(false)
@@ -117,7 +119,12 @@ const SupportChatLists: React.FC<SupportChatTableProps> = ({ issues, showSelect 
                 </thead>
                 <tbody key={key}>
                     {issues.map((issue, index) => (
-                        <tr key={index} className='flex justify-around text-left pl-[25px] pr-[50px] py-[25px] text-ellipsis  font-semibold  rounded-[15px] hover:border-borderColor border-[1.5px] border-solid border-white'>
+                        <tr
+                            onClick={() => {
+                                dispatch(setSupportChat(issue))
+                            }}
+                            key={index}
+                            className='flex justify-around text-left pl-[25px] pr-[50px] py-[25px] text-ellipsis  font-semibold  rounded-[15px] hover:border-borderColor border-[1.5px] border-solid border-white cursor-pointer'>
                             {showSelect && <td className='w-[30px]'>
                                 <Select selected={selectedUsers[index] || allSelected} onSelect={() => selectUser(index)} color='black' />
                             </td>}

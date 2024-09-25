@@ -9,9 +9,9 @@ interface SentInterface {
 export interface ConversationInterface {
     sender_id: string,
     time_stamp: string,
-    image_link: string,
+    image_link?: string,
     message_type: string,
-    text: string,
+    text?: string,
     status: SentInterface
 
 }
