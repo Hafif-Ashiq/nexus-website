@@ -25,11 +25,6 @@ const page = () => {
             console.log(result);
             setAllSupportChats(result);
 
-
-            // Dispatch the first chat (or any other logic as needed)
-            if (result.length > 0) {
-
-            }
         });
 
         // fetchAllSupportChats().then((result: SupportInterface[]) => {

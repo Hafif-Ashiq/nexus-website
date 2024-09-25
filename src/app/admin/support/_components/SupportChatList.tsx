@@ -126,7 +126,7 @@ const SupportChatLists: React.FC<SupportChatTableProps> = ({ issues, showSelect 
                             key={index}
                             className='flex justify-around text-left pl-[25px] pr-[50px] py-[25px] text-ellipsis  font-semibold  rounded-[15px] hover:border-borderColor border-[1.5px] border-solid border-white cursor-pointer'>
                             {showSelect && <td className='w-[30px]'>
-                                <Select selected={selectedUsers[index] || allSelected} onSelect={() => selectUser(index)} color='black' />
+                                <Select selected={selectedUsers[index] || allSelected} onSelect={() => selectUser(index)} color='#CBD5E4' />
                             </td>}
                             <td className='w-[100px]'>{index < 10 ? `0${index + 1}` : index + 1}</td>
                             <td className='w-[200px] text-ellipsis overflow-hidden'>{issue.user_id}</td>

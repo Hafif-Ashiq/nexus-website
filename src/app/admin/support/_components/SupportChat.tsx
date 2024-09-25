@@ -26,21 +26,11 @@ const SupportChat = () => {
             endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
         }
     }, [supportChat]); // Dependency array includes messages
-
+    // , [supportChat, supportChat.conversation,]
     useEffect(() => {
         console.log(supportChat);
 
     }, [supportChat])
-
-
-
-
-
-    const sendMessage = (message: string) => {
-
-    }
-
-
 
 
     const getMessage = (message: ConversationInterface, isLast: boolean) => {
