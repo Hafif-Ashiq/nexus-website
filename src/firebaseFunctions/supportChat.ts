@@ -77,7 +77,7 @@ export async function addImageMessage({
         const newMessage: ConversationInterface = {
             text: "",
             sender_id: senderId,
-            time_stamp: new Date().toISOString(),
+            time_stamp: getCurrentTimeFormatted(),
             message_type: 'image',
             status: {
                 is_sent: true,
