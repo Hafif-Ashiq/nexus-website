@@ -1,3 +1,4 @@
+import { SupportInterface } from "@/services/SupportInterface";
 import { UserProfile } from "@/services/UserInterface";
 
 export const mockUser: UserProfile = {
@@ -27,4 +28,28 @@ export const mockUser: UserProfile = {
             "app_notis_enabled": true
         }
     }
+}
+
+
+export const mockSupportChat: SupportInterface = {
+    "user_id": "mockSupport",
+    "user_name": "mockSupport",
+    "issue_id": "",
+    "issue_opened_time": "",
+    "issue_closed_time": "",
+    "issue_category": "Application",
+    "issue_status": "Pending",
+    "conversation": [
+        {
+            "sender_id": "",
+            "time_stamp": "",
+            "image_link": "",
+            "message_type": "",
+            "text": "",
+            "status": {
+                "is_sent": false,
+                "is_seen": false
+            }
+        }
+    ]
 }

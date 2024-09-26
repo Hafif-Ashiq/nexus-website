@@ -1,4 +1,5 @@
 // redux/slices/counterSlice.ts
+import { mockSupportChat, mockUser } from '@/constants/data';
 import { SupportInterface } from '@/services/SupportInterface';
 import { UserProfile } from '@/services/UserInterface';
 import { createSlice } from '@reduxjs/toolkit';
@@ -6,65 +7,19 @@ import { createSlice } from '@reduxjs/toolkit';
 export interface AdminSliceInterface {
   currentSupportChat: SupportInterface,
   adminId: string,
+  allSupportChats: SupportInterface[],
   allUsersList: UserProfile[],
   currentUser: UserProfile,
 }
 
 const initialState: AdminSliceInterface = {
-  currentSupportChat: {
-    "user_id": "",
-    "issue_id": "",
-    "issue_opened_time": "",
-    "issue_closed_time": "",
-    "issue_category": "Application",
-    "issue_status": "Pending",
-    "conversation": [
-      {
-        "sender_id": "",
-        "time_stamp": "",
-        "image_link": "",
-        "message_type": "",
-        "text": "",
-        "status": {
-          "is_sent": false,
-          "is_seen": false
-        }
-      }
-    ]
-  },
+  currentSupportChat: mockSupportChat,
   adminId: "bpReSCGFYZY9k1TuuCdW",
 
   allUsersList: [],
+  allSupportChats: [],
 
-  currentUser: {
-    "id": "",
-    "email": "",
-    "password": "",
-    "first_name": "",
-    "last_name": "",
-    "account_status": {
-      "is_premium": false,
-      "is_deactivated": false
-    },
-    "profile_pic": "",
-    "background_pic": "",
-    "biography": "",
-    "community": {
-      "posts": [],
-      "saved_posts": []
-    },
-    "guides": {
-      "viewed_guides": []
-    },
-    "app_customization": {
-      "is_dark": true,
-      "notification_settings": {
-        "community_notis_enabled": true,
-        "app_notis_enabled": true
-      }
-    }
-  }
-
+  currentUser: mockUser
 
 };
 
@@ -78,6 +33,9 @@ const adminSlice = createSlice({
     setAllUsersList: (state, action) => {
       state.allUsersList = action.payload;
     },
+    setAllSupportChats: (state, action) => {
+      state.allSupportChats = action.payload;
+    },
     setCurrentUser: (state, action) => {
       state.currentUser = action.payload;
     },
@@ -85,6 +43,6 @@ const adminSlice = createSlice({
   },
 });
 
-export const { setSupportChat, setAllUsersList, setCurrentUser } = adminSlice.actions;
+export const { setSupportChat, setAllUsersList, setCurrentUser, setAllSupportChats } = adminSlice.actions;
 
 export default adminSlice.reducer;

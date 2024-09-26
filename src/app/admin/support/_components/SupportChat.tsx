@@ -18,6 +18,10 @@ const SupportChat = () => {
 
     const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
 
+    const [lastAdminMessageIndex, setLastAdminMessageIndex] = useState<number>(0)
+    const [lastUserMessageIndex, setLastUserMessageIndex] = useState<number>(0)
+
+
 
 
     useEffect(() => {
@@ -25,6 +29,30 @@ const SupportChat = () => {
         if (endOfMessagesRef.current) {
             endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
         }
+
+        // Profile photo show
+        let chat = supportChat.conversation
+        for (let index = 0; index < chat.length; index++) {
+            if (chat[index].sender_id == adminId && chat[index - 1]?.sender_id !== adminId) {
+                setLastAdminMessageIndex(index)
+            }
+            if (chat[index].sender_id != adminId && chat[index - 1]?.sender_id == adminId) {
+                {
+                    setLastUserMessageIndex(index)
+                }
+            }
+        }
+        // supportChat.conversation.indexOf()
+        // supportChat.conversation.forEach((chat, index) => {
+        //     if (chat.sender_id == adminId) {
+        //         setLastAdminMessageIndex(index)
+        //     }
+        //     else {
+        //         setLastUserMessageIndex(index)
+        //     }
+        // })
+
+
     }, [supportChat]); // Dependency array includes messages
     // , [supportChat, supportChat.conversation,]
     useEffect(() => {
@@ -33,12 +61,14 @@ const SupportChat = () => {
     }, [supportChat])
 
 
-    const getMessage = (message: ConversationInterface, isLast: boolean) => {
+    const getMessage = (message: ConversationInterface, index: number) => {
         let isAdmin: boolean = message.sender_id == adminId
+        let nextIsAdmin: boolean = supportChat.conversation[index + 1]?.sender_id == adminId
+        let isLastMessage: boolean = index == supportChat.conversation.length - 1
 
         if (isAdmin) {
             return (
-                <div className={`flex gap-[10px] items-start justify-end`}>
+                <div className={`flex gap-[10px] items-start justify-end  ${(nextIsAdmin && isAdmin) || isLastMessage ? "mb-[3px]" : "mb-[25px]"}`}>
                     <div className='w-[30px] h-[30px]'></div>
 
                     <div className='flex-1 flex justify-end'>
@@ -52,17 +82,18 @@ const SupportChat = () => {
                             message.message_type == "image" ? <img className="rounded-[15px]" src={message.image_link} alt="" /> : <></>
                         }
                     </div>
-                    <div className='w-[30px] h-[30px] rounded-full overflow-hidden flex justify-center items-center'>
-                        <img src={isAdmin ? "/admin-image.jpg" : "/user-image.jpg"} alt="profile picture" className='object-cover' />
-                    </div>
+                    {/* <div className='w-[30px] h-[30px] rounded-full overflow-hidden flex justify-center items-center'>
+
+                    </div> */}
                 </div>
             )
         }
 
         return (
-            <div className={`flex gap-[10px] flex-start items-start`}>
+            <div className={`flex gap-[10px] flex-start items-start  ${(!nextIsAdmin && !isAdmin) || isLastMessage ? "mb-[2px]" : "mb-[25px]"}`}>
                 <div className='w-[30px] h-[30px] rounded-full overflow-hidden flex justify-center items-center'>
-                    <img src={"/user-image.jpg"} alt="profile picture" className='object-cover' />
+
+                    {index == lastUserMessageIndex ? <img src={"/user-image.jpg"} alt="profile picture" className='object-cover' /> : <></>}
                 </div>
 
                 <div className='flex-1 flex justify-start'>
@@ -122,8 +153,8 @@ const SupportChat = () => {
     return (
         <div className='flex flex-col gap-[20px] h-[80vh]'>
 
-            <div className='shadow-normal bg-white h-full rounded-[15px] p-[20px] flex flex-col gap-[15px]'>
-                <div className='flex justify-between items-center '>
+            <div className='shadow-normal bg-white h-full rounded-[15px] py-[20px] flex flex-col gap-[15px]'>
+                <div className='flex justify-between items-center px-[20px]'>
                     {/* left */}
                     <div className='flex justify-start items-center gap-[15px]  '>
                         {/* profile */}
@@ -147,7 +178,7 @@ const SupportChat = () => {
                 </div>
 
                 <div className='w-full h-[1px] border-[#EBEEF4] border-[1px] border-solid'></div>
-                <div className='flex-1 overflow-scroll flex flex-col gap-[25px]' style={{
+                <div className='flex-1 overflow-scroll flex flex-col gap-[0px] px-[20px]' style={{
                     //  overflow: 'auto', // Allows scrolling
                     scrollbarWidth: 'none', // Firefox
                     msOverflowStyle: 'none', // IE and Edge
@@ -156,7 +187,7 @@ const SupportChat = () => {
                     {supportChat.conversation.map(
                         (message, index) => (
                             <div className='w-ful'>
-                                {getMessage(message, index == supportChat.conversation.length - 1)}
+                                {getMessage(message, index)}
                             </div>
                         )
                     )}
@@ -165,9 +196,9 @@ const SupportChat = () => {
                 {
                     supportChat.issue_status == "Pending" ?
                         <>
-                            <div className='w-full h-[1px] border-[#EBEEF4] border-[1px] border-solid'></div>
+                            <div className='w-full h-[1px] border-[#EBEEF4] border-[1px] border-solid '></div>
 
-                            <div className='flex justify-end items-center gap-[15px]'>
+                            <div className='flex justify-end items-center gap-[15px] px-[20px]'>
                                 {/* buttons */}
                                 <IconButton icon='/assets/add-image-outlined.svg' onClick={uploadImage} />
                                 <input

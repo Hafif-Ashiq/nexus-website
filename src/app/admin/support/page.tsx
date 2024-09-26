@@ -8,40 +8,56 @@ import HeaderButton from '../_components/HeaderButton'
 import { SupportInterface } from '@/services/SupportInterface'
 import SupportChat from './_components/SupportChat'
 import { useDispatch } from 'react-redux'
-import { setSupportChat } from '@/redux/slices/adminSlice'
+import { setAllSupportChats, setSupportChat } from '@/redux/slices/adminSlice'
 import { listenToSupportChats } from '@/firebaseFunctions/support'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
+import { mockSupportChat } from '@/constants/data'
 
 const page = () => {
 
 
-    const [allSupportChats, setAllSupportChats] = useState<SupportInterface[]>([])
+    // const [allSupportChats, setAllSupportChats] = useState<SupportInterface[]>([])
+
+    const currentSupportChat = useSelector((state: RootState) => state.adminReducer.currentSupportChat)
+    const allSupportChats = useSelector((state: RootState) => state.adminReducer.allSupportChats)
 
     const dispatch = useDispatch()
 
 
     useEffect(() => {
+        console.log("in effect");
 
         let sChats = listenToSupportChats((result) => {
             console.log(result);
-            setAllSupportChats(result);
+            dispatch(setAllSupportChats(result));
 
         });
+        console.log("after effect");
 
-        // fetchAllSupportChats().then((result: SupportInterface[]) => {
-        //     console.log(result);
 
-        //     setAllSupportChats(result)
-        //     dispatch(setSupportChat(result[0]))
-        // })
         return () => sChats();
 
     }, [])
 
     useEffect(() => {
-        if (allSupportChats.length > 0) {
+        console.log("in support set");
+        if (allSupportChats.length == 0) {
+            return
+        }
+
+        if (mockSupportChat.issue_id == currentSupportChat.issue_id) {
+
             dispatch(setSupportChat(allSupportChats[0]));
         }
+        else {
+            // console.log("in else");
+            const newSupport = allSupportChats.find(chat => chat.issue_id == currentSupportChat.issue_id)
+            dispatch(setSupportChat(newSupport));
+        }
+
     }, [allSupportChats])
+
 
 
 

@@ -6,6 +6,8 @@ import { UserProfile } from '@/services/UserInterface'
 import Select from '@/components/Select'
 import { setCurrentUser } from '@/redux/slices/adminSlice'
 import { useDispatch } from 'react-redux'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 
 interface recentUsersProps {
     users: UserProfile[],
@@ -16,6 +18,8 @@ interface recentUsersProps {
 
 const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, showViewAll = true, clickEnabled = false }) => {
 
+
+    const currentUser = useSelector((state: RootState) => state.adminReducer.currentUser)
 
     const dispatch = useDispatch()
 
@@ -85,7 +89,7 @@ const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, show
 
             <table className='bg-white w-full rounded-[15px] flex-1 h-full'>
                 <thead>
-                    <tr className={`flex justify-between text-left px-[100px] py-[17px] text-ellipsis overflow-hidden rounded-[15px] bg-primaryColorLight text-white text-[18px]`}>
+                    <tr className={`flex justify-between text-left pl-[25px] pr-[50px] py-[25px] text-ellipsis overflow-hidden rounded-[15px] bg-primaryColorLight text-white text-[18px]`}>
                         {showSelect && <>
                             <th className='flex gap-[30px] items-center justify-start' style={{ width: anySelected ? "200px" : "30px" }}>
                                 <Select selected={allSelected} onSelect={selectAll} />
@@ -94,11 +98,11 @@ const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, show
                         </>}
                         {!anySelected ?
                             <>
-                                <th className='w-[100px]'>#</th>
+                                <th className='w-[20px]'>#</th>
                                 <th className='w-[200px]'>User ID</th>
                                 <th className='w-[200px]'>Email Address</th>
                                 <th className='w-[200px]'>Username</th>
-                                <th className='w-[100px]'>Status</th>
+                                <th className='w-[130px]'>Status</th>
                                 <th className='w-[50px]'>Action</th>
                             </>
                             :
@@ -123,15 +127,15 @@ const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, show
                                 console.log('clicked');
                                 dispatch(setCurrentUser(user))
                             }
-                        }} key={index} className={`flex justify-between text-left px-[100px] py-[17px] rounded-[15px] hover:border-borderColor border-[1.5px] border-solid border-white ${clickEnabled ? "cursor-pointer" : ""}`}>
+                        }} key={index} className={`flex justify-between text-left pl-[25px] pr-[50px] py-[25px] rounded-[15px]  border-[1.5px] border-solid  ${clickEnabled ? "cursor-pointer" : ""} ${user.id == currentUser.id ? "border-primaryColorLight" : "border-white hover:border-borderColor"}`}>
                             {showSelect && <td className='w-[30px]'>
-                                <Select selected={selectedUsers[index] || allSelected} onSelect={() => selectUser(index)} color='black' />
+                                <Select selected={selectedUsers[index] || allSelected} onSelect={() => selectUser(index)} color='#CBD5E4' />
                             </td>}
-                            <td className='w-[100px]'>{index < 10 ? `0${index + 1}` : index + 1}</td>
+                            <td className='w-[20px]'>{index < 10 ? `0${index + 1}` : index + 1}</td>
                             <td className='w-[200px] text-ellipsis overflow-hidden'>{user.id}</td>
                             <td className='w-[200px] text-ellipsis overflow-hidden'>{user.email}</td>
                             <td className='w-[200px] text-ellipsis overflow-hidden'>{user.first_name + " " + user.last_name} </td>
-                            <td className='w-[100px] text-ellipsis overflow-hidden'>{user.account_status.is_deactivated ? "Deactivated " : "Activated"}</td>
+                            <td className='w-[130px] text-ellipsis overflow-hidden'>{user.account_status.is_deactivated ? "Deactivated " : "Activated"}</td>
                             <td className='w-[50px] flex justify-center items-center relative'>
                                 <button onClick={() => index == actionsOpen ? setActionsOpen(-1) : setActionsOpen(index)} className=' py-[5px]'>
                                     <img src="/assets/dots.svg" alt="" />

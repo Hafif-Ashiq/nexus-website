@@ -9,6 +9,9 @@ export default function RootLayout({
 }>) {
     return (
         <html lang="en">
+            <head>
+                <title>Admin - Nexus</title>
+            </head>
 
             <body className="font-poppins relative flex">
                 <SideBar />
