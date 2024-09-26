@@ -1,11 +1,16 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import AccountDetailsSide from './AccountDetailsSide'
 import BillingDetails from './BillingDetails'
 import { addDoc, collection, getDocs } from 'firebase/firestore';
 import { db } from '@/services/firebase';
-import { chat, users } from '@/services/abc';
+import { chat, mockUsers } from '@/services/abc';
 import SubscriptionPlanSide from './SubscriptionPlanSide';
-import { UserProfile } from '@/services/UserInterface';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+import { useDispatch } from 'react-redux';
+import { addNewUser, deleteUser } from '@/firebaseFunctions/users';
+import { setCurrentUser } from '@/redux/slices/adminSlice';
+import { mockUser } from '@/constants/data';
 
 enum CardDisplay {
     userInfo, billingInfo, subscriptionInfo
@@ -13,32 +18,22 @@ enum CardDisplay {
 
 const UserSideBar = () => {
 
+    const user = useSelector((state: RootState) => state.adminReducer.currentUser)
+
+    const dispatch = useDispatch()
+
     const [activeCard, setActiveCard] = useState(CardDisplay.userInfo)
     const [addUser, setAddUser] = useState(false)
 
-    const [firstName, setFirstName] = useState("hello")
-    const [lastName, setLastName] = useState("")
-    const [biography, setBiography] = useState("")
-    const [password, setPassword] = useState("")
-    const [email, setEmail] = useState("")
 
-
-    const addUserToFirebase = async (user: UserProfile) => {
-
-        try {
-            const docRef = await addDoc(collection(db, "users"), user);
-            console.log("Document written with ID: ", docRef.id);
-            alert("User added")
-        } catch (e) {
-            console.error("Error adding document: ", e);
-        }
-
-    }
+    useEffect(() => {
+        setAddUser(false)
+    }, [user])
 
     const addAllUsers = async () => {
 
 
-        users.forEach(async (user, index) => {
+        mockUsers.forEach(async (user, index) => {
             try {
                 const docRef = await addDoc(collection(db, "users"), user);
                 console.log("Document written with ID: ", docRef.id);
@@ -46,31 +41,6 @@ const UserSideBar = () => {
                 console.error("Error adding document: ", e);
             }
         })
-    }
-
-
-    const addChat = async () => {
-
-
-
-        try {
-            // Xjp0Hi2CK0LD1a9i3KPt
-            const docRef = await addDoc(collection(db, "users", 'Xjp0Hi2CK0LD1a9i3KPt', "chat"), chat);
-
-            // contentArray.forEach(async (content, index) => {
-            //     try {
-            //         const docRef = await addDoc(collection(db, "users", 'Xjp0Hi2CK0LD1a9i3KPt', "content"), content);
-            //         console.log("Document written with ID: ", docRef.id);
-            //     } catch (e) {
-            //         console.error("Error adding document: ", e);
-            //     }
-            // })
-
-            // console.log("Document written with ID: ", d.id);
-        } catch (e) {
-            console.error("Error adding document: ", e);
-        }
-
     }
 
     // Call the function
@@ -119,19 +89,30 @@ const UserSideBar = () => {
                 <div className='flex-1'>
                     {
                         activeCard == CardDisplay.userInfo && <AccountDetailsSide
-                            onAddClick={(user) => { addUserToFirebase(user) }}
+                            onAddClick={(user) => {
+                                addNewUser(user)
+                                setAddUser(false)
+                            }}
+                            onDeleteClick={() => {
+                                deleteUser(user.id)
+                                dispatch(setCurrentUser(mockUser))
+                            }}
                             onBillingClick={() => setActiveCard(CardDisplay.billingInfo)}
                             onSubsClick={() => setActiveCard(CardDisplay.subscriptionInfo)}
                             addUser={addUser}
-                            firstName={firstName}
-                            lastName={lastName}
-                            biography={biography}
-                            email={email}
-                            password={password}
+                            user_id={user.id}
+                            firstName={user.first_name}
+                            lastName={user.last_name}
+                            biography={user.biography}
+                            email={user.email}
+                            password={user.password}
                         />
                     }
                     {
-                        activeCard == CardDisplay.billingInfo && <BillingDetails onBack={() => setActiveCard(CardDisplay.userInfo)} />
+                        activeCard == CardDisplay.billingInfo && <BillingDetails
+                            onBack={() => setActiveCard(CardDisplay.userInfo)}
+
+                        />
                     }
                     {
                         activeCard == CardDisplay.subscriptionInfo && <SubscriptionPlanSide onBack={() => setActiveCard(CardDisplay.userInfo)} />

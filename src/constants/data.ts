@@ -1,0 +1,30 @@
+import { UserProfile } from "@/services/UserInterface";
+
+export const mockUser: UserProfile = {
+    "id": "",
+    "email": "",
+    "password": "",
+    "first_name": "",
+    "last_name": "",
+    "account_status": {
+        "is_premium": false,
+        "is_deactivated": false
+    },
+    "profile_pic": "",
+    "background_pic": "",
+    "biography": "",
+    "community": {
+        "posts": [],
+        "saved_posts": []
+    },
+    "guides": {
+        "viewed_guides": []
+    },
+    "app_customization": {
+        "is_dark": true,
+        "notification_settings": {
+            "community_notis_enabled": true,
+            "app_notis_enabled": true
+        }
+    }
+}

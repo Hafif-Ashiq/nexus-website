@@ -1,21 +1,36 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import Header from './_components/Header'
 import Guides from './_components/Guides'
 import GraphInfo from '../_components/GraphInfo'
 import StatPerformance from './_components/StatPerformance'
 import UsersList from '../_components/UsersList'
-import { fetchAllUsers } from '@/firebaseFunctions/users'
+import { listenToUsersList } from '@/firebaseFunctions/users'
+
+import { setAllUsersList } from '@/redux/slices/adminSlice'
+import { RootState } from '@/redux/store'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 const page = () => {
-    const [allUsers, setAllUsers] = useState([])
+
+    const dispatch = useDispatch()
+
+    const allUsersList = useSelector((state: RootState) => state.adminReducer.allUsersList)
 
 
     useEffect(() => {
 
-        fetchAllUsers().then((result: any) => {
-            setAllUsers(result)
-        })
+
+
+        let unsubscribeUsers = listenToUsersList((result) => {
+            console.log(result);
+            dispatch(setAllUsersList(result))
+
+        });
+
+
+        return () => unsubscribeUsers();
 
     }, [])
 
@@ -43,7 +58,7 @@ const page = () => {
                 <GraphInfo data={dataUsers} title='Active Users' value='6245' change='5.4%' increase />
                 <StatPerformance />
             </div>
-            <UsersList users={allUsers.slice(0, 2)} />
+            <UsersList users={allUsersList.slice(0, 2)} />
         </div>
     )
 }

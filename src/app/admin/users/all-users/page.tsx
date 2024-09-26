@@ -3,21 +3,27 @@
 import React, { useEffect, useState } from 'react'
 import Search from '../../_components/Search'
 import UsersList from '../../_components/UsersList'
-import { fetchAllUsers } from '@/firebaseFunctions/users'
+import { listenToUsersList } from '@/firebaseFunctions/users'
+import { RootState } from '@/redux/store'
+import { useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
+import { setAllUsersList } from '@/redux/slices/adminSlice'
 
 const page = () => {
+
+    const dispatch = useDispatch()
+
+    const allUsersList = useSelector((state: RootState) => state.adminReducer.allUsersList)
+
     const [searchText, setSearchText] = useState("")
-    const [isLoading, setIsLoading] = useState(true)
-    const [allUsers, setAllUsers] = useState([])
 
 
     useEffect(() => {
-        setIsLoading(true)
-        fetchAllUsers().then((result: any) => {
-            setAllUsers(result)
-            setIsLoading(false)
-
-        })
+        let unsubscribeUsers = listenToUsersList((result) => {
+            console.log(result);
+            dispatch(setAllUsersList(result))
+        });
+        return () => unsubscribeUsers();
 
     }, [])
 
@@ -34,7 +40,7 @@ const page = () => {
                 </button>
             </div>
             <div>
-                <UsersList users={allUsers} showSelect showViewAll={false} />
+                <UsersList users={allUsersList} showSelect showViewAll={false} clickEnabled />
             </div>
 
         </div>

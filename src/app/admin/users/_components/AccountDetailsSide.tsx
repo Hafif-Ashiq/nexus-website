@@ -9,12 +9,14 @@ interface DetailProps {
     biography: string;
     email: string;
     password: string;
+    user_id: string;
     onBillingClick: () => void;
     onSubsClick: () => void;
     onAddClick: (user: UserProfile) => void;
+    onDeleteClick: () => void;
 }
 
-const AccountDetailsSide: React.FC<DetailProps> = ({ firstName, lastName, biography, email, password, onBillingClick, onSubsClick, addUser = false, onAddClick }) => {
+const AccountDetailsSide: React.FC<DetailProps> = ({ user_id, firstName, lastName, biography, email, password, onBillingClick, onSubsClick, addUser = false, onAddClick, onDeleteClick }) => {
 
     const [moreOpen, setMoreOpen] = useState(false)
 
@@ -26,16 +28,26 @@ const AccountDetailsSide: React.FC<DetailProps> = ({ firstName, lastName, biogra
 
 
     useEffect(() => {
-        setFirst(firstName)
-        setLast(lastName)
-        setBio(biography)
-        setMail(email)
-        setPass(password)
-    }, [])
+        if (!addUser) {
+            setFirst(firstName)
+            setLast(lastName)
+            setBio(biography)
+            setMail(email)
+            setPass(password)
+        }
+        else {
+            setFirst("")
+            setLast("")
+            setMail("")
+            setBio("")
+            setPass("")
+        }
+    }, [addUser, firstName, lastName, biography, email, password])
 
 
     const addUserClicked = () => {
         const user: UserProfile = {
+            id: "",
             email: mail,
             password: pass,
             first_name: first,
@@ -153,7 +165,7 @@ const AccountDetailsSide: React.FC<DetailProps> = ({ firstName, lastName, biogra
                 </label>
             </div>
 
-            <button onClick={addUser ? addUserClicked : () => { }} className={`${addUser ? "bg-primaryColorLight" : "bg-warningColor"} py-[14px] w-full flex justify-center items-center rounded-[15px] text-[16px] font-semibold text-white`}>{addUser ? "Add User" : "Delete User"}</button>
+            <button disabled={user_id == "Bd4umkyLqOLnMpdOLZ0E"} onClick={addUser ? addUserClicked : onDeleteClick} className={`${addUser ? "bg-primaryColorLight" : "bg-warningColor"} py-[14px] w-full flex justify-center items-center rounded-[15px] text-[16px] font-semibold text-white disabled:opacity-50`}>{addUser ? "Add User" : "Delete User"}</button>
 
         </div>
     )

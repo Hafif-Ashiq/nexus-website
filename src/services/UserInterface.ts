@@ -23,7 +23,7 @@ interface AppCustomization {
 }
 
 export interface UserProfile {
-    id?: string;
+    id: string;
     email: string;
     password: string;
     first_name: string;

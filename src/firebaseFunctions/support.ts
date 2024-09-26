@@ -1,11 +1,8 @@
+import { doc, getDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase';
-import { v4 as uuidv4 } from 'uuid'; // For generating unique file names
-import { getStorage, ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 
-
-import { ConversationInterface, SupportInterface } from '@/services/SupportInterface';
-import { getCurrentTimeFormatted } from '@/utils/datetime';
-import { onSnapshot, collection, updateDoc, arrayUnion, getFirestore } from 'firebase/firestore';
+import { SupportInterface } from '@/services/SupportInterface';
+import { onSnapshot, collection } from 'firebase/firestore';
 
 
 // Set up a listener for support chats
@@ -54,7 +51,6 @@ export const listenToSupportChats = (
 };
 
 
-import { doc, getDoc } from 'firebase/firestore';
 
 // Fetch user name based on user_id
 export const fetchUserName = async (user_id: string): Promise<string | null> => {

@@ -1,8 +1,5 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import GraphInfo from '../_components/GraphInfo'
-import UsersList from '../_components/UsersList'
-import { fetchAllUsers } from '@/firebaseFunctions/users'
 import Header from '../_components/Header'
 import LargeButton from '../_components/LargeButton'
 

@@ -1,16 +1,21 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import GraphInfo from '../_components/GraphInfo'
-import Header from './_components/Header'
 import LargeButton from '../_components/LargeButton'
-import UserSideBar from './_components/UserSideBar'
 import UsersList from '../_components/UsersList'
-import { fetchAllUsers } from '@/firebaseFunctions/users'
+import { listenToUsersList } from '@/firebaseFunctions/users'
+import { UserProfile } from '@/services/UserInterface'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
+import { useDispatch } from 'react-redux'
+import { setAllUsersList } from '@/redux/slices/adminSlice'
 
 const page = () => {
 
-    const [isLoading, setIsLoading] = useState(true)
-    const [allUsers, setAllUsers] = useState([])
+    const dispatch = useDispatch()
+
+    const allUsersList = useSelector((state: RootState) => state.adminReducer.allUsersList)
+
     const [activeTile, setActiveTile] = useState(0)
 
     const labelsUsers = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
@@ -29,12 +34,12 @@ const page = () => {
     };
 
     useEffect(() => {
-        setIsLoading(true)
-        fetchAllUsers().then((result: any) => {
-            setAllUsers(result)
-            setIsLoading(false)
+        let unsubscribeUsers = listenToUsersList((result) => {
+            console.log(result);
+            dispatch(setAllUsersList(result))
+        });
 
-        })
+        return () => unsubscribeUsers();
 
     }, [])
 
@@ -123,7 +128,7 @@ const page = () => {
                     ))}
                 </div>
                 <GraphInfo data={tiles[activeTile].data} title={tiles[activeTile].title} value={tiles[activeTile].value} change={tiles[activeTile].change} increase={tiles[activeTile].increase} />
-                <UsersList users={allUsers.slice(0, 3)} />
+                <UsersList users={allUsersList.slice(0, 3)} clickEnabled />
 
             </div>
 

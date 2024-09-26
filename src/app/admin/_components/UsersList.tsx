@@ -4,15 +4,20 @@ import React, { useEffect, useState } from 'react'
 import DropDown from './DropDown'
 import { UserProfile } from '@/services/UserInterface'
 import Select from '@/components/Select'
+import { setCurrentUser } from '@/redux/slices/adminSlice'
+import { useDispatch } from 'react-redux'
 
 interface recentUsersProps {
     users: UserProfile[],
     showSelect?: boolean,
-    showViewAll?: boolean
+    showViewAll?: boolean,
+    clickEnabled?: boolean
 }
 
-const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, showViewAll = true }) => {
+const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, showViewAll = true, clickEnabled = false }) => {
 
+
+    const dispatch = useDispatch()
 
     const [actionsOpen, setActionsOpen] = useState(-1)
     const [allSelected, setAllSelected] = useState(false)
@@ -113,7 +118,12 @@ const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, show
                 </thead>
                 <tbody key={key}>
                     {users.map((user, index) => (
-                        <tr key={index} className='flex justify-between text-left px-[100px] py-[17px] rounded-[15px] hover:border-borderColor border-[1.5px] border-solid border-white'>
+                        <tr onClick={() => {
+                            if (clickEnabled) {
+                                console.log('clicked');
+                                dispatch(setCurrentUser(user))
+                            }
+                        }} key={index} className={`flex justify-between text-left px-[100px] py-[17px] rounded-[15px] hover:border-borderColor border-[1.5px] border-solid border-white ${clickEnabled ? "cursor-pointer" : ""}`}>
                             {showSelect && <td className='w-[30px]'>
                                 <Select selected={selectedUsers[index] || allSelected} onSelect={() => selectUser(index)} color='black' />
                             </td>}
