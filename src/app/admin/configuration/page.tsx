@@ -1,13 +1,16 @@
 "use client"
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import Header from '../_components/Header'
 import LargeButton from '../_components/LargeButton'
+import ModelsGraph from './_components/ModelsGraph'
 
 const page = () => {
     const [activeTile, setActiveTile] = useState(0)
 
 
-    const labelsUsers = ['UP VOTES', 'DOWN VOTES'];
+    const labelsBarGraph = ["UP VOTES", "DOWN VOTES"];
+
+
 
 
 
@@ -15,61 +18,81 @@ const page = () => {
         {
             title: "MT MODEL 1.0",
             value: "2.5k",
-            activeSvg: "sparkle",
-            inActiveSvg: "users-blue",
             increase: true,
             change: "5.4%",
             data: {
-                labels: labelsUsers,
-                datasets: [
-                    {
-                        label: '',
-                        data: [62, 100, 500, 650, 30, 324, 234],
-                        borderColor: '#2A4E8F',
-                        backgroundColor: '#93AAFD30',
-                        fill: true
-                    }
-                ],
+                labels: labelsBarGraph,
+                datasets:
+                    [
+                        {
+                            label: '',
+                            data: [502, 100],
+                            backgroundColor: ['#04CE00', "#B50202"],
+                            borderColor: ['#04CE00', "#B50202"],
+                            borderWidth: 1,
+                            borderRadius: 15,
+                            barPercentage: 0.5, // Optional bar settings
+                            barThickness: 150,
+                            maxBarThickness: 700,
+                            minBarLength: 2,
+
+                        },
+
+                    ]
             }
         },
         {
-            title: "Premium Users",
+            title: "ATS - Model 1.0",
             value: "3.56k",
-            activeSvg: "users-white",
-            inActiveSvg: "users-blue",
+
             increase: true,
             change: "2.14%",
             data: {
-                labels: labelsUsers,
-                datasets: [
-                    {
-                        label: '',
-                        data: [62, 100, 500, 650, 30, 724, 1044],
-                        borderColor: '#2A4E8F',
-                        backgroundColor: '#93AAFD30',
-                        fill: true
-                    }
-                ],
+                labels: labelsBarGraph,
+                datasets:
+                    [
+                        {
+                            label: '',
+                            data: [102, 610],
+                            backgroundColor: ['#04CE00', "#B50202"],
+                            borderColor: ['#04CE00', "#B50202"],
+                            borderWidth: 1,
+                            borderRadius: 15,
+                            barPercentage: 0.5, // Optional bar settings
+                            barThickness: 150,
+                            maxBarThickness: 700,
+                            minBarLength: 2,
+
+                        },
+
+                    ]
+
             }
         },
         {
-            title: "Issues Reported",
+            title: "Whisper X 1.0",
             value: "567",
-            activeSvg: "issues-white",
-            inActiveSvg: "issues-blue",
             increase: false,
             change: "1.24%",
             data: {
-                labels: labelsUsers,
-                datasets: [
-                    {
-                        label: '',
-                        data: [262, 100, 50, 250, 30, 34, 64],
-                        borderColor: '#2A4E8F',
-                        backgroundColor: '#93AAFD30',
-                        fill: true
-                    }
-                ],
+                labels: labelsBarGraph,
+                datasets:
+                    [
+                        {
+                            label: '',
+                            data: [1002, 300],
+                            backgroundColor: ['#04CE00', "#B50202"],
+                            borderColor: ['#04CE00', "#B50202"],
+                            borderWidth: 1,
+                            borderRadius: 15,
+                            barPercentage: 0.5, // Optional bar settings
+                            barThickness: 150,
+                            maxBarThickness: 700,
+                            minBarLength: 2,
+
+                        },
+
+                    ]
             }
         },
     ]
@@ -85,7 +108,7 @@ const page = () => {
                             <LargeButton
                                 key={index}
                                 activeIcon={"sparkle"}
-                                inActiveIcon={"sparkle"}
+                                inActiveIcon={"sparkle-blue"}
                                 text={stat.value}
                                 title={stat.title}
                                 increase={stat.increase}
@@ -96,7 +119,7 @@ const page = () => {
                         ))}
                     </div>
                     {/* <GraphInfo data={tiles[activeTile].data} title={tiles[activeTile].title} value={tiles[activeTile].value} change={tiles[activeTile].change} increase={tiles[activeTile].increase} /> */}
-
+                    <ModelsGraph data={tiles[activeTile].data} title={tiles[activeTile].title} />
                 </div>
 
                 {/* <div className='basis-[30%]'>a</div> */}
