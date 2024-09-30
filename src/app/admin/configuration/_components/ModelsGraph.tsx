@@ -11,6 +11,7 @@ import {
     Legend
 } from 'chart.js';
 import { Bar, Line } from 'react-chartjs-2';
+import { AiModelInterface } from '@/services/AiModelsInterface';
 // import faker from 'faker';
 
 ChartJS.register(
@@ -82,11 +83,12 @@ interface BarGraphDataProps {
 
     },
     title?: string,
-
+    modelData: AiModelInterface,
+    onPrimaryClicked: () => void
 }
 
 
-const ModelsGraph: React.FC<BarGraphDataProps> = ({ data, title }) => {
+const ModelsGraph: React.FC<BarGraphDataProps> = ({ data, title, modelData, onPrimaryClicked }) => {
     return (
         <div className='flex h-[80vh] bg-white px-[35px] py-[32px] rounded-[15px] gap-[22px] shadow-normal basis-[40%]'>
 
@@ -118,8 +120,8 @@ const ModelsGraph: React.FC<BarGraphDataProps> = ({ data, title }) => {
                                 type="text"
                                 name='model-name'
                                 className='input-field w-full'
-                                value={"Machine Translation Encoder-Decoder 1.0"}
-                                placeholder='First Name'
+                                value={modelData.model_name}
+                                placeholder='Model Name'
                                 onChange={(event) => { }}
                             />
 
@@ -131,8 +133,8 @@ const ModelsGraph: React.FC<BarGraphDataProps> = ({ data, title }) => {
                                 type="text"
                                 name='endpoint'
                                 className='input-field w-full'
-                                value={"http://localhost:8080/MTS"}
-                                placeholder='About'
+                                value={modelData.endpoint}
+                                placeholder='Endpoint'
                                 onChange={(event) => { }}
                             />
                         </label>
@@ -142,8 +144,11 @@ const ModelsGraph: React.FC<BarGraphDataProps> = ({ data, title }) => {
                                 type="text"
                                 name='status'
                                 className={`input-field w-full`}
+                                style={{
+                                    color: modelData.active_status ? "#2B9F03" : "#B50202"
+                                }}
                                 disabled
-                                value={"Active"}
+                                value={modelData.active_status ? "Active" : "InActive"}
                                 placeholder='email@gmail.com'
                             />
                         </label>
@@ -153,7 +158,7 @@ const ModelsGraph: React.FC<BarGraphDataProps> = ({ data, title }) => {
                                 type="number"
                                 name='upVotes'
                                 className='input-field w-full'
-                                value={"1024"}
+                                value={modelData.total_up_votes}
                                 placeholder='0'
                                 disabled={true}
 
@@ -165,14 +170,14 @@ const ModelsGraph: React.FC<BarGraphDataProps> = ({ data, title }) => {
                                 type="number"
                                 name='downVotes'
                                 className='input-field w-full'
-                                value={"78"}
+                                value={modelData.total_down_votes}
                                 placeholder='0'
                                 disabled={true}
                             />
                         </label>
                     </div>
 
-                    <button onClick={() => { }} className={` bg-warningColor py-[14px] w-full flex justify-center items-center rounded-[15px] text-[16px] font-semibold text-white disabled:opacity-50`}>Deactivate Model</button>
+                    <button onClick={onPrimaryClicked} className={` ${modelData.active_status ? "bg-warningColor" : "bg-primaryColorLight"} py-[14px] w-full flex justify-center items-center rounded-[15px] text-[16px] font-semibold text-white disabled:opacity-50`}>{modelData.active_status ? "Deactivate Model" : "Activate Model"}</button>
                 </div>
 
             </div>

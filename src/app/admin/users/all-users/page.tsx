@@ -7,15 +7,21 @@ import { listenToUsersList } from '@/firebaseFunctions/users'
 import { RootState } from '@/redux/store'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
-import { setAllUsersList } from '@/redux/slices/adminSlice'
+import { setAllUsersList, setCurrentUser } from '@/redux/slices/adminSlice'
+import HeaderButton from '../../_components/HeaderButton'
+import { UserProfile } from '@/services/UserInterface'
+import { mockUser } from '@/constants/data'
 
 const page = () => {
 
     const dispatch = useDispatch()
 
     const allUsersList = useSelector((state: RootState) => state.adminReducer.allUsersList)
+    const currentUser = useSelector((state: RootState) => state.adminReducer.currentUser)
 
     const [searchText, setSearchText] = useState("")
+
+    const [usersList, setUsersList] = useState<UserProfile[]>([])
 
 
     useEffect(() => {
@@ -27,20 +33,51 @@ const page = () => {
 
     }, [])
 
+    useEffect(() => {
+        if (allUsersList.length == 0) {
+            return
+        }
+
+        if (mockUser.id == currentUser.id) {
+
+            dispatch(setCurrentUser(allUsersList[0]));
+        }
+        else {
+            const newSupport = allUsersList.find(user => user.id == currentUser.id)
+            dispatch(setCurrentUser(newSupport));
+        }
+    }, [allUsersList])
+
+    useEffect(() => {
+        const filteredUsers = getUsers()
+        setUsersList(filteredUsers)
+    }, [allUsersList, searchText])
+
+
+    const getUsers = () => {
+        if (searchText == "") {
+            return allUsersList
+        }
+
+        const usersList: UserProfile[] = allUsersList.filter(
+            user => user.first_name.toLowerCase().includes(searchText.toLowerCase())
+                ||
+                user.last_name.toLowerCase().includes(searchText.toLowerCase()) || user.email.toLowerCase().includes(searchText.toLowerCase())
+        )
+        console.log(usersList);
+
+        return usersList
+    }
+
 
     return (
-        <div className='flex flex-col gap-[25px]'>
-            <div className='flex items-center justify-start gap-[15px]'>
+        <div className='flex flex-col gap-[20px] bg-white rounded-[15px] h-full'>
+            <div className='flex items-center justify-between gap-[15px] px-[20px] pt-[20px]'>
                 <Search text={searchText} onChange={(text) => setSearchText(text)} placeholder="Search users..." />
-                <button className='p-[8px] border-borderColor border-[1px] border-solid rounded-full'>
-                    <img src="/assets/sort.svg" alt="" />
-                </button>
-                <button className='p-[8px] border-borderColor border-[1px] border-solid rounded-full'>
-                    <img src="/assets/setting-2.svg" alt="" />
-                </button>
+                <HeaderButton title='Filter' icon='/assets/sort.svg' onClick={() => { }} />
             </div>
-            <div>
-                <UsersList users={allUsersList} showSelect showViewAll={false} clickEnabled />
+            <div className='flex-1'>
+                <UsersList users={usersList} showSelect showViewAll={false} clickEnabled fullList />
             </div>
 
         </div>

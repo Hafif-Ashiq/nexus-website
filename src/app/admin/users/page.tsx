@@ -8,13 +8,15 @@ import { UserProfile } from '@/services/UserInterface'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { useDispatch } from 'react-redux'
-import { setAllUsersList } from '@/redux/slices/adminSlice'
+import { setAllUsersList, setCurrentUser } from '@/redux/slices/adminSlice'
+import { mockUser } from '@/constants/data'
 
 const page = () => {
 
     const dispatch = useDispatch()
 
     const allUsersList = useSelector((state: RootState) => state.adminReducer.allUsersList)
+    const currentUser = useSelector((state: RootState) => state.adminReducer.currentUser)
 
     const [activeTile, setActiveTile] = useState(0)
 
@@ -42,6 +44,20 @@ const page = () => {
         return () => unsubscribeUsers();
 
     }, [])
+    useEffect(() => {
+        if (allUsersList.length == 0) {
+            return
+        }
+
+        if (mockUser.id == currentUser.id) {
+
+            dispatch(setCurrentUser(allUsersList[0]));
+        }
+        else {
+            const newSupport = allUsersList.find(user => user.id == currentUser.id)
+            dispatch(setCurrentUser(newSupport));
+        }
+    }, [allUsersList])
 
 
     const tiles = [
@@ -128,7 +144,7 @@ const page = () => {
                     ))}
                 </div>
                 <GraphInfo data={tiles[activeTile].data} title={tiles[activeTile].title} value={tiles[activeTile].value} change={tiles[activeTile].change} increase={tiles[activeTile].increase} />
-                <UsersList users={allUsersList.slice(0, 3)} clickEnabled />
+                <UsersList users={allUsersList.slice(0, 2)} clickEnabled />
 
             </div>
 

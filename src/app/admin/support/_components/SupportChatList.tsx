@@ -84,7 +84,7 @@ const SupportChatLists: React.FC<SupportChatTableProps> = ({ issues, showSelect 
     const selectUser = (index: number) => { }
 
     return (
-        <div className='flex flex-col gap-[15px] h-full'>
+        <div className='flex flex-col gap-[15px] h-full flex-1'>
 
 
             <table className='bg-white w-full flex-1 h-full'>

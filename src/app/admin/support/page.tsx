@@ -16,6 +16,7 @@ import { mockSupportChat } from '@/constants/data'
 
 const page = () => {
 
+    const [searchText, setSearchText] = useState<string>("")
 
     // const [allSupportChats, setAllSupportChats] = useState<SupportInterface[]>([])
 
@@ -25,8 +26,9 @@ const page = () => {
     const dispatch = useDispatch()
 
 
+    const [chats, setChats] = useState<SupportInterface[]>([])
+
     useEffect(() => {
-        console.log("in effect");
 
         let sChats = listenToSupportChats((result) => {
             console.log(result);
@@ -41,7 +43,6 @@ const page = () => {
     }, [])
 
     useEffect(() => {
-        console.log("in support set");
         if (allSupportChats.length == 0) {
             return
         }
@@ -51,7 +52,6 @@ const page = () => {
             dispatch(setSupportChat(allSupportChats[0]));
         }
         else {
-            // console.log("in else");
             const newSupport = allSupportChats.find(chat => chat.issue_id == currentSupportChat.issue_id)
             dispatch(setSupportChat(newSupport));
         }
@@ -59,7 +59,26 @@ const page = () => {
     }, [allSupportChats])
 
 
+    useEffect(() => {
+        const sChats = getSupportChats()
+        setChats(sChats)
+    }, [allSupportChats, searchText])
 
+
+    const getSupportChats = () => {
+        if (searchText == "") {
+            return allSupportChats
+        }
+
+        const supportsList: SupportInterface[] = allSupportChats.filter(
+            chat => chat.user_name?.toLowerCase().includes(searchText.toLowerCase())
+                || chat.issue_category.toLowerCase().includes(searchText.toLowerCase())
+                || chat.issue_status.toLowerCase().includes(searchText.toLowerCase())
+        )
+
+
+        return supportsList
+    }
 
     return (
         <div className="flex flex-col gap-[30px] h-[80vh]">
@@ -69,10 +88,10 @@ const page = () => {
             />
 
             <div className="flex gap-[40px] flex-1">
-                <main className='basis-[70%] flex flex-col gap-[20px] bg-white  rounded-2xl'>
+                <main className='basis-[70%] flex flex-col gap-[20px] bg-white  rounded-2xl w-full'>
                     <div className='flex flex-col gap-[22px] py-[22px]'>
                         <div className='flex items-center justify-between gap-[15px] px-[22px]'>
-                            <Search text={""} onChange={(text) => { }} placeholder="Search users..." />
+                            <Search text={searchText} onChange={(text) => { setSearchText(text) }} placeholder="Search Support Chats..." />
 
                             <div className='flex justify-end items-center gap-[15px] '>
                                 {/* Report Download Button */}
@@ -82,8 +101,8 @@ const page = () => {
                             </div>
 
                         </div>
-                        <div>
-                            <SupportChatLists issues={allSupportChats} showSelect showViewAll={false} />
+                        <div className='flex-1'>
+                            <SupportChatLists issues={chats} showSelect showViewAll={false} />
                         </div>
 
                     </div>

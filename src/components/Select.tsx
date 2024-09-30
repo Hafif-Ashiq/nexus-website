@@ -14,7 +14,7 @@ const Select: React.FC<SelectProps> = ({ selected = false, color = "white", onSe
             style={{ border: `2.5px solid ${color}` }}
         >
             {selected && (
-                <img src={`/assets/tick-${color}.svg`} alt="" />
+                <img src={`/assets/tick-${color == "white" ? "white" : "black"}.svg`} alt="" />
             )}
         </button>
     )

@@ -13,10 +13,11 @@ interface recentUsersProps {
     users: UserProfile[],
     showSelect?: boolean,
     showViewAll?: boolean,
-    clickEnabled?: boolean
+    clickEnabled?: boolean,
+    fullList?: boolean
 }
 
-const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, showViewAll = true, clickEnabled = false }) => {
+const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, showViewAll = true, clickEnabled = false, fullList = false }) => {
 
 
     const currentUser = useSelector((state: RootState) => state.adminReducer.currentUser)
@@ -78,18 +79,24 @@ const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, show
 
     return (
         <div className='flex flex-col gap-[15px] h-full'>
-            <div className='flex justify-between items-center'>
-                <h3 className='text-[24px] font-semibold text-textColorDarkBlue'>Recent Users {showViewAll}</h3>
+            {
+                !fullList ?
+                    // With Header 
+                    <div className='flex justify-between items-center'>
+                        <h3 className='text-[24px] font-semibold text-textColorDarkBlue'>Recent Users {showViewAll}</h3>
 
-                {showViewAll && <Link href={"/admin/users/all-users"} className='flex justify-end items-center gap-[14px]'>
-                    <p className='text-[16px] font-semibold text-primaryColorLight'>View all</p>
-                    <img src="/assets/small-arrow-right.svg" alt="" />
-                </Link>}
-            </div>
+                        {showViewAll && <Link href={"/admin/users/all-users"} className='flex justify-end items-center gap-[14px]'>
+                            <p className='text-[16px] font-semibold text-primaryColorLight'>View all</p>
+                            <img src="/assets/small-arrow-right.svg" alt="" />
+                        </Link>}
+                    </div> :
+
+                    <></>
+            }
 
             <table className='bg-white w-full rounded-[15px] flex-1 h-full'>
                 <thead>
-                    <tr className={`flex justify-between text-left pl-[25px] pr-[50px] py-[25px] text-ellipsis overflow-hidden rounded-[15px] bg-primaryColorLight text-white text-[18px]`}>
+                    <tr className={`flex justify-between text-left pl-[25px] pr-[50px] py-[25px] text-ellipsis overflow-hidden ${fullList ? "" : "rounded-[15px]"} bg-primaryColorLight text-white text-[18px]`}>
                         {showSelect && <>
                             <th className='flex gap-[30px] items-center justify-start' style={{ width: anySelected ? "200px" : "30px" }}>
                                 <Select selected={allSelected} onSelect={selectAll} />
@@ -122,12 +129,14 @@ const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, show
                 </thead>
                 <tbody key={key}>
                     {users.map((user, index) => (
-                        <tr onClick={() => {
-                            if (clickEnabled) {
-                                console.log('clicked');
-                                dispatch(setCurrentUser(user))
-                            }
-                        }} key={index} className={`flex justify-between text-left pl-[25px] pr-[50px] py-[25px] rounded-[15px]  border-[1.5px] border-solid  ${clickEnabled ? "cursor-pointer" : ""} ${user.id == currentUser.id ? "border-primaryColorLight" : "border-white hover:border-borderColor"}`}>
+                        <tr
+                            onClick={() => {
+                                if (clickEnabled) {
+                                    console.log('clicked');
+                                    dispatch(setCurrentUser(user))
+                                }
+                            }}
+                            key={index} className={` font-semibold flex justify-between text-left pl-[25px] pr-[50px] py-[25px] rounded-[15px]  border-[1.5px] border-solid  ${clickEnabled ? "cursor-pointer" : ""} ${user.id == currentUser.id ? "border-primaryColorLight" : "border-white hover:border-borderColor"}`}>
                             {showSelect && <td className='w-[30px]'>
                                 <Select selected={selectedUsers[index] || allSelected} onSelect={() => selectUser(index)} color='#CBD5E4' />
                             </td>}
@@ -135,7 +144,7 @@ const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, show
                             <td className='w-[200px] text-ellipsis overflow-hidden'>{user.id}</td>
                             <td className='w-[200px] text-ellipsis overflow-hidden'>{user.email}</td>
                             <td className='w-[200px] text-ellipsis overflow-hidden'>{user.first_name + " " + user.last_name} </td>
-                            <td className='w-[130px] text-ellipsis overflow-hidden'>{user.account_status.is_deactivated ? "Deactivated " : "Activated"}</td>
+                            <td className={`w-[130px] text-ellipsis overflow-hidden ${user.account_status.is_deactivated ? "text-warningColor" : "text-confirmColor"} `}>{user.account_status.is_deactivated ? "Deactivated" : "Activate"}</td>
                             <td className='w-[50px] flex justify-center items-center relative'>
                                 <button onClick={() => index == actionsOpen ? setActionsOpen(-1) : setActionsOpen(index)} className=' py-[5px]'>
                                     <img src="/assets/dots.svg" alt="" />
@@ -147,7 +156,7 @@ const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, show
                 </tbody>
             </table>
 
-        </div>
+        </div >
     )
 }
 

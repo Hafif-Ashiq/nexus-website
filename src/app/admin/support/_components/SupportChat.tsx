@@ -128,15 +128,22 @@ const SupportChat = () => {
                     {
                         description: 'Images',
                         accept: {
-                            'image/*': ['.png', '.jpg', '.jpeg', '.gif'],
+                            'image/*': ['.png', '.jpg', '.jpeg'],
                         },
                     },
                 ],
             });
 
+            const validExtensions = ['png', 'jpg', 'jpeg']
             // Get the selected file
             const file = await fileHandle.getFile();
             console.log(file);
+            const fileExtension = file.name.split('.').pop()?.toLowerCase();
+            if (!fileExtension || !validExtensions.includes(fileExtension)) {
+                alert('Invalid file type selected. Please select an image file.');
+                return
+            }
+
             addImageMessage({
                 imageFile: file,
                 documentId: supportChat.issue_id,
@@ -147,6 +154,8 @@ const SupportChat = () => {
             console.error('File selection was canceled or failed', error);
         }
     }
+
+
 
 
 
