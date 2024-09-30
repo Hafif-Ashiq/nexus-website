@@ -13,6 +13,13 @@ const SupportChat = () => {
 
     const [inputText, setInputText] = useState<string>("")
 
+    const [filesOpen, setFilesOpen] = useState<boolean>(false)
+
+    const [imageFiles, setImageFiles] = useState<ConversationInterface[]>([])
+
+    const [imageExpanded, setImageExpanded] = useState<boolean>(false)
+    const [imageSelected, setImageSelected] = useState<number>(0)
+
     const supportChat: SupportInterface = useSelector((state: RootState) => state.adminReducer.currentSupportChat)
     const adminId: string = useSelector((state: RootState) => state.adminReducer.adminId)
 
@@ -42,22 +49,21 @@ const SupportChat = () => {
                 }
             }
         }
-        // supportChat.conversation.indexOf()
-        // supportChat.conversation.forEach((chat, index) => {
-        //     if (chat.sender_id == adminId) {
-        //         setLastAdminMessageIndex(index)
-        //     }
-        //     else {
-        //         setLastUserMessageIndex(index)
-        //     }
-        // })
 
 
     }, [supportChat]); // Dependency array includes messages
     // , [supportChat, supportChat.conversation,]
     useEffect(() => {
         console.log(supportChat);
+        console.log("before img");
 
+        const imgs = supportChat.conversation.filter((chat) => chat.message_type == "image")
+        console.log("after img");
+
+        console.log(imgs);
+
+
+        setImageFiles(imgs)
     }, [supportChat])
 
 
@@ -71,20 +77,23 @@ const SupportChat = () => {
                 <div className={`flex gap-[10px] items-start justify-end  ${(nextIsAdmin && isAdmin) || isLastMessage ? "mb-[3px]" : "mb-[25px]"}`}>
                     <div className='w-[30px] h-[30px]'></div>
 
-                    <div className='flex-1 flex justify-end'>
-                        {
-                            message.message_type == "text" ? <p className={`p-[16px] inline-block  font-semibold text-[16px] rounded-[15px] 
+                    {/* For text */}
+                    {
+                        message.message_type == "text" ? <div className='flex-1 flex justify-end'> <p className={`p-[16px] inline-block  font-semibold text-[16px] rounded-[15px] 
                          bg-primaryColorLight text-white
-                        `}>{message.text}</p> : <></>
-                        }
+                        `}>{message.text}</p> </div> : <></>
+                    }
+                    {/* For image */}
+                    {
+                        message.message_type == "image" ? <button onClick={() => {
+                            setImageSelected(imageFiles.findIndex(files => files.image_link == message.image_link))
+                            setImageExpanded(true)
 
-                        {
-                            message.message_type == "image" ? <img className="rounded-[15px]" src={message.image_link} alt="" /> : <></>
-                        }
-                    </div>
-                    {/* <div className='w-[30px] h-[30px] rounded-full overflow-hidden flex justify-center items-center'>
+                        }} className='flex-1 flex justify-end'>
+                            <img className="rounded-[15px]" src={message.image_link} alt="" />
+                        </button> : <></>
+                    }
 
-                    </div> */}
                 </div>
             )
         }
@@ -96,17 +105,26 @@ const SupportChat = () => {
                     {index == lastUserMessageIndex ? <img src={"/user-image.jpg"} alt="profile picture" className='object-cover' /> : <></>}
                 </div>
 
-                <div className='flex-1 flex justify-start'>
-                    {
-                        message.message_type == "text" ?
+                {/* For text */}
+                {
+                    message.message_type == "text" ?
+                        <div className='flex-1 flex justify-start'>
                             <p className={`p-[16px]  font-semibold text-[16px]  rounded-[15px] 
                 bg-accentColorLight text-black 
-                    `}>{message.text}</p> : <></>}
-                    {
-                        message.message_type == "image" ? <img className="rounded-[15px]" src={message.image_link} alt="" /> : <></>
-                    }
+                    `}>{message.text}</p> </div> : <></>
+                }
+                {/* For image */}
+                {
 
-                </div>
+                    message.message_type == "image" ? <button onClick={() => {
+                        setImageSelected(imageFiles.findIndex(files => files.image_link == message.image_link))
+                        setImageExpanded(true)
+
+                    }} className='flex-1 flex justify-start'>
+                        <img className="rounded-[15px]" src={message.image_link} alt="" /> </button> : <></>
+                }
+
+
                 <div className='w-[30px] h-[30px]'></div>
 
             </div>
@@ -156,6 +174,10 @@ const SupportChat = () => {
     }
 
 
+    // const getFiles = () => {
+
+    //     return 
+    // }
 
 
 
@@ -166,6 +188,9 @@ const SupportChat = () => {
                 <div className='flex justify-between items-center px-[20px]'>
                     {/* left */}
                     <div className='flex justify-start items-center gap-[15px]  '>
+                        {filesOpen ? <button onClick={() => setFilesOpen(false)} className='w-[10px] h-[20px] rounded-full overflow-hidden flex justify-center items-center'>
+                            <img src='/assets/back-arrow.svg' />
+                        </button> : <></>}
                         {/* profile */}
                         <div className='w-[50px] h-[50px] rounded-full overflow-hidden flex justify-center items-center'>
                             <img src="/user-image.jpg" alt="profile picture" className='object-cover' />
@@ -181,27 +206,55 @@ const SupportChat = () => {
                     {/* Right */}
                     <div className='flex justify-end items-center gap-[15px]'>
                         {/* buttons */}
-                        <IconButton icon='/assets/folder-minus-blue.svg' onClick={() => { }} />
+                        <IconButton icon='/assets/folder-minus-blue.svg' opened={filesOpen} onClick={() => { setFilesOpen(true) }} />
                         <IconButton icon='/assets/menu-blue.svg' onClick={() => { }} />
                     </div>
                 </div>
 
                 <div className='w-full h-[1px] border-[#EBEEF4] border-[1px] border-solid'></div>
-                <div className='flex-1 overflow-scroll flex flex-col gap-[0px] px-[20px]' style={{
-                    //  overflow: 'auto', // Allows scrolling
-                    scrollbarWidth: 'none', // Firefox
-                    msOverflowStyle: 'none', // IE and Edge
-                }}>
-                    {/* {getMessage(supportChat.conversation[0])} */}
-                    {supportChat.conversation.map(
-                        (message, index) => (
-                            <div className='w-ful'>
-                                {getMessage(message, index)}
-                            </div>
-                        )
-                    )}
-                    <div ref={endOfMessagesRef} />
-                </div>
+                {/* Conversation Tab */}
+                {!filesOpen &&
+                    <div className='flex-1 overflow-scroll flex flex-col gap-[0px] px-[20px]' style={{
+                        //  overflow: 'auto', // Allows scrolling
+                        scrollbarWidth: 'none', // Firefox
+                        msOverflowStyle: 'none', // IE and Edge
+                    }}>
+                        {/* {getMessage(supportChat.conversation[0])} */}
+                        {supportChat.conversation.map(
+                            (message, index) => (
+                                <div className='w-full'>
+                                    {getMessage(message, index)}
+                                </div>
+                            )
+                        )}
+
+
+
+                        <div ref={endOfMessagesRef} />
+                    </div>
+                }
+                {/* Files Tab */}
+                {filesOpen &&
+                    <div className='flex-1 overflow-scroll flex gap-[20px] px-[20px] flex-wrap' style={{
+                        //  overflow: 'auto', // Allows scrolling
+                        scrollbarWidth: 'none', // Firefox
+                        msOverflowStyle: 'none', // IE and Edge
+                    }}>
+                        {imageFiles.map(
+                            (file, index) => (
+                                <button onClick={() => {
+                                    setImageSelected(index)
+                                    setImageExpanded(true)
+
+                                }} className='w-[130px] h-[130px] rounded-[15px] overflow-hidden flex justify-center items-center'>
+                                    <img className="rounded-[15px] object-fill" src={file.image_link} alt={"input file"} />
+                                </button>
+                            )
+                        )}
+                    </div>
+                }
+
+                {/* Inputs Tab at the bottom */}
                 {
                     supportChat.issue_status == "Pending" ?
                         <>
@@ -230,6 +283,33 @@ const SupportChat = () => {
                             </div>
                         </> : <></>
                 }
+                {/* Image modal */}
+                {imageExpanded ?
+                    <div className='absolute inset-0 bg-[#00000090] overflow-hidden flex justify-center items-center'>
+                        <div className='w-[1000px] h-[800px] bg-white p-[25px] rounded-[25px]'>
+                            <div className='relative w-full h-full bg-black flex justify-between items-center rounded-[15px]'>
+                                {/* Cross */}
+                                <button onClick={() => setImageExpanded(false)} className='absolute right-[10px] top-[10px] '>
+                                    <img className='w-[45px] h-[45px]' src="/assets/cancel-white.svg" />
+                                </button>
+                                {/* Previous Button */}
+                                <button onClick={() => {
+                                    imageSelected == 0 ? setImageSelected(imageFiles.length - 1) : setImageSelected(imageSelected + 1)
+                                }}>
+                                    <img src="/assets/arrow-left-white.svg" alt="" />
+                                </button>
+                                <img className="object-contain max-h-full max-w-[80%]" src={imageFiles[imageSelected].image_link} alt={"input file"} />
+                                {/* Next Button */}
+                                <button onClick={() => {
+                                    imageSelected < imageFiles.length - 1 ? setImageSelected(imageSelected + 1) : setImageSelected(0)
+                                }}>
+                                    <img src="/assets/arrow-left-white.svg" className='rotate-180' alt="" />
+                                </button>
+                            </div>
+                        </div>
+                    </div> : <></>
+                }
+
             </div>
         </div>
     )
