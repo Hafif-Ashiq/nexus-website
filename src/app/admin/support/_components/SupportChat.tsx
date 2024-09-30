@@ -294,7 +294,7 @@ const SupportChat = () => {
                                 </button>
                                 {/* Previous Button */}
                                 <button onClick={() => {
-                                    imageSelected == 0 ? setImageSelected(imageFiles.length - 1) : setImageSelected(imageSelected + 1)
+                                    imageSelected == 0 ? setImageSelected(imageFiles.length - 1) : setImageSelected(imageSelected - 1)
                                 }}>
                                     <img src="/assets/arrow-left-white.svg" alt="" />
                                 </button>
