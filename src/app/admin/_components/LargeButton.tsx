@@ -10,12 +10,14 @@ interface LargeButtonProps {
     increase?: boolean;
     change?: string;
     title?: string;
+    styles?: string
 }
 
 
-const LargeButton: React.FC<LargeButtonProps> = ({ activeIcon, inActiveIcon, text, onClick, active = false, increase = false, change = "", title }) => {
+const LargeButton: React.FC<LargeButtonProps> = ({ activeIcon, inActiveIcon, text, onClick, active = false, increase = false, change = "", title, styles }) => {
     return (
-        <button onClick={onClick} className={`shadow-normal flex flex-col justify-start gap-[10px] p-[20px] h-[155px] ${active ? "text-white bg-primaryColorLight" : "bg-white"} rounded-[15px] w-full`}>
+        <button
+            onClick={onClick} className={`shadow-normal flex flex-col justify-start gap-[10px] p-[20px] h-[155px] ${active ? "text-white bg-primaryColorLight" : "bg-white"} rounded-[15px] w-full ${styles}`} >
             <div className='w-full flex justify-between items-center'>
                 <img src={`/assets/${active ? activeIcon : inActiveIcon}.svg`} alt="" className='w-[38px] h-[38px] fill-white' />
                 <div className='flex justify-end items-center gap-[5px]'>{

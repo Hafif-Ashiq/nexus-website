@@ -2,8 +2,17 @@ import React, { useRef, useState } from 'react'
 import LargeButton from '../../_components/LargeButton'
 import GuideTile from './GuideTile'
 import { title } from 'process'
+import GuideModal from './GuideModal'
+import { GuideInterface } from '@/services/GuideInterface'
+import { deleteGuideFromFirebase } from '@/firebaseFunctions/guide'
 
-const Guides = () => {
+interface GuidesProps {
+    guides: GuideInterface[]
+}
+
+const Guides = ({ guides }: GuidesProps) => {
+
+    const [guideOpen, setGuideOpen] = useState(false)
 
     const tilesData = [
         {
@@ -56,7 +65,7 @@ const Guides = () => {
     return (
         <div className='flex gap-[20px]'>
             <div className='w-[600px]'>
-                <LargeButton activeIcon='note-favorite' inActiveIcon='' text='Create a new Guide' active onClick={() => { }} />
+                <LargeButton activeIcon='note-favorite' inActiveIcon='' text='Create a new Guide' active onClick={() => { setGuideOpen(true) }} />
             </div>
             <div className='flex gap-[20px] overflow-x-auto select-none'
                 style={{
@@ -69,10 +78,23 @@ const Guides = () => {
                 onMouseMove={handleMouseMove}
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseLeave}>
-                {tilesData.map((tile, index) => (
-                    <GuideTile key={index} title={tile.title} onDeleteClick={() => { }} image={tile.image} />
+                {guides.map((tile, index) => (
+                    <GuideTile key={index} title={tile.title} onDeleteClick={() => {
+                        if (confirm("Are you sure you want to delete the guide?")) {
+                            deleteGuideFromFirebase(tile.id).then(res => {
+                                if (res) {
+                                    alert("Guide Deleted Successfully")
+                                }
+                                else {
+                                    alert("Error in deleting Guide")
+
+                                }
+                            })
+                        }
+                    }} image={tile.thumbnail} />
                 ))}
             </div>
+            {guideOpen && <GuideModal onCloseClick={() => setGuideOpen(false)} />}
         </div>
     )
 }
