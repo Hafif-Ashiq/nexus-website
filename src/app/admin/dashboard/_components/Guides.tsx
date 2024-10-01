@@ -81,7 +81,7 @@ const Guides = ({ guides }: GuidesProps) => {
                 {guides.map((tile, index) => (
                     <GuideTile key={index} title={tile.title} onDeleteClick={() => {
                         if (confirm("Are you sure you want to delete the guide?")) {
-                            deleteGuideFromFirebase(tile.id).then(res => {
+                            deleteGuideFromFirebase(tile.guide_id).then(res => {
                                 if (res) {
                                     alert("Guide Deleted Successfully")
                                 }

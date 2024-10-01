@@ -1,12 +1,13 @@
 
 export interface GuideInterface {
-    id: string,
+    guide_id: string,
     is_visible: boolean,
     title: string,
     description: string,
-    likedBy: string[],
-    viewedBy: string[],
+    liked_by: string[],
+    viewed_by: string[],
     link: string,
     thumbnail: string,
-    total_likes: number
+    total_likes: number,
+    date_posted: string
 }  

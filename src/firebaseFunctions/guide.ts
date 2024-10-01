@@ -1,12 +1,13 @@
 import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { getFirestore, doc, setDoc, collection, getDocs, addDoc, deleteDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, collection, getDocs, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { GuideInterface } from "@/services/GuideInterface";
+import { getCurrentTimeFormatted } from "@/utils/datetime";
 
 const addGuideToFirebase = async (
     file: File | null,
     thumbnailFile: File | null,
-    guideData: Omit<GuideInterface, "id" | "link" | "thumbnail">
+    guideData: Omit<GuideInterface, "guide_id" | "link" | "thumbnail">
 ) => {
     try {
         // Initialize Firebase services
@@ -53,20 +54,23 @@ const addGuideToFirebase = async (
         }
 
         // Prepare the guide object
-        const guide: Omit<GuideInterface, "id"> = {
+        const guide: Omit<GuideInterface, "guide_id"> = {
             is_visible: guideData.is_visible,
             title: guideData.title,
             description: guideData.description,
-            likedBy: guideData.likedBy,
-            viewedBy: guideData.viewedBy,
-            link: videoUrl || "", // Empty if no video is provided
+            liked_by: guideData.liked_by,
+            viewed_by: guideData.viewed_by,
+            link: thumbnailUrl || "", // Empty if no video is provided
             thumbnail: thumbnailUrl || "", // Empty if no thumbnail is provided
             total_likes: guideData.total_likes,
+            date_posted: getCurrentTimeFormatted()
         };
 
         // Save the guide to Firestore (ID will be auto-generated)
         const guidesCollectionRef = collection(firestore, "guides");
         const docRef = await addDoc(guidesCollectionRef, guide);
+
+        await updateDoc(docRef, { guide_id: docRef.id })
 
         console.log("Guide added successfully:", guide);
         return true

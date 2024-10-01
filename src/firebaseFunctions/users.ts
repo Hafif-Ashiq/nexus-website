@@ -1,6 +1,7 @@
-import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, updateDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase';
 import { UserProfile } from '@/services/UserInterface';
+import { uploadFileToStorage } from './utils';
 
 
 export const listenToUsersList = (
@@ -78,4 +79,30 @@ export const deleteUser = async (userId: string) => {
     } catch (e) {
         console.error("Error deleting document: ", e);
     }
+};
+
+
+export const updateUser = async (userId: string, updatedData: Partial<Pick<UserProfile, 'first_name' | 'last_name' | 'email' | 'biography'>>) => {
+    try {
+        const userDocRef = doc(db, "users", userId); // Reference to the user document
+        await updateDoc(userDocRef, updatedData); // Update the document with new data
+        console.log("Document successfully updated!");
+        alert("User updated successfully");
+    } catch (e) {
+        console.error("Error updating document: ", e);
+    }
+};
+
+
+export const handleProfileFileUpload = async (file: File) => {
+
+    try {
+        const downloadURL = await uploadFileToStorage(file, "userProfile");
+        console.log('File uploaded successfully:', downloadURL);
+        return downloadURL
+    } catch (error) {
+        console.error('Error uploading file:', error);
+        return ""
+    }
+
 };

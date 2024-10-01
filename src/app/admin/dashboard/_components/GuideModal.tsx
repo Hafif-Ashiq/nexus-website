@@ -3,6 +3,7 @@ import LargeButton from '../../_components/LargeButton'
 import MediumButton from '../../_components/MediumButton'
 import { title } from 'process'
 import { addGuideToFirebase } from '@/firebaseFunctions/guide'
+import { getCurrentTimeFormatted } from '@/utils/datetime'
 
 interface GuideModalProps {
     onCloseClick: () => void,
@@ -118,9 +119,10 @@ const GuideModal = ({ onCloseClick }: GuideModalProps) => {
             title: title,
             description: description,
             total_likes: 0,
-            likedBy: [],
-            viewedBy: [],
-            is_visible: status == "Visible"
+            liked_by: [],
+            viewed_by: [],
+            is_visible: status == "Visible",
+            date_posted: getCurrentTimeFormatted()
         }).then(res => {
             if (res) {
                 alert("Created Guide Successfully")
@@ -197,7 +199,7 @@ const GuideModal = ({ onCloseClick }: GuideModalProps) => {
                                 />
                             </label>
                             <label htmlFor="description" className='flex flex-col gap-[10px]'>
-                                <p className='text-[16px] font-bold text-primaryColorLight'>Descrition</p>
+                                <p className='text-[16px] font-bold text-primaryColorLight'>Status</p>
                                 <select
 
                                     name='description'

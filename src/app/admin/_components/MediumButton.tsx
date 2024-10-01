@@ -20,7 +20,7 @@ const MediumButton: React.FC<LargeButtonProps> = ({ activeIcon, inActiveIcon, te
 
             </div>
             <div className='flex flex-col text-center'>
-                <p className='text-center font-semibold text-[24px]'>{text}</p>
+                <p className='text-center font-semibold text-[16px]'>{text}</p>
             </div>
         </button>
     )

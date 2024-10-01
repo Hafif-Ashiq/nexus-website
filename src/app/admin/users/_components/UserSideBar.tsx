@@ -8,9 +8,10 @@ import SubscriptionPlanSide from './SubscriptionPlanSide';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { useDispatch } from 'react-redux';
-import { addNewUser, deleteUser } from '@/firebaseFunctions/users';
+import { addNewUser, deleteUser, updateUser } from '@/firebaseFunctions/users';
 import { setCurrentUser } from '@/redux/slices/adminSlice';
 import { mockUser } from '@/constants/data';
+import AddUserModal from './AddUserModal';
 
 enum CardDisplay {
     userInfo, billingInfo, subscriptionInfo
@@ -19,6 +20,7 @@ enum CardDisplay {
 const UserSideBar = () => {
 
     const user = useSelector((state: RootState) => state.adminReducer.currentUser)
+    const allUsersList = useSelector((state: RootState) => state.adminReducer.allUsersList)
 
     const dispatch = useDispatch()
 
@@ -26,24 +28,11 @@ const UserSideBar = () => {
     const [addUser, setAddUser] = useState(false)
 
 
-    useEffect(() => {
-        setAddUser(false)
-    }, [user])
-
-    const addAllUsers = async () => {
 
 
-        mockUsers.forEach(async (user, index) => {
-            try {
-                const docRef = await addDoc(collection(db, "users"), user);
-                console.log("Document written with ID: ", docRef.id);
-            } catch (e) {
-                console.error("Error adding document: ", e);
-            }
-        })
-    }
-
-    // Call the function
+    // useEffect(() => {
+    //     setAddUser(false)
+    // }, [user])
 
 
     return (
@@ -64,21 +53,21 @@ const UserSideBar = () => {
             <div className='shadow-normal bg-white h-full rounded-[15px] p-[20px] flex flex-col gap-[15px]'>
                 <div className='flex flex-col gap-[13px] relative'>
                     <button className='w-full h-[150px] rounded-[10px] overflow-hidden shadow-normal group relative bg-accentColorLight'>
-                        <img src="/guide-bg.jpg" alt="" className='w-full h-full' />
+                        <img src={user.background_pic ? user.background_pic : "/guide-bg.jpg"} alt="" className='w-full h-full' />
                         <div className='absolute p-[9px] bg-[#00000070] left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] rounded-full hidden group-hover:block'>
                             <img src="/assets/pencil-filled-white.svg" alt="" className='object-fit' />
                         </div>
                     </button>
                     <div>
                         <div className='flex justify-start items-center gap-[10px]'>
-                            <p className='text-[16px] font-semibold text-black'>Emily Clark</p>
+                            <p className='text-[16px] font-semibold text-black'>{user.first_name + " " + user.last_name}</p>
                             <img src="/assets/tick-circle-blue.svg" alt="" />
                         </div>
-                        <p className='text-[14px] font-medium text-[#7A7B7C]'>@emily.clark</p>
+                        <p className='text-[14px] font-medium text-[#7A7B7C]'>{user.email}</p>
                     </div>
                     <button className='shadow-normal absolute right-[15px] bottom-0 border-white border-[4px] border-solid rounded-[20px] overflow-hidden group bg-accentColorLight'>
                         <div className='w-[120px] h-[120px] rounded-[18px]'>
-                            <img src="/person.jpg" alt="" className='object-cover w-full h-full' />
+                            <img src={user.profile_pic ? user.profile_pic : "/person.jpg"} alt="" className='object-cover w-full h-full' />
                         </div>
                         <div className='absolute p-[9px] bg-[#00000070] bottom-[6px] right-[6px] rounded-full hidden group-hover:block'>
                             <img src="/assets/pencil-filled-white.svg" alt="" className='object-fit' />
@@ -90,16 +79,27 @@ const UserSideBar = () => {
                     {
                         activeCard == CardDisplay.userInfo && <AccountDetailsSide
                             onAddClick={(user) => {
-                                addNewUser(user)
-                                setAddUser(false)
+
                             }}
                             onDeleteClick={() => {
+                                if (!(confirm("Are you sure to delete this user?"))) {
+                                    return
+                                }
                                 deleteUser(user.id)
                                 dispatch(setCurrentUser(mockUser))
                             }}
+                            onUpdateClick={(first, last, mail, bio) => {
+                                updateUser(user.id, {
+                                    first_name: first,
+                                    last_name: last,
+                                    email: mail,
+                                    biography: bio
+                                })
+
+                            }}
                             onBillingClick={() => setActiveCard(CardDisplay.billingInfo)}
                             onSubsClick={() => setActiveCard(CardDisplay.subscriptionInfo)}
-                            addUser={addUser}
+                            addUser={false}
                             user_id={user.id}
                             firstName={user.first_name}
                             lastName={user.last_name}
@@ -117,7 +117,9 @@ const UserSideBar = () => {
                     {
                         activeCard == CardDisplay.subscriptionInfo && <SubscriptionPlanSide onBack={() => setActiveCard(CardDisplay.userInfo)} />
                     }
-
+                    {
+                        addUser && <AddUserModal onCloseClick={() => setAddUser(false)} />
+                    }
 
                 </div>
             </div>
