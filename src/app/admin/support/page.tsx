@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import Header from '../_components/Header'
+import Header from '../../../components/Header'
 import Search from '../_components/Search'
 import SupportChatLists from './_components/SupportChatList'
 import HeaderButton from '../_components/HeaderButton'

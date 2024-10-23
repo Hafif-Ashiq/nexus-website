@@ -1,7 +1,6 @@
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
+
 import React from 'react'
-import HeaderBreadCrumb from './HeaderBreadCrumb'
+import HeaderBreadCrumb from '../../../components/HeaderBreadCrumb'
 
 interface HeadCrumbHeaderProps {
 

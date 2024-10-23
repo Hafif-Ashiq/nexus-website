@@ -1,6 +1,6 @@
 "use client"
 import React, { useEffect, useState } from 'react'
-import Header from '../_components/Header'
+import Header from '../../../components/Header'
 import LargeButton from '../_components/LargeButton'
 import ModelsGraph from './_components/ModelsGraph'
 import { getAllModels, updateModel } from '@/firebaseFunctions/aiModels'

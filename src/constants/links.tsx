@@ -25,3 +25,27 @@ export const adminNavLinks = [
         link: "/support"
     },
 ]
+
+
+export const userNavLinks = [
+    {
+        icon: "",
+        title: "Home",
+        link: ""
+    },
+    {
+        icon: "",
+        title: "Library",
+        link: "/library"
+    },
+    {
+        icon: "",
+        title: "AI Chat",
+        link: "/ai-chat"
+    },
+    {
+        icon: "",
+        title: "Community`",
+        link: "/community"
+    }
+]

@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import React from 'react'
-import HeaderBreadCrumb from '../../_components/HeaderBreadCrumb'
+import HeaderBreadCrumb from '../../../../components/HeaderBreadCrumb'
 
 const Header = () => {
     const path = usePathname().split("/")
