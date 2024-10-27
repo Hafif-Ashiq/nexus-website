@@ -8,7 +8,7 @@ import { Provider } from 'react-redux';
 import { store } from '../redux/store';
 
 
-const poppins = Poppins({ subsets: ["latin"], weight: '400' });
+const poppins = Poppins({ subsets: ["latin"], weight: ['100', '200', '300', '400', '500', '600', '700', '800', '900'] });
 
 
 export default function RootLayout({

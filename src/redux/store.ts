@@ -4,10 +4,11 @@ import { useDispatch } from 'react-redux';
 
 // Example slice reducer (you can replace this with your actual reducers)
 import adminReducer from './slices/adminSlice';
-
+import userReducer from './slices/userSlice';
 export const store = configureStore({
   reducer: {
     adminReducer: adminReducer, // Add your slice reducers here
+    userReducer: userReducer, // Add your slice reducers here
   },
 });
 

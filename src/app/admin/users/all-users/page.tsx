@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react'
 import Search from '../../_components/Search'
 import UsersList from '../../_components/UsersList'
-import { listenToUsersList } from '@/firebaseFunctions/users'
+import { listenToUsersList } from '@/firebaseFunctions/admin/users'
 import { RootState } from '@/redux/store'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'

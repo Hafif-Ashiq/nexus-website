@@ -45,7 +45,7 @@ export const userNavLinks = [
     },
     {
         icon: "",
-        title: "Community`",
+        title: "Community",
         link: "/community"
     }
 ]

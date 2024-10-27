@@ -4,7 +4,7 @@ import GuideTile from './GuideTile'
 import { title } from 'process'
 import GuideModal from './GuideModal'
 import { GuideInterface } from '@/services/GuideInterface'
-import { deleteGuideFromFirebase } from '@/firebaseFunctions/guide'
+import { deleteGuideFromFirebase } from '@/firebaseFunctions/admin/guide'
 
 interface GuidesProps {
     guides: GuideInterface[]

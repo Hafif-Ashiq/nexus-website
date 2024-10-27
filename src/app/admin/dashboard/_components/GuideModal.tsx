@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import LargeButton from '../../_components/LargeButton'
 import MediumButton from '../../_components/MediumButton'
 import { title } from 'process'
-import { addGuideToFirebase } from '@/firebaseFunctions/guide'
+import { addGuideToFirebase } from '@/firebaseFunctions/admin/guide'
 import { getCurrentTimeFormatted } from '@/utils/datetime'
 
 interface GuideModalProps {

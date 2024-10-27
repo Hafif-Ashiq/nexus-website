@@ -1,10 +1,11 @@
 import React, { useEffect, useRef, useState } from 'react'
 import { getStatusColor } from '@/utils/support';
 import { ConversationInterface, SupportInterface } from '@/services/SupportInterface';
-import IconButton from '../../_components/IconButton';
+import IconButton from '../../../../components/IconButton';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
-import { addImageMessage, addTextMessage } from '@/firebaseFunctions/supportChat';
+import { addImageMessage, addTextMessage } from '@/firebaseFunctions/admin/supportChat';
+import ImageModal from '@/components/ImageModal';
 
 
 
@@ -285,29 +286,18 @@ const SupportChat = () => {
                 }
                 {/* Image modal */}
                 {imageExpanded ?
-                    <div className='absolute inset-0 bg-[#00000090] overflow-hidden flex justify-center items-center'>
-                        <div className='w-[1000px] h-[800px] bg-white p-[25px] rounded-[25px]'>
-                            <div className='relative w-full h-full bg-black flex justify-between items-center rounded-[15px]'>
-                                {/* Cross */}
-                                <button onClick={() => setImageExpanded(false)} className='absolute right-[10px] top-[10px] '>
-                                    <img className='w-[45px] h-[45px]' src="/assets/cancel-white.svg" />
-                                </button>
-                                {/* Previous Button */}
-                                <button onClick={() => {
-                                    imageSelected == 0 ? setImageSelected(imageFiles.length - 1) : setImageSelected(imageSelected - 1)
-                                }}>
-                                    <img src="/assets/arrow-left-white.svg" alt="" />
-                                </button>
-                                <img className="object-contain max-h-full max-w-[80%]" src={imageFiles[imageSelected].image_link} alt={"input file"} />
-                                {/* Next Button */}
-                                <button onClick={() => {
-                                    imageSelected < imageFiles.length - 1 ? setImageSelected(imageSelected + 1) : setImageSelected(0)
-                                }}>
-                                    <img src="/assets/arrow-left-white.svg" className='rotate-180' alt="" />
-                                </button>
-                            </div>
-                        </div>
-                    </div> : <></>
+
+                    <ImageModal
+                        imageSelected={imageFiles[imageSelected].image_link}
+                        onClose={() => setImageExpanded(false)}
+                        onNextClick={() => {
+                            imageSelected < imageFiles.length - 1 ? setImageSelected(imageSelected + 1) : setImageSelected(0)
+                        }}
+                        onPreviousClick={() => {
+                            imageSelected == 0 ? setImageSelected(imageFiles.length - 1) : setImageSelected(imageSelected - 1)
+                        }}
+                    />
+                    : <></>
                 }
 
             </div>

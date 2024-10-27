@@ -2,10 +2,10 @@ import React, { useEffect, useState } from 'react'
 import LargeButton from '../../_components/LargeButton'
 import MediumButton from '../../_components/MediumButton'
 import { title } from 'process'
-import { addGuideToFirebase } from '@/firebaseFunctions/guide'
+import { addGuideToFirebase } from '@/firebaseFunctions/admin/guide'
 import { getCurrentTimeFormatted } from '@/utils/datetime'
 import { UserProfile } from '@/services/UserInterface'
-import { addNewUser, handleProfileFileUpload } from '@/firebaseFunctions/users'
+import { addNewUser, handleProfileFileUpload } from '@/firebaseFunctions/admin/users'
 
 interface GuideModalProps {
     onCloseClick: () => void,

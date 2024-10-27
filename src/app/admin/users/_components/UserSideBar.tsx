@@ -8,7 +8,7 @@ import SubscriptionPlanSide from './SubscriptionPlanSide';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { useDispatch } from 'react-redux';
-import { addNewUser, deleteUser, updateUser } from '@/firebaseFunctions/users';
+import { addNewUser, deleteUser, updateUser } from '@/firebaseFunctions/admin/users';
 import { setCurrentUser } from '@/redux/slices/adminSlice';
 import { mockUser } from '@/constants/data';
 import AddUserModal from './AddUserModal';

@@ -5,14 +5,14 @@ import Guides from './_components/Guides'
 import GraphInfo from '../_components/GraphInfo'
 import StatPerformance from './_components/StatPerformance'
 import UsersList from '../_components/UsersList'
-import { listenToUsersList } from '@/firebaseFunctions/users'
+import { listenToUsersList } from '@/firebaseFunctions/admin/users'
 
 import { setAllUsersList } from '@/redux/slices/adminSlice'
 import { RootState } from '@/redux/store'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { GuideInterface } from '@/services/GuideInterface'
-import { getGuidesFromFirebase } from '@/firebaseFunctions/guide'
+import { getGuidesFromFirebase } from '@/firebaseFunctions/admin/guide'
 
 const page = () => {
 
@@ -25,15 +25,11 @@ const page = () => {
 
 
     useEffect(() => {
-
-
-
         let unsubscribeUsers = listenToUsersList((result) => {
             console.log(result);
             dispatch(setAllUsersList(result))
 
         });
-
 
         return () => unsubscribeUsers();
 

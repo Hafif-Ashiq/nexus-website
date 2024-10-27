@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Header from '../../../components/Header'
 import LargeButton from '../_components/LargeButton'
 import ModelsGraph from './_components/ModelsGraph'
-import { getAllModels, updateModel } from '@/firebaseFunctions/aiModels'
+import { getAllModels, updateModel } from '@/firebaseFunctions/admin/aiModels'
 import { AiModelInterface } from '@/services/AiModelsInterface'
 
 const page = () => {
