@@ -19,42 +19,52 @@ interface recentUsersProps {
 
 const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, showViewAll = true, clickEnabled = false, fullList = false }) => {
 
-
     const currentUser = useSelector((state: RootState) => state.adminReducer.currentUser)
-
     const dispatch = useDispatch()
 
     const [actionsOpen, setActionsOpen] = useState(-1)
     const [allSelected, setAllSelected] = useState(false)
-    const [selectedUsers, setSelectedUsers] = useState<any>({})
-    const [key, setKey] = useState(0)
+    const [selectedUsers, setSelectedUsers] = useState<{ [key: number]: boolean }>({})
 
     const [anySelected, setAnySelected] = useState(false)
 
     useEffect(() => {
-        // Object.keys(selectedUsers).length === 0 && !allSelected ? setAnySelected(false) : setAnySelected(true)
-        // Object.keys(selectedUsers).length === users.length ? setAllSelected(true) : setAllSelected(false)
-        // console.log(Object.keys(selectedUsers).length)
-    }, [key])
+        const selectedCount = Object.keys(selectedUsers).length
+        setAnySelected(selectedCount > 0 || allSelected)
+
+        if (selectedCount === users.length) {
+            setAllSelected(true)
+        } else if (selectedCount === 0) {
+            setAllSelected(false)
+        }
+    }, [selectedUsers, allSelected, users.length])
 
     const selectUser = (index: number) => {
-
-        const sels = selectedUsers
-        if (sels[index]) {
-            delete sels[index]
-            allSelected ? setAllSelected(false) : null
-        }
-        else {
-            sels[index] = true
-        }
-        setSelectedUsers(sels)
-        setKey(key + 1)
+        setSelectedUsers(prev => {
+            const updated = { ...prev }
+            if (updated[index]) {
+                delete updated[index]
+            } else {
+                updated[index] = true
+            }
+            return updated
+        })
+        setAllSelected(false)
     }
 
     const selectAll = () => {
-        setAllSelected(!allSelected)
-        // setSelectedUsers({})
-        setKey(key + 1)
+        setAllSelected(prev => !prev)
+        if (!allSelected) {
+            // Select all users
+            const allIndexes = users.reduce((acc, _, index) => {
+                acc[index] = true
+                return acc
+            }, {} as { [key: number]: boolean })
+            setSelectedUsers(allIndexes)
+        } else {
+            // Deselect all
+            setSelectedUsers({})
+        }
     }
 
     const getUserDropDownActions = (index: number) => {
@@ -73,7 +83,6 @@ const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, show
                 title: "Open Support",
                 onClick: () => { }
             },
-
         ]
     }
 
@@ -100,7 +109,7 @@ const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, show
                         {showSelect && <>
                             <th className='flex gap-[30px] items-center justify-start' style={{ width: anySelected ? "200px" : "30px" }}>
                                 <Select selected={allSelected} onSelect={selectAll} />
-                                {anySelected && <div className='font-semibold text-[18px]'>{users.length} Selected</div>}
+                                {anySelected && <div className='font-semibold text-[18px]'>{Object.keys(selectedUsers).length} Selected</div>}
                             </th>
                         </>}
                         {!anySelected ?
@@ -121,13 +130,11 @@ const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, show
                                     <div className='w-[5px] h-[5px] bg-white rounded-full'></div>
                                     <button>Delete</button>
                                 </th>
-
                             </>
                         }
-
                     </tr>
                 </thead>
-                <tbody key={key}>
+                <tbody>
                     {users.map((user, index) => (
                         <tr
                             onClick={() => {
@@ -144,7 +151,11 @@ const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, show
                             <td className='w-[200px] text-ellipsis overflow-hidden'>{user.id}</td>
                             <td className='w-[200px] text-ellipsis overflow-hidden'>{user.email}</td>
                             <td className='w-[200px] text-ellipsis overflow-hidden'>{user.first_name + " " + user.last_name} </td>
-                            <td className={`w-[130px] text-ellipsis overflow-hidden ${user.account_status.is_deactivated ? "text-warningColor" : "text-confirmColor"} `}>{user.account_status.is_deactivated ? "Deactivated" : "Activate"}</td>
+                            <td className={`w-[130px] text-ellipsis overflow-hidden 
+                                ${user.account_status.is_deactivated ? "text-warningColor" : "text-confirmColor"} `}
+                            >
+                                {user.account_status.is_deactivated ? "Deactivated" : "Activate"}
+                            </td>
                             <td className='w-[50px] flex justify-center items-center relative'>
                                 <button onClick={() => index == actionsOpen ? setActionsOpen(-1) : setActionsOpen(index)} className=' py-[5px]'>
                                     <img src="/assets/dots.svg" alt="" />

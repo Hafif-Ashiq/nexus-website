@@ -1,9 +1,9 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import Header from '../../../components/Header'
-import Search from '../_components/Search'
+import Search from '../../../components/Search'
 import SupportChatLists from './_components/SupportChatList'
-import HeaderButton from '../_components/HeaderButton'
+import HeaderButton from '../../../components/HeaderButton'
 // import { fetchAllSupportChats } from '@/firebaseFunctions/support'
 import { SupportInterface } from '@/services/SupportInterface'
 import SupportChat from './_components/SupportChat'

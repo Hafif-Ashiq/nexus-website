@@ -1,14 +1,14 @@
 "use client"
 
 import React, { useEffect, useState } from 'react'
-import Search from '../../_components/Search'
+import Search from '../../../../components/Search'
 import UsersList from '../../_components/UsersList'
 import { listenToUsersList } from '@/firebaseFunctions/admin/users'
 import { RootState } from '@/redux/store'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { setAllUsersList, setCurrentUser } from '@/redux/slices/adminSlice'
-import HeaderButton from '../../_components/HeaderButton'
+import HeaderButton from '../../../../components/HeaderButton'
 import { UserProfile } from '@/services/UserInterface'
 import { mockUser } from '@/constants/data'
 

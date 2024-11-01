@@ -1,20 +1,23 @@
 // redux/slices/counterSlice.ts
 
 import { AiChatInterface } from '@/services/AiChatInterface';
+import { ContentInterface } from '@/services/ContentInterface';
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface UserSliceReducer {
 
     userId: string,
     selectedChat: AiChatInterface | null,
-    chats: AiChatInterface[]
+    chats: AiChatInterface[],
+    content: ContentInterface[]
 }
 
 const initialState: UserSliceReducer = {
 
     userId: "Bd4umkyLqOLnMpdOLZ0E",
     selectedChat: null,
-    chats: []
+    chats: [],
+    content: []
 
 };
 
@@ -31,9 +34,12 @@ const userSlice = createSlice({
         setChats: (state, action) => {
             state.chats = action.payload;
         },
+        setContent: (state, action) => {
+            state.content = action.payload;
+        },
     },
 });
 
-export const { setUserId, setSelectedChat, setChats } = userSlice.actions;
+export const { setUserId, setSelectedChat, setChats, setContent } = userSlice.actions;
 
 export default userSlice.reducer;

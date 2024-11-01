@@ -1,43 +1,39 @@
-import Link from 'next/link'
 import React, { useEffect, useState } from 'react'
 
 import Select from '@/components/Select'
-import DropDown from '../../_components/DropDown'
-import { SupportInterface } from '@/services/SupportInterface'
-import { getStatusColor } from '@/utils/support'
 import { useDispatch } from 'react-redux'
 import { setSupportChat } from '@/redux/slices/adminSlice'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
+import { ContentInterface } from '@/services/ContentInterface'
+import { getCurrentTimeFormatted, getDateFormatted } from '@/utils/datetime'
 
-interface SupportChatTableProps {
-    issues: SupportInterface[],
+interface ContentTableProps {
+    content: ContentInterface[],
     showSelect?: boolean,
     showViewAll?: boolean
 }
 
-const SupportChatLists: React.FC<SupportChatTableProps> = ({ issues, showSelect = false, showViewAll = true }) => {
-
-    const currentSupportChat = useSelector((state: RootState) => state.adminReducer.currentSupportChat)
+const ContentList: React.FC<ContentTableProps> = ({ content, showSelect = false, showViewAll = true }) => {
 
     const dispatch = useDispatch()
 
     const [actionsOpen, setActionsOpen] = useState(-1)
     const [allSelected, setAllSelected] = useState(false)
     const [selectedUsers, setSelectedUsers] = useState<{ [key: number]: boolean }>({})
-    const [key, setKey] = useState(0)
+
     const [anySelected, setAnySelected] = useState(false)
 
     useEffect(() => {
         const selectedCount = Object.keys(selectedUsers).length
         setAnySelected(selectedCount > 0 || allSelected)
 
-        if (selectedCount === issues.length) {
+        if (selectedCount === content.length) {
             setAllSelected(true)
         } else if (selectedCount === 0) {
             setAllSelected(false)
         }
-    }, [selectedUsers, allSelected, issues.length])
+    }, [selectedUsers, allSelected, content.length])
 
     const selectUser = (index: number) => {
         setSelectedUsers(prev => {
@@ -56,7 +52,7 @@ const SupportChatLists: React.FC<SupportChatTableProps> = ({ issues, showSelect 
         setAllSelected(prev => !prev)
         if (!allSelected) {
             // Select all users
-            const allIndexes = issues.reduce((acc, _, index) => {
+            const allIndexes = content.reduce((acc, _, index) => {
                 acc[index] = true
                 return acc
             }, {} as { [key: number]: boolean })
@@ -84,31 +80,40 @@ const SupportChatLists: React.FC<SupportChatTableProps> = ({ issues, showSelect 
         ]
     }
 
+
+    const getContentType = (type: string) => {
+        return (
+            <>
+                <img src={`/assets/contentTypes/${type}-blue.svg`} alt={type} />
+                <div>{type.charAt(0).toUpperCase() + type.slice(1).toLowerCase()}</div>
+            </>
+        )
+    }
+
     return (
         <div className='flex flex-col gap-[15px] h-full flex-1'>
 
             <table className='bg-white w-full flex-1 h-full'>
                 <thead>
-                    <tr className={`flex justify-between text-left pl-[25px] pr-[50px] py-[25px] text-ellipsis overflow-hidden  bg-primaryColorLight text-white text-[18px]`}>
+                    <tr className={`flex justify-between text-left pl-[25px] pr-[50px] py-[25px] text-ellipsis overflow-hidden  bg-primaryColorLight font-semibold text-white text-[18px]`}>
                         {showSelect && <>
                             <th className='flex gap-[30px] items-center justify-start' style={{ width: anySelected ? "200px" : "30px" }}>
                                 {/* All Select */}
                                 <Select selected={allSelected} onSelect={selectAll} />
-                                {anySelected && <div className='font-semibold text-[18px]'>{Object.keys(selectedUsers).length} Selected</div>}
+                                {anySelected && <div className='font-medium text-[18px]'>{Object.keys(selectedUsers).length} Selected</div>}
                             </th>
                         </>}
                         {!anySelected ?
                             <>
                                 <th className='w-[20px]'>#</th>
-                                <th className='w-[200px]'>User ID</th>
-                                <th className='w-[200px]'>Username</th>
-                                <th className='w-[200px]'>Category</th>
-                                <th className='w-[130px]'>Status</th>
+                                <th className='w-[300px]'>Content Title</th>
+                                <th className='w-[200px]'>Date Modified</th>
+                                <th className='w-[200px]'>Type</th>
                                 <th className='w-[50px]'>Action</th>
                             </>
                             :
                             <>
-                                <th className='flex items-center gap-[15px]'>
+                                <th className='flex items-center font-semibold gap-[15px]'>
                                     <button>Activate</button>
                                     <div className='w-[5px] h-[5px] bg-white rounded-full'></div>
                                     <button>Deactivate</button>
@@ -120,29 +125,26 @@ const SupportChatLists: React.FC<SupportChatTableProps> = ({ issues, showSelect 
 
                     </tr>
                 </thead>
-                <tbody key={key}>
-                    {issues.map((issue, index) => (
+                <tbody>
+                    {content.map((cont, index) => (
                         <tr
                             onClick={() => {
-                                dispatch(setSupportChat(issue))
+                                dispatch(setSupportChat(cont))
                             }}
                             key={index}
-                            className={`flex justify-between text-left pl-[25px] pr-[50px] py-[25px] text-ellipsis  font-semibold  rounded-[15px]  border-[1.5px] border-solid  cursor-pointer ${issue.issue_id == currentSupportChat.issue_id ? "border-primaryColorLight" : "hover:border-borderColor border-white"}`}>
+                            className={`flex justify-between text-left pl-[25px] pr-[50px] py-[25px] text-ellipsis  font-medium  rounded-[15px]  cursor-pointer`}>
                             {showSelect && <td className='w-[30px]'>
                                 <Select selected={selectedUsers[index] || allSelected} onSelect={() => selectUser(index)} color='#CBD5E4' />
                             </td>}
                             <td className='w-[20px]'>{index < 10 ? `0${index + 1}` : index + 1}</td>
-                            <td className='w-[200px] text-ellipsis overflow-hidden'>{issue.user_id}</td>
-                            <td className='w-[200px] text-ellipsis overflow-hidden'>{issue.user_name}</td>
-                            <td className='w-[200px] text-ellipsis overflow-hidden'>{issue.issue_category} </td>
-                            <td className='w-[130px] text-ellipsis overflow-hidden' style={{
-                                color: getStatusColor(issue.issue_status)
-                            }}>{issue.issue_status}</td>
+                            <td className='w-[300px] text-ellipsis overflow-hidden'>{cont.title}</td>
+                            <td className='w-[200px] text-ellipsis overflow-hidden opacity-50'>{getDateFormatted(cont.date_updated)}</td>
+                            <td className='w-[200px] text-ellipsis overflow-hidden flex items-center gap-[10px] opacity-50'>{getContentType(cont.type)} </td>
                             <td className='w-[50px] flex justify-center items-center relative'>
                                 <button onClick={() => index == actionsOpen ? setActionsOpen(-1) : setActionsOpen(index)} className=' py-[5px]'>
                                     <img src="/assets/dots.svg" alt="" />
                                 </button>
-                                {index == actionsOpen && <DropDown actions={getUserDropDownActions(index)} />}
+                                {/* {index == actionsOpen && <DropDown actions={getUserDropDownActions(index)} />} */}
                             </td>
                         </tr>
                     ))}
@@ -153,4 +155,4 @@ const SupportChatLists: React.FC<SupportChatTableProps> = ({ issues, showSelect 
     )
 }
 
-export default SupportChatLists
+export default ContentList

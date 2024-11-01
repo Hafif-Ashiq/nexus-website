@@ -1,4 +1,4 @@
-import HeaderButton from '@/app/admin/_components/HeaderButton';
+import HeaderButton from '@/components/HeaderButton';
 import IconButton from '@/components/IconButton'
 import ImageModal from '@/components/ImageModal';
 import React, { useEffect, useRef, useState } from 'react'

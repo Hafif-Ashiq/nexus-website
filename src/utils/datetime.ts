@@ -14,3 +14,8 @@ export function getCurrentTimeFormatted(): string {
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}.${milliseconds}`;
 }
 
+
+
+export function getDateFormatted(date: string): string {
+    return new Date(date).toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+}
