@@ -70,6 +70,7 @@ const page = () => {
     }
 
 
+
     return (
         <div className='flex flex-col gap-[20px] bg-white rounded-[15px] h-full'>
             <div className='flex items-center justify-between gap-[15px] px-[20px] pt-[20px]'>

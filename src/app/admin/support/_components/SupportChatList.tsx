@@ -123,13 +123,18 @@ const SupportChatLists: React.FC<SupportChatTableProps> = ({ issues, showSelect 
                 <tbody key={key}>
                     {issues.map((issue, index) => (
                         <tr
-                            onClick={() => {
-                                dispatch(setSupportChat(issue))
+                            onClick={(e) => {
+                                if (!(e.target as HTMLElement).closest('button')) {
+                                    dispatch(setSupportChat(issue))
+                                }
                             }}
                             key={index}
                             className={`flex justify-between text-left pl-[25px] pr-[50px] py-[25px] text-ellipsis  font-semibold  rounded-[15px]  border-[1.5px] border-solid  cursor-pointer ${issue.issue_id == currentSupportChat.issue_id ? "border-primaryColorLight" : "hover:border-borderColor border-white"}`}>
                             {showSelect && <td className='w-[30px]'>
-                                <Select selected={selectedUsers[index] || allSelected} onSelect={() => selectUser(index)} color='#CBD5E4' />
+                                <Select selected={selectedUsers[index] || allSelected} onSelect={(e) => {
+                                    e.stopPropagation();
+                                    selectUser(index)
+                                }} color='#CBD5E4' />
                             </td>}
                             <td className='w-[20px]'>{index < 10 ? `0${index + 1}` : index + 1}</td>
                             <td className='w-[200px] text-ellipsis overflow-hidden'>{issue.user_id}</td>

@@ -2,8 +2,8 @@ import React from 'react'
 
 interface SelectProps {
     selected: boolean;
-    onSelect: () => void;
-    color?: string
+    onSelect: (e: React.MouseEvent) => void; // Updated to handle event for stopPropagation
+    color?: string;
 }
 
 const Select: React.FC<SelectProps> = ({ selected = false, color = "white", onSelect }) => {
