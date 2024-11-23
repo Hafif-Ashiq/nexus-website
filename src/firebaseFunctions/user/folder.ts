@@ -1,4 +1,4 @@
-import { collection, query, onSnapshot } from 'firebase/firestore';
+import { collection, query, onSnapshot, getDocs } from 'firebase/firestore';
 import { FolderInterface } from '../../services/FoldersInterface';
 import { db } from '@/services/firebase';
 
@@ -29,4 +29,22 @@ export const listenToUserFolders = (
 
     // Return the unsubscribe function to stop listening
     return unsubscribe;
+};
+
+export const getFolderNames = async (userId: string): Promise<string[]> => {
+    try {
+        const userFoldersRef = collection(db, 'users', userId, 'folder');
+        const foldersQuery = query(userFoldersRef);
+        const querySnapshot = await getDocs(foldersQuery);
+
+        const folderNames = querySnapshot.docs.map(doc => {
+            const folderData = doc.data() as FolderInterface;
+            return folderData.title;
+        });
+
+        return folderNames;
+    } catch (error) {
+        console.error('Error fetching folder names:', error);
+        return [];
+    }
 };

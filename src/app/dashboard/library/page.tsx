@@ -12,7 +12,7 @@ import LibrarySideBar from './_components/LibrarySideBar'
 import { FolderInterface } from '@/services/FoldersInterface'
 import { listenToUserFolders } from '@/firebaseFunctions/user/folder'
 import { useRouter } from 'next/navigation'
-import { setCurrentContent, setFolderContent } from '@/redux/slices/librarySlice'
+import { setAllContent, setAllFolders, setCurrentContent, setFolderContent } from '@/redux/slices/librarySlice'
 
 const page = () => {
     const userId = useSelector((state: RootState) => state.userReducer.userId)
@@ -20,14 +20,15 @@ const page = () => {
     const router = useRouter()
     const dispatch = useDispatch()
     const [searchText, setSearchText] = useState('')
-    const [folders, setFolders] = useState<FolderInterface[]>([])
-    const [content, setContent] = useState<ContentInterface[]>([])
+
+    const folders = useSelector((state: RootState) => state.libraryReducer.allFolders);
+    const content = useSelector((state: RootState) => state.libraryReducer.allContent);
 
 
     useEffect(() => {
-        listenToUserContent(userId, setContent)
-        listenToUserFolders(userId, setFolders)
-    }, [userId])
+        listenToUserContent(userId, (content) => dispatch(setAllContent(content)))
+        listenToUserFolders(userId, (folders) => dispatch(setAllFolders(folders)))
+    }, [userId, dispatch])
 
     return (
         <div className='flex flex-col gap-[40px]'>
@@ -47,7 +48,7 @@ const page = () => {
                         </div>
                         <div className='flex-1'>
 
-                        <ContentList content={content} showSelect onContentClick={(cont) => {
+                            <ContentList content={content} showSelect onContentClick={(cont) => {
                                 dispatch(setCurrentContent(cont))
                                 router.push(`/dashboard/library/content/${cont.content_id}`)
                             }} />

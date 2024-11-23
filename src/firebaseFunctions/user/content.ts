@@ -1,4 +1,4 @@
-import { collection, query, onSnapshot, where, doc } from 'firebase/firestore';
+import { collection, query, onSnapshot, where, doc, updateDoc } from 'firebase/firestore';
 import { ContentInterface } from '../../services/ContentInterface';
 import { db } from '@/services/firebase';
 
@@ -82,4 +82,22 @@ export const listenToContent = (
 
     // Return the unsubscribe function to stop listening
     return unsubscribe;
+};
+
+export const updateContent = async (
+    userId: string,
+    contentId: string,
+    updates: {
+        title?: string;
+        folder_id?: string;
+        tags?: string[]
+    }
+) => {
+    try {
+        const contentRef = doc(db, 'users', userId, 'content', contentId);
+        await updateDoc(contentRef, updates);
+    } catch (error) {
+        console.error('Error updating content:', error);
+        throw error;
+    }
 };
