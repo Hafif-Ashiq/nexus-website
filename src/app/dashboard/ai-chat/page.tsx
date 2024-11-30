@@ -33,6 +33,9 @@ const page = () => {
         if (!selectedChat && chats.length > 0) {
             dispatch(setSelectedChat(chats[0]))
         }
+        else {
+            dispatch(setSelectedChat(chats.find(chat => chat.chat_id === selectedChat?.chat_id)))
+        }
     }, [chats])
 
     return (

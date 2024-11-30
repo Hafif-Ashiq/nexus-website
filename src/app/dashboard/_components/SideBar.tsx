@@ -44,7 +44,16 @@ const SideBar = () => {
                             ${path === `/dashboard${navlink.link}` ? "bg-primaryColorLight text-white" : ""}   
                             rounded-[15px]
                         `}>
-                            <img src={`/assets/${navlink.icon}`} alt="" />
+                            {/* <img src={`/assets/${navlink.icon}`} alt="" /> */}
+                            {navlink.icon && <navlink.icon
+                                stroke={path === `/dashboard${navlink.link}` ? "white" : "#171717"}
+
+                                // fill={path.includes(navlink.link) ? "#2a4e8f" : "white"}
+                                style={{
+                                    color: path === `/dashboard${navlink.link}` ? "white" : "transparent"
+                                }}
+                            >
+                            </navlink.icon>}
                             <p className='text-[20px]'>{navlink.title}</p>
                         </Link>
                     ))}

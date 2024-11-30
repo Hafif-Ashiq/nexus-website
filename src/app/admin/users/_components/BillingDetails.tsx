@@ -114,14 +114,14 @@ const BillingDetails: React.FC<billingDetailsProps> = ({ onBack }) => {
                 </div>
 
             </div>
-            <div className='w-full h-[1px] border-[#EBEEF4] border-[1px] border-solid'></div>
+            <div className='w-full h-[1px] border-borderColorLight border-[1px] border-solid'></div>
             <div className='flex flex-col gap-[10px]'>
                 <p className='text-[16px] font-bold text-primaryColorLight'>Existing Accounts</p>
                 {
                     cards.length !== 0 ? cards.map((card, index) => (
                         <div key={index} className='px-[15px] py-[13px] text-[16px] text-primaryColorLight border-[1px] border-solid border-[#CBD5E4]  rounded-[15px] font-semibold flex gap-[15px]'>
                             <img src={`/assets/${card.cardType}.svg`} alt="" />
-                            <div className='w-[1px] flex items-stretch border-[#EBEEF4] border-[1px] border-solid'></div>
+                            <div className='w-[1px] flex items-stretch border-borderColorLight border-[1px] border-solid'></div>
                             <div className='flex-1 flex justify-between items-center '>
                                 <p>{card.name}</p>
                                 <p>{card.cardNumber}</p>

@@ -102,10 +102,10 @@ const ContentList: React.FC<ContentTableProps> = ({ content, showSelect = false,
                         </>}
                         {!anySelected ?
                             <>
-                                <th className='w-[20px]'>#</th>
-                                <th className='w-[300px] font-medium'>Content Title</th>
-                                <th className='w-[200px] font-medium'>Date Modified</th>
-                                <th className='w-[200px] font-medium'>Type</th>
+                                {/* <th className='w-[20px]'>#</th> */}
+                                <th className='w-[400px] font-medium'>Content Title</th>
+                                <th className='w-[150px] font-medium'>Date Modified</th>
+                                <th className='w-[150px] font-medium'>Type</th>
                                 <th className='w-[50px] font-medium'>Action</th>
                             </>
                             :
@@ -132,17 +132,19 @@ const ContentList: React.FC<ContentTableProps> = ({ content, showSelect = false,
                                 }
                             }}
                             key={index}
-                            className={`flex justify-between text-left pl-[25px] pr-[50px] py-[25px] text-ellipsis  font-medium  rounded-[15px]  cursor-pointer border-[1px] border-solid border-transparent hover:border-primaryColorLight transition-all duration-200 group`}>
+                            className={`flex justify-between items-center text-left pl-[25px] pr-[50px] py-[10px] text-ellipsis  font-medium  rounded-[15px]  cursor-pointer border-[1px] border-solid border-transparent hover:border-primaryColorLight transition-all duration-200 group`}>
                             {showSelect && <td className='w-[30px]'>
                                 <Select selected={selectedUsers[index] || allSelected} onSelect={(e) => {
                                     e.stopPropagation(); // Prevent tr click
                                     selectUser(index);
                                 }} color='#CBD5E4' />
                             </td>}
-                            <td className='w-[20px]'>{index < 10 ? `0${index + 1}` : index + 1}</td>
-                            <td className='w-[300px] text-ellipsis overflow-hidden'>{cont.title}</td>
-                            <td className='w-[200px] text-ellipsis overflow-hidden opacity-50 group-hover:opacity-100 transition-opacity duration-200'>{getDateFormatted(cont.date_updated)}</td>
-                            <td className='w-[200px] text-ellipsis overflow-hidden flex items-center gap-[10px] opacity-50 group-hover:opacity-100 transition-opacity duration-200'>{getContentType(cont.type)} </td>
+                            {/* <td className='w-[20px]'>{index < 10 ? `0${index + 1}` : index + 1}</td> */}
+                            <td className='w-[400px] text-ellipsis overflow-hidden flex items-center gap-[25px]'>
+                                <img className='w-[100px] h-[60px] object-cover rounded-[10px]' src={cont.thumbnail} alt="" />
+                                <span className='flex-1 '>{cont.title}</span></td>
+                            <td className='w-[150px] text-ellipsis overflow-hidden opacity-50 group-hover:opacity-100 transition-opacity duration-200'>{getDateFormatted(cont.date_updated)}</td>
+                            <td className='w-[150px] text-ellipsis overflow-hidden flex items-center gap-[10px] opacity-50 group-hover:opacity-100 transition-opacity duration-200'>{getContentType(cont.type)} </td>
                             <td className='w-[50px] flex justify-center items-center relative'>
                                 <button onClick={(e) => {
                                     e.stopPropagation(); // Prevent tr click

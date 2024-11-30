@@ -37,7 +37,7 @@ const LibrarySideBar = ({ folders, onFolderClick }: LibrarySideBarProps) => {
                         <IconButton icon='/assets/menu-blue.svg' onClick={() => { }} />
                     </div>
                 </div>
-                <div className='w-full h-[1px] border-[#EBEEF4] border-[1px] border-solid'></div>
+                <div className='w-full h-[1px] border-borderColorLight border-[1px] border-solid'></div>
                 <div className='flex flex-col gap-[15px] px-[20px]'>
                     <p className='font-semibold text-[16px] text-textColorDarkBlue'>Folders</p>
                     <div className='grid grid-cols-2 gap-[15px]'>

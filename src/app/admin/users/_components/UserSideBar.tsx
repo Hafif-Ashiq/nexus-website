@@ -12,6 +12,7 @@ import { addNewUser, deleteUser, updateUser } from '@/firebaseFunctions/admin/us
 import { setCurrentUser } from '@/redux/slices/adminSlice';
 import { mockUser } from '@/constants/data';
 import AddUserModal from './AddUserModal';
+import Loader from '@/components/Loader';
 
 enum CardDisplay {
     userInfo, billingInfo, subscriptionInfo
@@ -28,7 +29,28 @@ const UserSideBar = () => {
     const [addUser, setAddUser] = useState(false)
 
 
+    const [backgroundImageLoading, setBackgroundImageLoading] = useState(true);
+    const [profileImageLoading, setProfileImageLoading] = useState(true);
 
+    useEffect(() => {
+        if (user.background_pic) {
+            setBackgroundImageLoading(true); // Set loading to true when a new image is selected
+            const img = new Image();
+            img.src = user.background_pic;
+            img.onload = () => setBackgroundImageLoading(false);
+            img.onerror = () => setBackgroundImageLoading(false); // Handle error case
+        }
+    }, [user.background_pic]);
+
+    useEffect(() => {
+        if (user.profile_pic) {
+            setProfileImageLoading(true); // Set loading to true when a new image is selected
+            const img = new Image();
+            img.src = user.profile_pic;
+            img.onload = () => setProfileImageLoading(false);
+            img.onerror = () => setProfileImageLoading(false); // Handle error case
+        }
+    }, [user.profile_pic]);
 
     // useEffect(() => {
     //     setAddUser(false)
@@ -53,7 +75,9 @@ const UserSideBar = () => {
             <div className='shadow-normal bg-white h-full rounded-[15px] p-[20px] flex flex-col gap-[15px]'>
                 <div className='flex flex-col gap-[13px] relative'>
                     <button className='w-full h-[150px] rounded-[10px] overflow-hidden shadow-normal group relative bg-accentColorLight'>
-                        <img src={user.background_pic ? user.background_pic : "/guide-bg.jpg"} alt="" className='w-full h-full' />
+                        {backgroundImageLoading ? <div className='w-full h-full bg-accentColorLight flex justify-center items-center'>
+                            <Loader />
+                        </div> : <img src={user.background_pic ? user.background_pic : ""} alt="" className='w-full h-full object-cover' />}
                         <div className='absolute p-[9px] bg-[#00000070] left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] rounded-full hidden group-hover:block'>
                             <img src="/assets/pencil-filled-white.svg" alt="" className='object-fit' />
                         </div>
@@ -67,14 +91,16 @@ const UserSideBar = () => {
                     </div>
                     <button className='shadow-normal absolute right-[15px] bottom-0 border-white border-[4px] border-solid rounded-[20px] overflow-hidden group bg-accentColorLight'>
                         <div className='w-[120px] h-[120px] rounded-[18px]'>
-                            <img src={user.profile_pic ? user.profile_pic : "/person.jpg"} alt="" className='object-cover w-full h-full' />
+                            {profileImageLoading ? <div className='w-full h-full bg-accentColorLight flex justify-center items-center'>
+                                <Loader />
+                            </div> : <img src={user.profile_pic ? user.profile_pic : ""} alt="" className='object-cover w-full h-full' />}
                         </div>
                         <div className='absolute p-[9px] bg-[#00000070] bottom-[6px] right-[6px] rounded-full hidden group-hover:block'>
                             <img src="/assets/pencil-filled-white.svg" alt="" className='object-fit' />
                         </div>
                     </button>
                 </div>
-                <div className='w-full h-[1px] border-[#EBEEF4] border-[1px] border-solid'></div>
+                <div className='w-full h-[1px] border-borderColorLight border-[1px] border-solid'></div>
                 <div className='flex-1'>
                     {
                         activeCard == CardDisplay.userInfo && <AccountDetailsSide

@@ -212,7 +212,7 @@ const SupportChat = () => {
                     </div>
                 </div>
 
-                <div className='w-full h-[1px] border-[#EBEEF4] border-[1px] border-solid'></div>
+                <div className='w-full h-[1px] border-borderColorLight border-[1px] border-solid'></div>
                 {/* Conversation Tab */}
                 {!filesOpen &&
                     <div className='flex-1 overflow-scroll flex flex-col gap-[0px] px-[20px]' style={{
@@ -259,7 +259,7 @@ const SupportChat = () => {
                 {
                     supportChat.issue_status == "Pending" ?
                         <>
-                            <div className='w-full h-[1px] border-[#EBEEF4] border-[1px] border-solid '></div>
+                            <div className='w-full h-[1px] border-borderColorLight border-[1px] border-solid '></div>
 
                             <div className='flex justify-end items-center gap-[15px] px-[20px]'>
                                 {/* buttons */}

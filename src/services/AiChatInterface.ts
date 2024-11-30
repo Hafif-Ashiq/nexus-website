@@ -1,3 +1,5 @@
+import { SummarizationConfig, TranslationConfig } from "./Configs"
+
 export interface AiChatMessageInterface {
     text: string,
     message_type: string,
@@ -9,16 +11,10 @@ export interface AiChatMessageInterface {
 }
 
 export interface AiChatInterface {
+    chat_id: string,
     user_id: string,
     conversation: AiChatMessageInterface[],
     chat_type: string,
-    summarization_config: {
-        length: string,
-        sentences: number,
-        style: string
-    },
-    translation_config: {
-        source_language: string,
-        target_language: string
-    }
+    summarization_config: SummarizationConfig,
+    translation_config: TranslationConfig
 }

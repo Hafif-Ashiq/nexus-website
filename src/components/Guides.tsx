@@ -1,41 +1,19 @@
 import React, { useRef, useState } from 'react'
-import LargeButton from '../../_components/LargeButton'
+import LargeButton from '../app/admin/_components/LargeButton'
 import GuideTile from './GuideTile'
 import { title } from 'process'
-import GuideModal from './GuideModal'
+import GuideModal from '../app/admin/dashboard/_components/GuideModal'
 import { GuideInterface } from '@/services/GuideInterface'
 import { deleteGuideFromFirebase } from '@/firebaseFunctions/admin/guide'
 
 interface GuidesProps {
-    guides: GuideInterface[]
+    guides: GuideInterface[],
+    editEnabled: boolean
 }
 
-const Guides = ({ guides }: GuidesProps) => {
+const Guides = ({ guides, editEnabled }: GuidesProps) => {
 
     const [guideOpen, setGuideOpen] = useState(false)
-
-    const tilesData = [
-        {
-            title: "Learn to Translate",
-            image: "/guide-bg.jpg"
-        },
-        {
-            title: "Learn to Translate",
-            image: "/guide-bg.jpg"
-        },
-        {
-            title: "Learn to Translate",
-            image: "/guide-bg.jpg"
-        },
-        {
-            title: "Learn to Translate",
-            image: "/guide-bg.jpg"
-        },
-        {
-            title: "Learn to Translate",
-            image: "/guide-bg.jpg"
-        },
-    ]
 
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
@@ -63,10 +41,12 @@ const Guides = ({ guides }: GuidesProps) => {
     };
 
     return (
-        <div className='flex gap-[20px]'>
-            <div className='w-[600px]'>
-                <LargeButton activeIcon='note-favorite' inActiveIcon='' text='Create a new Guide' active onClick={() => { setGuideOpen(true) }} />
-            </div>
+        <div className='flex gap-[20px] overflow-x-hidden'>
+            {
+                editEnabled && <div className='w-[600px]'>
+                    <LargeButton activeIcon='note-favorite' inActiveIcon='' text='Create a new Guide' active onClick={() => { setGuideOpen(true) }} />
+                </div>
+            }
             <div className='flex gap-[20px] overflow-x-auto select-none'
                 style={{
                     WebkitOverflowScrolling: 'touch',
@@ -80,21 +60,20 @@ const Guides = ({ guides }: GuidesProps) => {
                 onMouseLeave={handleMouseLeave}>
                 {guides.map((tile, index) => (
                     <GuideTile key={index} title={tile.title} onDeleteClick={() => {
-                        if (confirm("Are you sure you want to delete the guide?")) {
+                        if (confirm("Are you sure you want to delete the guide?") && editEnabled) {
                             deleteGuideFromFirebase(tile.guide_id).then(res => {
                                 if (res) {
                                     alert("Guide Deleted Successfully")
                                 }
                                 else {
                                     alert("Error in deleting Guide")
-
                                 }
                             })
                         }
-                    }} image={tile.thumbnail} />
+                    }} image={tile.thumbnail} editEnabled={editEnabled} />
                 ))}
             </div>
-            {guideOpen && <GuideModal onCloseClick={() => setGuideOpen(false)} />}
+            {editEnabled && guideOpen && <GuideModal onCloseClick={() => setGuideOpen(false)} />}
         </div>
     )
 }

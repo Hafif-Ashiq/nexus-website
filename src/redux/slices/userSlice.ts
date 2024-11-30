@@ -14,6 +14,7 @@ export interface UserSliceReducer {
 
 const initialState: UserSliceReducer = {
 
+    // userId: "ir4ThYV5ghOFdjxeA8cp",
     userId: "Bd4umkyLqOLnMpdOLZ0E",
     selectedChat: null,
     chats: [],
@@ -40,6 +41,11 @@ const userSlice = createSlice({
     },
 });
 
-export const { setUserId, setSelectedChat, setChats, setContent } = userSlice.actions;
+export const {
+    setUserId,
+    setSelectedChat,
+    setChats,
+    setContent
+} = userSlice.actions;
 
 export default userSlice.reducer;

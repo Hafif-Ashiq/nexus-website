@@ -11,7 +11,6 @@
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
     "@reduxjs/toolkit": "^2.2.7",
-    "@svgr/webpack": "^8.1.0",
     "chart.js": "^4.4.3",
     "faker": "^6.6.6",
     "firebase": "^10.12.0",
@@ -24,6 +23,7 @@
     "uuid": "^10.0.0"
   },
   "devDependencies": {
+    "@svgr/webpack": "^8.1.0",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

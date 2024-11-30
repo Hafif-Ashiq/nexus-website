@@ -1,8 +1,9 @@
-import { getStorage, ref, uploadBytes, getDownloadURL } from "firebase/storage";
-import { getFirestore, doc, setDoc, collection, getDocs, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
+import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
+import { doc, setDoc, collection, getDocs, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
 import { v4 as uuidv4 } from "uuid";
 import { GuideInterface } from "@/services/GuideInterface";
 import { getCurrentTimeFormatted } from "@/utils/datetime";
+import { db } from "@/services/firebase"; // Import the already initialized Firestore
 
 const addGuideToFirebase = async (
     file: File | null,
@@ -12,7 +13,7 @@ const addGuideToFirebase = async (
     try {
         // Initialize Firebase services
         const storage = getStorage();
-        const firestore = getFirestore();
+        // const firestore = getFirestore(); // Removed as Firestore is now imported from @firebase
 
         // Generate a unique ID for the guide
         // const guideId = uuidv4();
@@ -67,7 +68,7 @@ const addGuideToFirebase = async (
         };
 
         // Save the guide to Firestore (ID will be auto-generated)
-        const guidesCollectionRef = collection(firestore, "guides");
+        const guidesCollectionRef = collection(db, "guides"); // Using the imported Firestore instance
         const docRef = await addDoc(guidesCollectionRef, guide);
 
         await updateDoc(docRef, { guide_id: docRef.id })
@@ -83,10 +84,10 @@ const addGuideToFirebase = async (
 const getGuidesFromFirebase = async (): Promise<GuideInterface[]> => {
     try {
         // Initialize Firestore
-        const firestore = getFirestore();
+        // const firestore = getFirestore(); // Removed as Firestore is now imported from @firebase
 
         // Reference to the guides collection
-        const guidesCollectionRef = collection(firestore, "guides");
+        const guidesCollectionRef = collection(db, "guides"); // Using the imported Firestore instance
 
         // Fetch all documents from the guides collection
         const guideSnapshot = await getDocs(guidesCollectionRef);
@@ -108,10 +109,10 @@ const getGuidesFromFirebase = async (): Promise<GuideInterface[]> => {
 const deleteGuideFromFirebase = async (guideId: string) => {
     try {
         // Initialize Firestore
-        const firestore = getFirestore();
+        // const firestore = getFirestore(); // Removed as Firestore is now imported from @firebase
 
         // Reference to the guide document
-        const guideDocRef = doc(firestore, "guides", guideId);
+        const guideDocRef = doc(db, "guides", guideId); // Using the imported Firestore instance
 
         // Delete the document
         await deleteDoc(guideDocRef);

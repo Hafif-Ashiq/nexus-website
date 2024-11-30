@@ -22,6 +22,7 @@ const config: Config = {
         backgroundColorLight: "#FFFFFF",
         accentColorLight: "#F4F6F9",
         borderColor: "#CBD5E4",
+        borderColorLight: "#EBEEF4",
 
         confirmColor: "#2B9F03",
         warningColor: "#B50202",

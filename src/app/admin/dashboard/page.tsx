@@ -1,7 +1,7 @@
 "use client"
 import React, { useEffect, useState } from 'react'
 import Header from './_components/Header'
-import Guides from './_components/Guides'
+import Guides from '../../../components/Guides'
 import GraphInfo from '../_components/GraphInfo'
 import StatPerformance from './_components/StatPerformance'
 import UsersList from '../_components/UsersList'
@@ -58,7 +58,7 @@ const page = () => {
     return (
         <div className="flex flex-col gap-[40px]">
             <Header />
-            <Guides guides={guides} />
+            <Guides guides={guides} editEnabled />
             <div className='flex gap-[20px]'>
                 <GraphInfo data={dataUsers} title='Active Users' value='6245' change='5.4%' increase />
                 <StatPerformance />

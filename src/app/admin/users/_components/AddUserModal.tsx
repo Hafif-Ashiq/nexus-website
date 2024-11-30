@@ -16,7 +16,7 @@ const AddUserModal = ({ onCloseClick }: GuideModalProps) => {
 
     const [loadingSuccess, setLoadingSuccess] = useState<boolean>(false)
 
-    const [isProfileActive, setisProfileActive] = useState<boolean>(true)
+    const [isProfileActive, setisProfileActive] = useState<boolean>(false)
     const [profileSrc, setProfileSrc] = useState<string | null>(null);
     const [coverSrc, setCoverSrc] = useState<string | null>(null);
 
@@ -253,14 +253,14 @@ const AddUserModal = ({ onCloseClick }: GuideModalProps) => {
                                 activeIcon='image-large-white'
                                 inActiveIcon='image-large-bluw'
                                 text='Cover Image'
-                                active={isProfileActive}
-                                onClick={() => setisProfileActive(true)} />
+                                active={!isProfileActive}
+                                onClick={() => setisProfileActive(false)} />
                             <MediumButton
                                 activeIcon='image-large-white'
                                 inActiveIcon='image-large-bluw'
                                 text='Profile Image'
-                                active={!isProfileActive}
-                                onClick={() => setisProfileActive(false)} />
+                                active={isProfileActive}
+                                onClick={() => setisProfileActive(true)} />
                         </div>
                         {/* guide details */}
                         <div className='flex flex-col items-stretch justify-between gap-[20px]'>
@@ -350,10 +350,10 @@ const AddUserModal = ({ onCloseClick }: GuideModalProps) => {
 
                     <div className='flex-1 overflow-hidden my-[25px] h-full rounded-[15px] bg-accentColorLight flex justify-center items-center'>
                         {
-                            isProfileActive && profileSrc && <img src={profileSrc} alt="Selected" className='object-cover  h-full rounded-[15px]' />
+                            isProfileActive && profileSrc && <img src={profileSrc} alt="Selected" className='object-cover aspect-square rounded-[15px]' />
                         }
                         {
-                            !isProfileActive && coverSrc && <img src={coverSrc} alt="Selected" className='object-cover  rounded-[15px]' />
+                            !isProfileActive && coverSrc && <img src={coverSrc} alt="Selected" className='object-cover rounded-[15px] aspect-[16/9]' />
                         }
                         {
                             (!profileSrc && isProfileActive) || (!isProfileActive && !coverSrc) ? <button onClick={onImageClick}>

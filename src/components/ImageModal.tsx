@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react';
+import Loader from './Loader';
 
 interface ImageModalProps {
     imageSelected: string | undefined,
@@ -8,8 +9,20 @@ interface ImageModalProps {
 }
 
 const ImageModal = ({ imageSelected, onClose, onPreviousClick, onNextClick }: ImageModalProps) => {
+    const [loading, setLoading] = useState(true);
+
+    useEffect(() => {
+        if (imageSelected) {
+            setLoading(true); // Set loading to true when a new image is selected
+            const img = new Image();
+            img.src = imageSelected;
+            img.onload = () => setLoading(false);
+            img.onerror = () => setLoading(false); // Handle error case
+        }
+    }, [imageSelected]);
+
     return (
-        <div className='absolute inset-0 bg-[#00000090] overflow-hidden flex justify-center items-center'>
+        <div className='fixed inset-0 bg-[#00000090] w-screen h-screen overflow-hidden flex justify-center items-center z-50'>
             <div className='w-[1000px] h-[800px] bg-white p-[25px] rounded-[25px]'>
                 <div className='relative w-full h-full bg-black flex justify-between items-center rounded-[15px]'>
                     {/* Cross */}
@@ -20,7 +33,11 @@ const ImageModal = ({ imageSelected, onClose, onPreviousClick, onNextClick }: Im
                     <button onClick={onPreviousClick}>
                         <img src="/assets/arrow-left-white.svg" alt="" />
                     </button>
-                    <img className="object-contain max-h-full max-w-[80%]" src={imageSelected} alt={"input file"} />
+                    {loading ? (
+                        <Loader />
+                    ) : (
+                        <img className="object-contain max-h-full max-w-[80%]" src={imageSelected} alt={"input file"} />
+                    )}
                     {/* Next Button */}
                     <button onClick={onNextClick}>
                         <img src="/assets/arrow-left-white.svg" className='rotate-180' alt="" />

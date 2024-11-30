@@ -4,6 +4,12 @@ import ImageModal from '@/components/ImageModal';
 import React, { useEffect, useRef, useState } from 'react'
 import { AiChatInterface, AiChatMessageInterface } from '@/services/AiChatInterface';
 
+import Like from "../../../../../public/assets/like.svg"
+import Dislike from "../../../../../public/assets/dislike.svg"
+import { updateMessageResponseStatus } from '@/firebaseFunctions/user/aiChat';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
+
 interface ChatProps {
     selectedChat: AiChatInterface | null
 }
@@ -12,6 +18,7 @@ const Chat = ({ selectedChat }: ChatProps) => {
 
     const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
 
+    const userId = useSelector((state: RootState) => state.userReducer.userId)
 
     // State
     const [inputText, setInputText] = useState("")
@@ -23,28 +30,45 @@ const Chat = ({ selectedChat }: ChatProps) => {
             endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
         }
 
-        // Profile photo show
-        // let chat = supportChat.conversation
-        // for (let index = 0; index < chat.length; index++) {
-        //     if (chat[index].sender_id == adminId && chat[index - 1]?.sender_id !== adminId) {
-        //         setLastAdminMessageIndex(index)
-        //     }
-        //     if (chat[index].sender_id != adminId && chat[index - 1]?.sender_id == adminId) {
-        //         {
-        //             setLastUserMessageIndex(index)
-        //         }
-        //     }
-        // }
-
-
     }, [selectedChat]); // Dependency array includes messages
 
+
+    if (!selectedChat) {
+        return (
+            <h1 className='flex-1'>Couldn't find the chat</h1>
+        )
+    }
+
+
+    const sendSummarizationMessage = () => {
+
+
+    }
+
+
+    const likeMessage = (liked: boolean, index: number) => {
+
+        const response_status = {
+            is_liked: liked ? false : true,
+            is_disliked: false
+        }
+        updateMessageResponseStatus(userId, selectedChat.chat_id, index, response_status)
+    }
+
+    const dislikeMessage = (disliked: boolean, index: number) => {
+
+        const response_status = {
+            is_liked: false,
+            is_disliked: disliked ? false : true
+        }
+        updateMessageResponseStatus(userId, selectedChat.chat_id, index, response_status)
+    }
 
     const getMessage = (message: AiChatMessageInterface, index: number) => {
         console.log(message);
 
         let isMessageFromUser: boolean = message.message_type == "original"
-        let isResponse: boolean = message.message_type == "response"
+
         if (isMessageFromUser) {
             console.log("isMessageFromUser");
 
@@ -64,21 +88,49 @@ const Chat = ({ selectedChat }: ChatProps) => {
 
         return (
             <div className={`flex gap-[10px] flex-start items-start mb-[25px] `}>
-                <div className='w-[30px] h-[30px] rounded-full overflow-hidden flex justify-center items-center'>
+                <div className='min-w-[30px] w-[30px] h-[30px] rounded-full overflow-hidden flex justify-center items-center'>
 
                     <img src={"/user-image.jpg"} alt="profile picture" className='object-cover' />
                 </div>
 
                 {/* For text */}
 
-                <div className='flex-1 flex justify-start'>
-                    <p className={`p-[16px]  font-medium text-[16px]  rounded-[15px] 
-                bg-accentColorLight text-black max-w-[52%]
-                    `}>{message.text}</p>
+                <div className='flex-1 flex justify-start items-center'>
+                    <p
+                        className={`p-[16px] font-medium text-[16px] rounded-[15px] bg-accentColorLight text-black max-w-[52%]`}>
+                        {message.text}
+                    </p>
+                    {
+                        message.response_status && <div className='flex gap-[5px] mx-[15px]'>
+                            <button
+                                className=' p-[8px] bg-accentColorLight rounded-full'
+                                onClick={() => likeMessage(message.response_status.is_liked, index)}
+                            >
+                                {
+                                    message.response_status?.is_liked
+                                        ?
+                                        <Like fill="#2a4e8f" />
+                                        :
+                                        <Like stroke="#2a4e8f" />
+                                }
+                            </button>
+                            <button
+                                className=' p-[8px] bg-accentColorLight rounded-full '
+                                onClick={() => dislikeMessage(message.response_status.is_disliked, index)}
+                            >
+                                {
+                                    message.response_status?.is_disliked
+                                        ?
+                                        <Dislike fill="#2a4e8f" />
+                                        :
+                                        <Dislike stroke="#2a4e8f" />
+                                }
+                            </button>
+                        </div>
+                    }
                 </div>
 
-                <div className='w-[30px] h-[30px]'></div>
-            </div>
+            </div >
         )
 
     }
@@ -116,7 +168,7 @@ const Chat = ({ selectedChat }: ChatProps) => {
                     </div>
                 </div>
 
-                <div className='w-full h-[1px] border-[#EBEEF4] border-[1px] border-solid'></div>
+                <div className='w-full h-[1px] border-borderColorLight border-[1px] border-solid'></div>
                 {/* Conversation Tab */}
 
                 {true &&
@@ -125,8 +177,6 @@ const Chat = ({ selectedChat }: ChatProps) => {
                         scrollbarWidth: 'none', // Firefox
                         msOverflowStyle: 'none', // IE and Edge
                     }}>
-                        {/* {getMessage(supportChat.conversation[0])} */}
-
                         {selectedChat?.conversation.map(
                             (message, index) => (
                                 <div className='w-full'>
@@ -134,8 +184,6 @@ const Chat = ({ selectedChat }: ChatProps) => {
                                 </div>
                             )
                         )}
-
-
 
                         <div ref={endOfMessagesRef} />
                     </div>
@@ -164,12 +212,10 @@ const Chat = ({ selectedChat }: ChatProps) => {
 
                 {/* Inputs Tab at the bottom */}
 
-                <div className='w-full h-[1px] border-[#EBEEF4] border-[1px] border-solid '></div>
+                <div className='w-full h-[1px] border-borderColorLight border-[1px] border-solid '></div>
 
                 <div className='flex justify-end items-center gap-[15px] px-[20px]'>
                     {/* buttons */}
-                    {/* Image icon */}
-                    <IconButton icon='/assets/add-image-outlined.svg' onClick={() => { }} />
                     {/* Text input */}
                     <input
                         onKeyDown={(event) => {
@@ -191,16 +237,7 @@ const Chat = ({ selectedChat }: ChatProps) => {
                         onClick={() => { }} />
                 </div>
 
-                {/* Image modal  */}
-                {!"imageExpanded" ?
-                    <ImageModal
-                        imageSelected={""}
-                        onClose={() => { }}
-                        onNextClick={() => { }}
-                        onPreviousClick={() => { }}
-                    />
-                    : <></>
-                }
+
 
             </div>
         </div>

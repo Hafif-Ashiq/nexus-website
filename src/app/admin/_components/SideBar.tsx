@@ -6,7 +6,6 @@ import { usePathname } from 'next/navigation'
 import React from 'react'
 
 
-
 const SideBar = () => {
     const path = usePathname()
 
@@ -43,7 +42,19 @@ const SideBar = () => {
                             ${path.includes(navlink.link) ? "bg-primaryColorLight text-white" : ""}
                             rounded-[15px]
                         `}>
-                            <img src={`/assets/${navlink.icon}`} alt="" />
+                            {/* <img src={`/assets/${navlink.icon}`} alt="" /> */}
+                            {navlink.icon && <navlink.icon
+                                stroke={path.includes(navlink.link) ? "white" : "#171717"}
+
+                                // fill={path.includes(navlink.link) ? "#2a4e8f" : "white"}
+                                style={{
+                                    color: path.includes(navlink.link) ? "white" : "transparent"
+                                }}
+
+                            >
+                            </navlink.icon>}
+
+
                             <p className='text-[20px]'>{navlink.title}</p>
                         </Link>
                     ))}

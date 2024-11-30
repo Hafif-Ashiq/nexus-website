@@ -1,3 +1,5 @@
+import { SummarizationConfig } from "./Configs"
+
 export enum ContentType {
     VIDEO = "video",
     AUDIO = "audio",
@@ -17,7 +19,8 @@ interface TranslationInterface {
 
 interface SummarizationInterface {
     text: string,
-    status: StatusInterface
+    status: StatusInterface,
+    summarization_config: SummarizationConfig
 }
 
 export interface ContentInterface {
