@@ -42,12 +42,15 @@ const PostsSection = ({ posts, loading, onLoadMore }: PostsSectionProps) => {
             {posts.map((post) => (
                 <Post key={post.post_id} post={post} />
             ))}
+
+            <div ref={endOfPostsRef} />
+
             {loading && posts.length > 0 && (
                 <div className='flex justify-center items-center h-[40px] mb-[20px]'>
                     <Loader />
                 </div>
             )}
-            <div ref={endOfPostsRef} /> {/* This div is used to detect when the last post is visible */}
+
         </div>
     )
 }

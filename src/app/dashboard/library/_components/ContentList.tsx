@@ -141,7 +141,7 @@ const ContentList: React.FC<ContentTableProps> = ({ content, showSelect = false,
                             </td>}
                             {/* <td className='w-[20px]'>{index < 10 ? `0${index + 1}` : index + 1}</td> */}
                             <td className='w-[400px] text-ellipsis overflow-hidden flex items-center gap-[25px]'>
-                                <img className='w-[100px] h-[60px] object-cover rounded-[10px]' src={cont.thumbnail} alt="" />
+                                <img className='w-[100px] h-[60px] object-cover rounded-[10px] bg-accentColorLight' src={cont.thumbnail} alt="" />
                                 <span className='flex-1 '>{cont.title}</span></td>
                             <td className='w-[150px] text-ellipsis overflow-hidden opacity-50 group-hover:opacity-100 transition-opacity duration-200'>{getDateFormatted(cont.date_updated)}</td>
                             <td className='w-[150px] text-ellipsis overflow-hidden flex items-center gap-[10px] opacity-50 group-hover:opacity-100 transition-opacity duration-200'>{getContentType(cont.type)} </td>

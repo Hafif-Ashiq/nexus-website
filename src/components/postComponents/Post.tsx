@@ -33,10 +33,12 @@ const Post = ({ post }: PostProps) => {
 
     const [userData, setUserData] = useState<Partial<Pick<UserProfile, 'first_name' | 'last_name' | 'email' | 'profile_pic'>>>({})
 
+
     useEffect(() => {
         setLiked(post.liked_by.includes(userId) || false)
         listenToPostComments(post.post_id, setComments)
         getUserDataForPost(post.user_id).then(res => setUserData(res))
+
     }, [])
 
     const handleLikeClick = () => {

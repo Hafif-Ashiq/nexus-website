@@ -9,6 +9,7 @@ import Dislike from "../../../../../public/assets/dislike.svg"
 import { updateMessageResponseStatus } from '@/firebaseFunctions/user/aiChat';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
+import Loader from '@/components/Loader';
 
 interface ChatProps {
     selectedChat: AiChatInterface | null
@@ -35,7 +36,9 @@ const Chat = ({ selectedChat }: ChatProps) => {
 
     if (!selectedChat) {
         return (
-            <h1 className='flex-1'>Couldn't find the chat</h1>
+            <div className='flex flex-1 justify-center items-center h-[80vh]'>
+                <Loader />
+            </div>
         )
     }
 
