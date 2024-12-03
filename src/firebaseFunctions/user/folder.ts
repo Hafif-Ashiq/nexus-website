@@ -1,4 +1,4 @@
-import { collection, query, onSnapshot, getDocs } from 'firebase/firestore';
+import { collection, query, onSnapshot, getDocs, addDoc, updateDoc } from 'firebase/firestore';
 import { FolderInterface } from '../../services/FoldersInterface';
 import { db } from '@/services/firebase';
 
@@ -46,5 +46,32 @@ export const getFolderNames = async (userId: string): Promise<string[]> => {
     } catch (error) {
         console.error('Error fetching folder names:', error);
         return [];
+    }
+};
+
+export const createFolder = async (
+    userId: string,
+    folderData: {
+        title: string;
+        icon: number;
+    }
+): Promise<string> => {
+    try {
+        const userFoldersRef = collection(db, 'users', userId, 'folder');
+        const docRef = await addDoc(userFoldersRef, {
+            title: folderData.title,
+            icon: folderData.icon,
+            date_updated: new Date().toISOString()
+        });
+
+        // Update the document with its own ID
+        await updateDoc(docRef, {
+            folder_id: docRef.id
+        });
+
+        return docRef.id;
+    } catch (error) {
+        console.error('Error creating folder:', error);
+        throw error;
     }
 };

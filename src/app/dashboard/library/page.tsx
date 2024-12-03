@@ -24,6 +24,25 @@ const page = () => {
     const folders = useSelector((state: RootState) => state.libraryReducer.allFolders);
     const content = useSelector((state: RootState) => state.libraryReducer.allContent);
 
+    const [filteredContent, setFilteredContent] = useState<ContentInterface[]>(content)
+
+
+    useEffect(() => {
+        const filteredContent = getContent()
+        setFilteredContent(filteredContent)
+    }, [content, searchText])
+
+    const getContent = () => {
+        if (searchText == "") {
+            return content
+        }
+
+        const contentList: ContentInterface[] = content.filter(
+            cont => cont.title.toLowerCase().includes(searchText.toLowerCase())
+        )
+
+        return contentList
+    }
 
     useEffect(() => {
         listenToUserContent(userId, (content) => dispatch(setAllContent(content)))
@@ -48,7 +67,7 @@ const page = () => {
                         </div>
                         <div className='flex-1'>
 
-                            <ContentList content={content} showSelect onContentClick={(cont) => {
+                            <ContentList content={filteredContent} showSelect onContentClick={(cont) => {
                                 dispatch(setCurrentContent(cont))
                                 router.push(`/dashboard/library/content/${cont.content_id}`)
                             }} />

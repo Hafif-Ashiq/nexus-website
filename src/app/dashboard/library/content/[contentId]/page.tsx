@@ -49,7 +49,7 @@ const page = () => {
                                 <div className={`font-semibold text-[16px] text-primaryColorLight rounded-[12px]  border-[2px] border-solid transition-all duration-300  px-[10px] ${showOriginalContent ? 'border-borderColor  py-[10px]' : 'border-transparent mx-[20px] mt-[20px]'}`}>
                                     Original
                                 </div>
-                                <div className={`font-medium text-black text-justify bg-accentColorLight flex-1 px-[20px] rounded-lg ${showOriginalContent ? 'py-[20px]' : 'py-[10px]'}`}>
+                                <div className={`font-medium w-full text-black text-justify bg-accentColorLight flex-1 px-[20px] rounded-lg ${showOriginalContent ? 'py-[20px]' : 'py-[10px]'}`}>
                                     {content.extracted_text}
                                 </div>
 
@@ -98,7 +98,7 @@ const page = () => {
                                     }
 
                                 </div>
-                                <div className={`font-medium text-black text-justify bg-accentColorLight flex-1 px-[20px] rounded-lg ${!showOriginalContent ? 'py-[20px]' : 'py-[10px]'}`}>
+                                <div className={`font-medium text-black text-justify bg-accentColorLight flex-1 w-full px-[20px] rounded-lg ${!showOriginalContent ? 'py-[20px]' : 'py-[10px]'}`}>
                                     {content?.summarization?.text}
                                 </div>
                             </div>

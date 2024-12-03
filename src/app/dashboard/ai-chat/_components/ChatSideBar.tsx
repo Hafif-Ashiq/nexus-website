@@ -1,7 +1,9 @@
 import HeaderButton from '@/components/HeaderButton'
 import IconButton from '@/components/IconButton'
+import { RootState } from '@/redux/store'
 import { AiChatInterface } from '@/services/AiChatInterface'
 import React from 'react'
+import { useSelector } from 'react-redux'
 
 interface ChatSideBarProps {
     chats: AiChatInterface[],
@@ -10,11 +12,12 @@ interface ChatSideBarProps {
 
 const ChatSideBar = ({ chats, setSelectedChat }: ChatSideBarProps) => {
 
+    const selectedChat = useSelector((state: RootState) => state.userReducer.selectedChat)
 
 
     const showChats = (chat: AiChatInterface) => {
         return (
-            <button className='flex flex-col gap-[2px]' onClick={() => setSelectedChat(chat)}>
+            <button className={`flex flex-col gap-[2px] border-[3px] border-solid rounded-[15px] ${selectedChat?.chat_id === chat.chat_id ? 'border-primaryColorLight' : 'border-transparent'}`} onClick={() => setSelectedChat(chat)}>
                 <div className='flex justify-between items-center gap-[50px] overflow-hidden  px-[18px] py-[15px] rounded-t-[15px] bg-accentColorLight w-full text-left'>
                     <p className='font-medium text-[16px] max-h-[48px] overflow-hidden w-full text-ellipsis'>{chat.conversation[chat.conversation.length - 1].text}</p>
                     <button className='flex justify-center items-center cursor-pointer  '>

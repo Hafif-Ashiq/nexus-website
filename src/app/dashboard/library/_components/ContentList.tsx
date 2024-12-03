@@ -8,11 +8,11 @@ import { getDateFormatted } from '@/utils/datetime'
 interface ContentTableProps {
     content: ContentInterface[],
     showSelect?: boolean,
-    showViewAll?: boolean,
+    showHeader?: boolean,
     onContentClick: (content: ContentInterface) => void
 }
 
-const ContentList: React.FC<ContentTableProps> = ({ content, showSelect = false, showViewAll = true, onContentClick }) => {
+const ContentList: React.FC<ContentTableProps> = ({ content, showSelect = false, showHeader = true, onContentClick }) => {
 
 
     const [actionsOpen, setActionsOpen] = useState(-1)
@@ -91,7 +91,7 @@ const ContentList: React.FC<ContentTableProps> = ({ content, showSelect = false,
         <div className='flex flex-col gap-[15px] h-full flex-1'>
 
             <table className='bg-white w-full flex-1 h-full'>
-                <thead>
+                {showHeader && <thead>
                     <tr className={`flex justify-between text-left pl-[25px] pr-[50px] py-[25px] text-ellipsis overflow-hidden  bg-primaryColorLight font-semibold text-white text-[18px]`}>
                         {showSelect && <>
                             <th className='flex gap-[30px] items-center justify-start' style={{ width: anySelected ? "200px" : "30px" }}>
@@ -122,6 +122,7 @@ const ContentList: React.FC<ContentTableProps> = ({ content, showSelect = false,
 
                     </tr>
                 </thead>
+                }
                 <tbody>
                     {content.map((cont, index) => (
                         <tr
