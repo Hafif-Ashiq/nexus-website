@@ -1,8 +1,9 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
+import ProfileModal from '@/components/ProfileModal'
 
 const LibraryHeaderBreadCrumb = ({ subtitle }: { subtitle: string }) => {
     const router = useRouter()
@@ -15,6 +16,7 @@ const LibraryHeaderBreadCrumb = ({ subtitle }: { subtitle: string }) => {
     const folderId = isFolder ? pathSegments[pathSegments.indexOf('folder') + 1] : null
     const contentId = isContent ? pathSegments[pathSegments.indexOf('content') + 1] : null
 
+    const [showProfileModal, setShowProfileModal] = useState(false)
     return (
         <div className='flex items-center justify-between'>
             <div className='flex flex-col gap-[5px]'>
@@ -50,10 +52,15 @@ const LibraryHeaderBreadCrumb = ({ subtitle }: { subtitle: string }) => {
                     <span>Upload</span>
                 </button>
                 <button onClick={() => {
-                    router.push('/dashboard/profile')
+                    setShowProfileModal(!showProfileModal)
                 }} className='w-[55px] h-[55px] rounded-full overflow-hidden'>
                     <img src="/admin-image.jpg" alt="admin image" className='object-cover w-full h-full ' />
                 </button>
+                {showProfileModal &&
+                    <div className='absolute top-[60px] right-[0px] '>
+                        <ProfileModal />
+                    </div>
+                }
             </div>
         </div>
     )

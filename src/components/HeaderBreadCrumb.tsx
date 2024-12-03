@@ -1,10 +1,12 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
-import React from 'react'
+import React, { useState } from 'react'
+import ProfileModal from './ProfileModal'
 
 const HeaderBreadCrumb = () => {
     const path = usePathname().split("/")
     const router = useRouter()
+    const [showProfileModal, setShowProfileModal] = useState(false)
     return (
         <div className='flex items-center justify-between'>
             <h2 className='text-[28px] font-semibold capitalize flex items-center gap-[20px]'>{path.slice(2).map((link, index) => (
@@ -23,10 +25,15 @@ const HeaderBreadCrumb = () => {
                     <span>Upload</span>
                 </button>
                 <button onClick={() => {
-                    router.push('/dashboard/profile')
+                    setShowProfileModal(!showProfileModal)
                 }} className='w-[55px] h-[55px] rounded-full overflow-hidden'>
                     <img src="/admin-image.jpg" alt="admin image" className='object-cover w-full h-full ' />
                 </button>
+                {showProfileModal &&
+                    <div className='absolute top-[60px] right-[0px] '>
+                        <ProfileModal />
+                    </div>
+                }
             </div>
         </div>
     )
