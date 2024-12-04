@@ -8,16 +8,16 @@ interface SummarizationConfigModalProps {
 
 const SummarizationConfigModal = ({ config, onConfigChange }: SummarizationConfigModalProps) => {
 
-    const [selectedType, setSelectedType] = useState<"extractive" | "abstractive">("extractive")
-    const [selectedLength, setSelectedLength] = useState<"short" | "medium" | "long">("medium")
+    const [selectedType, setSelectedType] = useState<"extractive" | "abstractive">(config.type)
+    const [selectedLength, setSelectedLength] = useState<"short" | "medium" | "long">(config.length)
 
     const summarizationStyles = ["Extractive", "Abstractive"]
     const summarizationLengths = ["Short", "Medium", "Long"]
 
-    useEffect(() => {
-        setSelectedType(config.type)
-        setSelectedLength(config.length)
-    }, [config])
+    // useEffect(() => {
+    //     setSelectedType(config.type)
+    //     setSelectedLength(config.length)
+    // }, [])
 
     const handleConfigChange = () => {
         let newConfig = {
@@ -26,6 +26,13 @@ const SummarizationConfigModal = ({ config, onConfigChange }: SummarizationConfi
         }
         onConfigChange(newConfig)
     }
+
+    useEffect(() => {
+        if (selectedType !== config.type || selectedLength !== config.length) {
+            console.log("changed")
+            handleConfigChange()
+        }
+    }, [selectedType, selectedLength])
 
     return (
         <div className='p-[20px] bg-white rounded-[15px] border-[1px] border-borderColorLight py-[20px] shadow-md flex flex-col gap-[15px]'>

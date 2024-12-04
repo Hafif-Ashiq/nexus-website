@@ -5,8 +5,12 @@ import LargeButton from '../_components/LargeButton'
 import ModelsGraph from './_components/ModelsGraph'
 import { getAllModels, updateModel } from '@/firebaseFunctions/admin/aiModels'
 import { AiModelInterface } from '@/services/AiModelsInterface'
+import ModelsEndpointModal from './_components/ModelsEndpointModal'
 
 const page = () => {
+
+    const [showEndpointModal, setShowEndpointModal] = useState(false)
+
     const [activeTile, setActiveTile] = useState(0)
 
     const [tiles, setTiles] = useState<AiModelInterface[]>([])
@@ -63,6 +67,12 @@ const page = () => {
             <Header title='Configuration' subtitle='' />
             <div className="flex gap-[40px] flex-1">
                 <div className='basis-[70%] flex flex-col gap-[20px]'>
+                    <div className='flex justify-end'>
+                        <button onClick={() => setShowEndpointModal(true)} className='bg-primaryColorLight text-white px-[20px] py-[10px] rounded-[10px]'>
+                            Update Modal Endpoint
+                        </button>
+                        {showEndpointModal && <ModelsEndpointModal onClose={() => setShowEndpointModal(false)} />}
+                    </div>
                     <div className='flex justify-between items-center gap-[20px]'>
                         {tiles.map((stat, index) => (
                             <LargeButton
@@ -77,6 +87,7 @@ const page = () => {
                             />
                         ))}
                     </div>
+
                     {/* <GraphInfo data={tiles[activeTile].data} title={tiles[activeTile].title} value={tiles[activeTile].value} change={tiles[activeTile].change} increase={tiles[activeTile].increase} /> */}
                     {tiles.length > 0 ?
                         <ModelsGraph

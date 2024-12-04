@@ -5,12 +5,15 @@ import { AiChatInterface, AiChatMessageInterface } from '@/services/AiChatInterf
 
 import Like from "../../../../../public/assets/like.svg"
 import Dislike from "../../../../../public/assets/dislike.svg"
-import { updateMessageResponseStatus } from '@/firebaseFunctions/user/aiChat';
+import { updateAiChatConfig, updateMessageResponseStatus } from '@/firebaseFunctions/user/aiChat';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import Loader from '@/components/Loader';
 import SummarizationConfigModal from './modals/SummarizationConfigModal';
 import { chat } from '@/services/abc';
+import TranslationConfigModal from './modals/TranslationConfigModal';
+import { TranslationConfig } from '@/services/Configs';
+import { SummarizationConfig } from '@/services/Configs';
 
 interface ChatProps {
     selectedChat: AiChatInterface | null
@@ -142,6 +145,11 @@ const Chat = ({ selectedChat }: ChatProps) => {
     }
 
 
+    const handleConfigChange = (newConfig: SummarizationConfig | TranslationConfig) => {
+        console.log(newConfig)
+        updateAiChatConfig(selectedChat.chat_type, newConfig, userId, selectedChat.chat_id)
+    }
+
 
     return (
         <div className='flex flex-col gap-[20px] h-[80vh] basis-[70%]'>
@@ -174,9 +182,13 @@ const Chat = ({ selectedChat }: ChatProps) => {
                                 if (selectedChat.chat_type == "Summarization") {
                                     setShowSummarizationConfigModal(!showSummarizationConfigModal)
                                 }
+                                else if (selectedChat.chat_type == "Translation") {
+                                    setShowTranslationConfigModal(!showTranslationConfigModal)
+                                }
                             }} isDropdown={true} />
                             <div className='absolute top-[100%] right-0'>
-                                {showSummarizationConfigModal && <SummarizationConfigModal config={selectedChat.summarization_config} onConfigChange={() => { }} />}
+                                {showSummarizationConfigModal && <SummarizationConfigModal config={selectedChat.summarization_config} onConfigChange={handleConfigChange} />}
+                                {showTranslationConfigModal && <TranslationConfigModal config={selectedChat.translation_config} onConfigChange={handleConfigChange} />}
                             </div>
                         </div>
                         <IconButton icon='/assets/menu-blue.svg' onClick={() => { }} />

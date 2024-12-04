@@ -44,3 +44,27 @@ export async function updateModel(model_id: string, updatedFields: Partial<AiMod
         console.error(`Error updating model with ID ${model_id}:`, error);
     }
 }
+
+export async function updateEndpointPrefix(newPrefix: string) {
+    try {
+        const modelCollectionRef = collection(db, 'models');
+        const querySnapshot = await getDocs(modelCollectionRef);
+
+        const updatePromises = querySnapshot.docs.map(async (doc) => {
+            const modelData = doc.data() as AiModelInterface;
+            const currentEndpoint = modelData.endpoint;
+
+            // Update the endpoint by replacing the base URL while preserving the path
+            const url = new URL(currentEndpoint);
+            const updatedEndpoint = `${newPrefix}${url.pathname}`;
+            await updateDoc(doc.ref, { endpoint: updatedEndpoint });
+            console.log(`Updated endpoint for model ID ${modelData.model_id}: ${updatedEndpoint}`);
+
+        });
+
+        await Promise.all(updatePromises);
+        console.log("All applicable endpoints updated successfully!");
+    } catch (error) {
+        console.error("Error updating endpoints: ", error);
+    }
+}

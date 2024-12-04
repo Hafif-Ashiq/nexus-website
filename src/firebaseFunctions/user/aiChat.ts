@@ -2,6 +2,8 @@ import { getFirestore, collection, query, onSnapshot, updateDoc, doc, getDoc } f
 import { AiChatInterface } from '../../services/AiChatInterface';
 import { db } from '@/services/firebase';
 import { AiModelInterface } from '@/services/AiModelsInterface';
+import { SummarizationConfig } from '@/services/Configs';
+import { TranslationConfig } from '@/services/Configs';
 
 export const listenToAiChatHistory = (
     userId: string,
@@ -119,6 +121,42 @@ export const updateMessageResponseStatus = async (
 
     } catch (error) {
         console.error('Error updating message response status:', error);
+        throw error;
+    }
+};
+
+export const updateAiChatConfig = async (chatType: string, newConfig: SummarizationConfig | TranslationConfig, userId: string, chatId: string) => {
+    try {
+        const chatRef = doc(db, 'users', userId, 'chat', chatId); // Assuming chatId is available in the scope
+        const chatDoc = await getDoc(chatRef);
+
+        if (!chatDoc.exists()) {
+            throw new Error('Chat document does not exist');
+        }
+
+        const chatData = chatDoc.data();
+        let updatedConfig;
+
+        if (chatType === 'Summarization') {
+            updatedConfig = {
+                ...chatData.summarization_config,
+                ...newConfig
+            };
+        } else if (chatType === 'Translation') {
+            updatedConfig = {
+                ...chatData.translation_config,
+                ...newConfig
+            };
+        } else {
+            throw new Error('Invalid chat type');
+        }
+
+        await updateDoc(chatRef, {
+            [chatType.toLowerCase() + '_config']: updatedConfig
+        });
+
+    } catch (error) {
+        console.error('Error updating config:', error);
         throw error;
     }
 };
