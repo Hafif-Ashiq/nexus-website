@@ -6,10 +6,11 @@ import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { addImageMessage, addTextMessage } from '@/firebaseFunctions/admin/supportChat';
 import ImageModal from '@/components/modals/ImageModal';
+import Loader from '@/components/Loader';
 
 
 
-const SupportChat = () => {
+const UserSupportChat = () => {
 
 
     const [inputText, setInputText] = useState<string>("")
@@ -21,15 +22,19 @@ const SupportChat = () => {
     const [imageExpanded, setImageExpanded] = useState<boolean>(false)
     const [imageSelected, setImageSelected] = useState<number>(0)
 
-    const supportChat: SupportInterface = useSelector((state: RootState) => state.adminReducer.currentSupportChat)
-    const adminId: string = useSelector((state: RootState) => state.adminReducer.adminId)
+    const supportChat: SupportInterface | null = useSelector((state: RootState) => state.userReducer.selectedUserSupportChat)
+    const userId: string = useSelector((state: RootState) => state.userReducer.userId)
 
     const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
 
-    const [lastAdminMessageIndex, setLastAdminMessageIndex] = useState<number>(0)
     const [lastUserMessageIndex, setLastUserMessageIndex] = useState<number>(0)
 
 
+    if (!supportChat) {
+        return <div className='h-[80vh] flex justify-center items-center'>
+            <Loader />
+        </div>
+    }
 
 
     useEffect(() => {
@@ -41,10 +46,8 @@ const SupportChat = () => {
         // Profile photo show
         let chat = supportChat.conversation
         for (let index = 0; index < chat.length; index++) {
-            if (chat[index].sender_id == adminId && chat[index - 1]?.sender_id !== adminId) {
-                setLastAdminMessageIndex(index)
-            }
-            if (chat[index].sender_id != adminId && chat[index - 1]?.sender_id == adminId) {
+
+            if (chat[index].sender_id != userId && chat[index - 1]?.sender_id == userId) {
                 {
                     setLastUserMessageIndex(index)
                 }
@@ -52,90 +55,19 @@ const SupportChat = () => {
         }
 
 
-    }, [supportChat]); // Dependency array includes messages
-    // , [supportChat, supportChat.conversation,]
+    }, [supportChat, supportChat.conversation]);
+
+
     useEffect(() => {
-        console.log(supportChat);
-        console.log("before img");
 
         const imgs = supportChat.conversation.filter((chat) => chat.message_type == "image")
-        console.log("after img");
-
-        console.log(imgs);
-
 
         setImageFiles(imgs)
     }, [supportChat])
 
 
-    const getMessage = (message: ConversationInterface, index: number) => {
-        let isAdmin: boolean = message.sender_id == adminId
-        let nextIsAdmin: boolean = supportChat.conversation[index + 1]?.sender_id == adminId
-        let isLastMessage: boolean = index == supportChat.conversation.length - 1
-
-        if (isAdmin) {
-            return (
-                <div className={`flex gap-[10px] items-start justify-end  ${(nextIsAdmin && isAdmin) || isLastMessage ? "mb-[3px]" : "mb-[25px]"}`}>
-                    <div className='w-[30px] h-[30px]'></div>
-
-                    {/* For text */}
-                    {
-                        message.message_type == "text" ? <div className='flex-1 flex justify-end'> <p className={`p-[16px] inline-block  font-semibold text-[16px] rounded-[15px] 
-                         bg-primaryColorLight text-white
-                        `}>{message.text}</p> </div> : <></>
-                    }
-                    {/* For image */}
-                    {
-                        message.message_type == "image" ? <button onClick={() => {
-                            setImageSelected(imageFiles.findIndex(files => files.image_link == message.image_link))
-                            setImageExpanded(true)
-
-                        }} className='flex-1 flex justify-end'>
-                            <img className="rounded-[15px]" src={message.image_link} alt="" />
-                        </button> : <></>
-                    }
-
-                </div>
-            )
-        }
-
-        return (
-            <div className={`flex gap-[10px] flex-start items-start  ${(!nextIsAdmin && !isAdmin) || isLastMessage ? "mb-[2px]" : "mb-[25px]"}`}>
-                <div className='w-[30px] h-[30px] rounded-full overflow-hidden flex justify-center items-center'>
-
-                    {index == lastUserMessageIndex ? <img src={"/user-image.jpg"} alt="profile picture" className='object-cover' /> : <></>}
-                </div>
-
-                {/* For text */}
-                {
-                    message.message_type == "text" ?
-                        <div className='flex-1 flex justify-start'>
-                            <p className={`p-[16px]  font-semibold text-[16px]  rounded-[15px] 
-                bg-accentColorLight text-black 
-                    `}>{message.text}</p> </div> : <></>
-                }
-                {/* For image */}
-                {
-
-                    message.message_type == "image" ? <button onClick={() => {
-                        setImageSelected(imageFiles.findIndex(files => files.image_link == message.image_link))
-                        setImageExpanded(true)
-
-                    }} className='flex-1 flex justify-start'>
-                        <img className="rounded-[15px]" src={message.image_link} alt="" /> </button> : <></>
-                }
-
-
-                <div className='w-[30px] h-[30px]'></div>
-
-            </div>
-        )
-
-    }
-
-
     const sendTextMessage = () => {
-        addTextMessage({ message: inputText, documentId: supportChat.issue_id, senderId: adminId })
+        addTextMessage({ message: inputText, documentId: supportChat.issue_id, senderId: userId })
         setInputText("")
     }
 
@@ -166,13 +98,83 @@ const SupportChat = () => {
             addImageMessage({
                 imageFile: file,
                 documentId: supportChat.issue_id,
-                senderId: adminId
+                senderId: userId
             })
         }
         catch (error) {
             console.error('File selection was canceled or failed', error);
         }
     }
+
+
+
+
+
+    const getMessage = (message: ConversationInterface, index: number) => {
+        let isUser: boolean = message.sender_id == userId
+        let nextIsUser: boolean = supportChat.conversation[index + 1]?.sender_id == userId
+        let isLastMessage: boolean = index == supportChat.conversation.length - 1
+
+        if (isUser) {
+            return (
+                <div className={`flex gap-[10px] items-start justify-end  ${(nextIsUser && isUser) || isLastMessage ? "mb-[3px]" : "mb-[25px]"}`}>
+                    <div className='w-[30px] h-[30px]'></div>
+
+                    {/* For text */}
+                    {
+                        message.message_type == "text" ? <div className='flex-1 flex justify-end'> <p className={`p-[16px] inline-block  font-semibold text-[16px] rounded-[15px] 
+                         bg-primaryColorLight text-white
+                        `}>{message.text}</p> </div> : <></>
+                    }
+                    {/* For image */}
+                    {
+                        message.message_type == "image" ? <button onClick={() => {
+                            setImageSelected(imageFiles.findIndex(files => files.image_link == message.image_link))
+                            setImageExpanded(true)
+
+                        }} className='max-w-[400px] flex justify-end'>
+                            <img className="rounded-[15px]" src={message.image_link} alt="" />
+                        </button> : <></>
+                    }
+
+                </div>
+            )
+        }
+
+        return (
+            <div className={`flex gap-[10px] flex-start items-start  ${(!nextIsUser && !isUser) || isLastMessage ? "mb-[2px]" : "mb-[25px]"}`}>
+                <div className='w-[30px] h-[30px] rounded-full overflow-hidden flex justify-center items-center'>
+
+                    {index == lastUserMessageIndex ? <img src={"/user-image.jpg"} alt="profile picture" className='object-cover' /> : <></>}
+                </div>
+
+                {/* For text */}
+                {
+                    message.message_type == "text" ?
+                        <div className='flex-1 flex justify-start'>
+                            <p className={`p-[16px]  font-semibold text-[16px]  rounded-[15px] 
+                bg-accentColorLight text-black 
+                    `}>{message.text}</p> </div> : <></>
+                }
+                {/* For image */}
+                {
+
+                    message.message_type == "image" ? <button onClick={() => {
+                        setImageSelected(imageFiles.findIndex(files => files.image_link == message.image_link))
+                        setImageExpanded(true)
+
+                    }} className='max-w-[400px] flex justify-start'>
+                        <img className="rounded-[15px]" src={message.image_link} alt="" /> </button> : <></>
+                }
+
+
+                <div className='w-[30px] h-[30px]'></div>
+
+            </div>
+        )
+
+    }
+
 
 
     // const getFiles = () => {
@@ -198,7 +200,7 @@ const SupportChat = () => {
                         </div>
                         {/* title */}
                         <div className='flex flex-col items-start justify-center'>
-                            <p className='font-semibold text-[16px]'>{supportChat.user_name}</p>
+                            <p className='font-semibold text-[16px]'>Admin</p>
                             <p className='font-semibold text-[14px]' style={{
                                 color: getStatusColor(supportChat.issue_status)
                             }}>{supportChat.issue_status}</p>
@@ -305,4 +307,4 @@ const SupportChat = () => {
     )
 }
 
-export default SupportChat
+export default UserSupportChat

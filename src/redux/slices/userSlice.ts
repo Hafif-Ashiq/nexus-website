@@ -2,14 +2,17 @@
 
 import { AiChatInterface } from '@/services/AiChatInterface';
 import { ContentInterface } from '@/services/ContentInterface';
+import { SupportInterface } from '@/services/SupportInterface';
 import { createSlice } from '@reduxjs/toolkit';
-
+import { mockSupportChat } from '@/constants/data';
 export interface UserSliceReducer {
 
     userId: string,
     selectedChat: AiChatInterface | null,
     chats: AiChatInterface[],
-    content: ContentInterface[]
+    content: ContentInterface[],
+    selectedUserSupportChat: SupportInterface | null,
+    allUserSupportChats: SupportInterface[]
 }
 
 const initialState: UserSliceReducer = {
@@ -18,7 +21,9 @@ const initialState: UserSliceReducer = {
     userId: "Bd4umkyLqOLnMpdOLZ0E",
     selectedChat: null,
     chats: [],
-    content: []
+    content: [],
+    selectedUserSupportChat: mockSupportChat,
+    allUserSupportChats: []
 
 };
 
@@ -38,6 +43,12 @@ const userSlice = createSlice({
         setContent: (state, action) => {
             state.content = action.payload;
         },
+        setSelectedUserSupportChat: (state, action) => {
+            state.selectedUserSupportChat = action.payload;
+        },
+        setAllUserSupportChats: (state, action) => {
+            state.allUserSupportChats = action.payload;
+        },
     },
 });
 
@@ -45,7 +56,9 @@ export const {
     setUserId,
     setSelectedChat,
     setChats,
-    setContent
+    setContent,
+    setSelectedUserSupportChat,
+    setAllUserSupportChats
 } = userSlice.actions;
 
 export default userSlice.reducer;

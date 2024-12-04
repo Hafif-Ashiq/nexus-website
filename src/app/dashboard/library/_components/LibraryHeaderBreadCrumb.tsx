@@ -3,7 +3,7 @@ import { usePathname, useRouter } from 'next/navigation'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
-import ProfileModal from '@/components/ProfileModal'
+import ProfileModal from '@/components/modals/ProfileModal'
 
 const LibraryHeaderBreadCrumb = ({ subtitle }: { subtitle: string }) => {
     const router = useRouter()

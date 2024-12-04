@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import ImageModal from '../ImageModal'
+import ImageModal from '../modals/ImageModal'
 import Loader from '../Loader'
 
 interface PostDisplay {

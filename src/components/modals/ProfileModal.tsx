@@ -1,11 +1,11 @@
 import React from 'react'
 
-import DarkIcon from '../../public/assets/moon.svg'
-import AppNotifIcon from '../../public/assets/app-notif.svg'
-import CommunityNotifIcon from '../../public/assets/community-filled.svg'
-import ManageAccountIcon from '../../public/assets/manage-account-menu.svg'
-import HelpIcon from '../../public/assets/support-menu.svg'
-import SwitchButton from './SwitchButton'
+import DarkIcon from '../../../public/assets/moon.svg'
+import AppNotifIcon from '../../../public/assets/app-notif.svg'
+import CommunityNotifIcon from '../../../public/assets/community-filled.svg'
+import ManageAccountIcon from '../../../public/assets/manage-account-menu.svg'
+import HelpIcon from '../../../public/assets/support-menu.svg'
+import SwitchButton from '../SwitchButton'
 import { useRouter } from 'next/navigation'
 
 const ProfileModal = () => {
@@ -40,7 +40,9 @@ const ProfileModal = () => {
         {
             title: 'Help & Support',
             icon: HelpIcon,
-            onClick: () => { }
+            onClick: () => {
+                router.push("/dashboard/support")
+            }
         }
     ]
 

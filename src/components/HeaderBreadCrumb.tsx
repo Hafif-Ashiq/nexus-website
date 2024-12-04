@@ -1,7 +1,7 @@
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import React, { useState } from 'react'
-import ProfileModal from './ProfileModal'
+import ProfileModal from './modals/ProfileModal'
 
 const HeaderBreadCrumb = () => {
     const path = usePathname().split("/")

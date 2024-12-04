@@ -1,6 +1,5 @@
 import HeaderButton from '@/components/HeaderButton';
 import IconButton from '@/components/IconButton'
-import ImageModal from '@/components/ImageModal';
 import React, { useEffect, useRef, useState } from 'react'
 import { AiChatInterface, AiChatMessageInterface } from '@/services/AiChatInterface';
 
@@ -10,6 +9,8 @@ import { updateMessageResponseStatus } from '@/firebaseFunctions/user/aiChat';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import Loader from '@/components/Loader';
+import SummarizationConfigModal from './modals/SummarizationConfigModal';
+import { chat } from '@/services/abc';
 
 interface ChatProps {
     selectedChat: AiChatInterface | null
@@ -23,7 +24,8 @@ const Chat = ({ selectedChat }: ChatProps) => {
 
     // State
     const [inputText, setInputText] = useState("")
-
+    const [showSummarizationConfigModal, setShowSummarizationConfigModal] = useState<boolean>(false)
+    const [showTranslationConfigModal, setShowTranslationConfigModal] = useState<boolean>(false)
 
     useEffect(() => {
         // Scroll to the bottom of the chat when messages change
@@ -31,6 +33,8 @@ const Chat = ({ selectedChat }: ChatProps) => {
             endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
         }
 
+        setShowSummarizationConfigModal(false)
+        setShowTranslationConfigModal(false)
     }, [selectedChat]); // Dependency array includes messages
 
 
@@ -68,12 +72,11 @@ const Chat = ({ selectedChat }: ChatProps) => {
     }
 
     const getMessage = (message: AiChatMessageInterface, index: number) => {
-        console.log(message);
+
 
         let isMessageFromUser: boolean = message.message_type == "original"
 
         if (isMessageFromUser) {
-            console.log("isMessageFromUser");
 
             return (
                 <div className={`flex gap-[10px] items-start justify-end mb-[25px]`}>
@@ -157,7 +160,7 @@ const Chat = ({ selectedChat }: ChatProps) => {
                         </div>
                         {/* title */}
                         <div className='flex flex-col items-start justify-center'>
-                            <p className='font-semibold text-[16px]'>Haji Mehdi</p>
+                            <p className='font-semibold text-[16px]'>AI Something</p>
                             <p className='font-semibold text-[14px]' style={{
                                 color: "#2B9F03"
                             }}>Available</p>
@@ -166,7 +169,16 @@ const Chat = ({ selectedChat }: ChatProps) => {
                     {/* Right */}
                     <div className='flex justify-end items-center gap-[15px]'>
                         {/* buttons */}
-                        <HeaderButton icon='' title='Translation' onClick={() => { }} isDropdown={true} />
+                        <div className='relative'>
+                            <HeaderButton icon='' title={selectedChat.chat_type} onClick={() => {
+                                if (selectedChat.chat_type == "Summarization") {
+                                    setShowSummarizationConfigModal(!showSummarizationConfigModal)
+                                }
+                            }} isDropdown={true} />
+                            <div className='absolute top-[100%] right-0'>
+                                {showSummarizationConfigModal && <SummarizationConfigModal config={selectedChat.summarization_config} onConfigChange={() => { }} />}
+                            </div>
+                        </div>
                         <IconButton icon='/assets/menu-blue.svg' onClick={() => { }} />
                     </div>
                 </div>
@@ -182,7 +194,7 @@ const Chat = ({ selectedChat }: ChatProps) => {
                     }}>
                         {selectedChat?.conversation.map(
                             (message, index) => (
-                                <div className='w-full'>
+                                <div key={index} className='w-full'>
                                     {getMessage(message, index)}
                                 </div>
                             )
