@@ -55,7 +55,7 @@ const Chat = ({ selectedChat }: ChatProps) => {
             is_liked: liked ? false : true,
             is_disliked: false
         }
-        updateMessageResponseStatus(userId, selectedChat.chat_id, index, response_status)
+        updateMessageResponseStatus(userId, selectedChat.chat_id, index, "FigG5uIMlUEw1IAlSsBr", response_status)
     }
 
     const dislikeMessage = (disliked: boolean, index: number) => {
@@ -64,7 +64,7 @@ const Chat = ({ selectedChat }: ChatProps) => {
             is_liked: false,
             is_disliked: disliked ? false : true
         }
-        updateMessageResponseStatus(userId, selectedChat.chat_id, index, response_status)
+        updateMessageResponseStatus(userId, selectedChat.chat_id, index, "FigG5uIMlUEw1IAlSsBr", response_status)
     }
 
     const getMessage = (message: AiChatMessageInterface, index: number) => {

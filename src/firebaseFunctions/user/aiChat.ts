@@ -1,6 +1,7 @@
 import { getFirestore, collection, query, onSnapshot, updateDoc, doc, getDoc } from 'firebase/firestore';
 import { AiChatInterface } from '../../services/AiChatInterface';
 import { db } from '@/services/firebase';
+import { AiModelInterface } from '@/services/AiModelsInterface';
 
 export const listenToAiChatHistory = (
     userId: string,
@@ -42,17 +43,18 @@ export const listenToAiChatHistory = (
     }
 };
 
-
 export const updateMessageResponseStatus = async (
     userId: string,
     chatId: string,
     messageIndex: number,
+    modelId: string,
     responseStatus: {
         is_liked: boolean,
         is_disliked: boolean
     }
 ) => {
     try {
+        // Get chat document
         const chatRef = doc(db, 'users', userId, 'chat', chatId);
         const chatDoc = await getDoc(chatRef);
 
@@ -67,18 +69,53 @@ export const updateMessageResponseStatus = async (
             throw new Error('Message index out of bounds');
         }
 
-        // Update the response status
+        // Get previous response status
+        const previousStatus = conversation[messageIndex].response_status || {
+            is_liked: false,
+            is_disliked: false
+        };
+
+        // Get model document
+        const modelRef = doc(db, 'models', modelId);
+        const modelDoc = await getDoc(modelRef);
+
+        if (!modelDoc.exists()) {
+            throw new Error('Model document does not exist');
+        }
+
+        const modelData = modelDoc.data() as AiModelInterface;
+        let upVotes = modelData.total_up_votes || 0;
+        let downVotes = modelData.total_down_votes || 0;
+
+        // Update votes based on previous and new status
+        if (previousStatus.is_liked && !responseStatus.is_liked) {
+            upVotes--;
+        } else if (!previousStatus.is_liked && responseStatus.is_liked) {
+            upVotes++;
+        }
+
+        if (previousStatus.is_disliked && !responseStatus.is_disliked) {
+            downVotes--;
+        } else if (!previousStatus.is_disliked && responseStatus.is_disliked) {
+            downVotes++;
+        }
+
+        // Update the response status in conversation
         conversation[messageIndex] = {
             ...conversation[messageIndex],
             response_status: responseStatus
         };
 
-        // Update the document
-        await updateDoc(chatRef, {
-            conversation: conversation
-        });
-
-        console.log("updated from function")
+        // Update both documents
+        await Promise.all([
+            updateDoc(chatRef, {
+                conversation: conversation
+            }),
+            updateDoc(modelRef, {
+                total_up_votes: upVotes,
+                total_down_votes: downVotes
+            })
+        ]);
 
     } catch (error) {
         console.error('Error updating message response status:', error);
