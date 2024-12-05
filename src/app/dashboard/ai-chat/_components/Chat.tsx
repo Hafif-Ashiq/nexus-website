@@ -5,7 +5,7 @@ import { AiChatInterface, AiChatMessageInterface } from '@/services/AiChatInterf
 
 import Like from "../../../../../public/assets/like.svg"
 import Dislike from "../../../../../public/assets/dislike.svg"
-import { updateAiChatConfig, updateMessageResponseStatus } from '@/firebaseFunctions/user/aiChat';
+import { addOriginalMessage, addResponseMessage, updateAiChatConfig, updateMessageResponseStatus } from '@/firebaseFunctions/user/aiChat';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import Loader from '@/components/Loader';
@@ -14,6 +14,9 @@ import { chat } from '@/services/abc';
 import TranslationConfigModal from './modals/TranslationConfigModal';
 import { TranslationConfig } from '@/services/Configs';
 import { SummarizationConfig } from '@/services/Configs';
+import { AiModelInterface } from '@/services/AiModelsInterface';
+import { translate } from '@/backendFunctions/translation';
+import { summarize } from '@/backendFunctions/summarization';
 
 interface ChatProps {
     selectedChat: AiChatInterface | null
@@ -21,14 +24,32 @@ interface ChatProps {
 
 const Chat = ({ selectedChat }: ChatProps) => {
 
+    if (!selectedChat) {
+        return (
+            <div className='flex flex-1 justify-center items-center h-[80vh]'>
+                <Loader />
+            </div>
+        )
+    }
+
     const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
 
     const userId = useSelector((state: RootState) => state.userReducer.userId)
-
+    const allModels = useSelector((state: RootState) => state.aiModelsReducer.allModels)
     // State
     const [inputText, setInputText] = useState("")
     const [showSummarizationConfigModal, setShowSummarizationConfigModal] = useState<boolean>(false)
     const [showTranslationConfigModal, setShowTranslationConfigModal] = useState<boolean>(false)
+
+    const [currentModel, setCurrentModel] = useState<AiModelInterface | null>(null)
+
+
+
+    useEffect(() => {
+        const modelId = getModelId()
+        const model = allModels.find((model) => model.model_id == modelId)
+        setCurrentModel(model ?? null)
+    }, [allModels, selectedChat])
 
     useEffect(() => {
         // Scroll to the bottom of the chat when messages change
@@ -41,18 +62,26 @@ const Chat = ({ selectedChat }: ChatProps) => {
     }, [selectedChat]); // Dependency array includes messages
 
 
-    if (!selectedChat) {
-        return (
-            <div className='flex flex-1 justify-center items-center h-[80vh]'>
-                <Loader />
-            </div>
-        )
+
+
+
+    const getTranslationFromModel = async () => {
+        if (!currentModel) {
+            return
+        }
+        const response = await translate(inputText, selectedChat.translation_config.source_language, selectedChat.translation_config.target_language, currentModel.endpoint)
+        console.log(response)
+        return response
     }
 
 
-    const sendSummarizationMessage = () => {
-
-
+    const sendSummarizationMessage = async () => {
+        if (!currentModel) {
+            return
+        }
+        const response = await summarize(inputText, selectedChat.summarization_config.length, currentModel?.endpoint)
+        console.log(response)
+        return response
     }
 
 
@@ -62,7 +91,10 @@ const Chat = ({ selectedChat }: ChatProps) => {
             is_liked: liked ? false : true,
             is_disliked: false
         }
-        updateMessageResponseStatus(userId, selectedChat.chat_id, index, "FigG5uIMlUEw1IAlSsBr", response_status)
+        if (!currentModel) {
+            return
+        }
+        updateMessageResponseStatus(userId, selectedChat.chat_id, index, currentModel?.model_id, response_status)
     }
 
     const dislikeMessage = (disliked: boolean, index: number) => {
@@ -71,7 +103,10 @@ const Chat = ({ selectedChat }: ChatProps) => {
             is_liked: false,
             is_disliked: disliked ? false : true
         }
-        updateMessageResponseStatus(userId, selectedChat.chat_id, index, "FigG5uIMlUEw1IAlSsBr", response_status)
+        if (!currentModel) {
+            return
+        }
+        updateMessageResponseStatus(userId, selectedChat.chat_id, index, currentModel?.model_id, response_status)
     }
 
     const getMessage = (message: AiChatMessageInterface, index: number) => {
@@ -106,14 +141,15 @@ const Chat = ({ selectedChat }: ChatProps) => {
 
                 <div className='flex-1 flex justify-start items-center'>
                     <p
-                        className={`p-[16px] font-medium text-[16px] rounded-[15px] bg-accentColorLight text-black max-w-[52%]`}>
+                        className={`p-[16px] font-medium text-[16px] rounded-[15px] bg-accentColorLight text-black max-w-[52%] ${selectedChat.chat_type === "Translation" && selectedChat.translation_config?.target_language === "Urdu" ? "font-urdu leading-10 text-right " : ""
+                            }`}>
                         {message.text}
                     </p>
                     {
                         message.response_status && <div className='flex gap-[5px] mx-[15px]'>
                             <button
                                 className=' p-[8px] bg-accentColorLight rounded-full'
-                                onClick={() => likeMessage(message.response_status.is_liked, index)}
+                                onClick={() => likeMessage(message.response_status?.is_liked ?? false, index)}
                             >
                                 {
                                     message.response_status?.is_liked
@@ -125,7 +161,7 @@ const Chat = ({ selectedChat }: ChatProps) => {
                             </button>
                             <button
                                 className=' p-[8px] bg-accentColorLight rounded-full '
-                                onClick={() => dislikeMessage(message.response_status.is_disliked, index)}
+                                onClick={() => dislikeMessage(message.response_status?.is_disliked ?? false, index)}
                             >
                                 {
                                     message.response_status?.is_disliked
@@ -148,8 +184,65 @@ const Chat = ({ selectedChat }: ChatProps) => {
     const handleConfigChange = (newConfig: SummarizationConfig | TranslationConfig) => {
         console.log(newConfig)
         updateAiChatConfig(selectedChat.chat_type, newConfig, userId, selectedChat.chat_id)
+
     }
 
+
+    const getModelId = () => {
+        const type = selectedChat.chat_type
+        if (type == "Summarization") {
+            if (selectedChat.summarization_config.type == "extractive") {
+                return "FNJAQivoRd7ouJOcQesX"
+            }
+            else if (selectedChat.summarization_config.type == "abstractive") {
+                return "FigG5uIMlUEw1IAlSsBr"
+            }
+        }
+        else if (type == "Translation") {
+            return "zkb0ysUiZpKSFcnoaoQD"
+        }
+    }
+
+
+
+
+    const handleTranslateMessage = async () => {
+        if (!currentModel) {
+            alert("No model selected")
+            return
+        }
+        // if (inputText.length < 40) {
+        //     alert("Input text is too short")
+        //     return
+        // }
+        addOriginalMessage(userId, selectedChat.chat_id, inputText)
+        setInputText("")
+        getTranslationFromModel().then((res: any) => {
+            console.log(res)
+            if (res.text) {
+                addResponseMessage(userId, selectedChat.chat_id, res.text)
+            }
+        })
+    }
+
+    const handleSummarizeMessage = () => {
+        if (!currentModel) {
+            alert("No model selected")
+            return
+        }
+        // if (inputText.length < 40) {
+        //     alert("Input text is too short")
+        //     return
+        // }
+        addOriginalMessage(userId, selectedChat.chat_id, inputText)
+        setInputText("")
+        sendSummarizationMessage().then((res: any) => {
+            console.log(res)
+            if (res.text) {
+                addResponseMessage(userId, selectedChat.chat_id, res.text)
+            }
+        })
+    }
 
     return (
         <div className='flex flex-col gap-[20px] h-[80vh] basis-[70%]'>
@@ -261,7 +354,14 @@ const Chat = ({ selectedChat }: ChatProps) => {
                     />
                     {/* Send button */}
                     <IconButton icon='/assets/arrow-up-white.svg' disabled={inputText == ""} filled
-                        onClick={() => { }} />
+                        onClick={() => {
+                            if (selectedChat.chat_type == "Translation") {
+                                handleTranslateMessage()
+                            }
+                            else if (selectedChat.chat_type == "Summarization") {
+                                handleSummarizeMessage()
+                            }
+                        }} />
                 </div>
 
 

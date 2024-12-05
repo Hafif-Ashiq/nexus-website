@@ -18,7 +18,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-
+      <head>
+        <link
+          href="https://fonts.googleapis.com/css2?family=Noto+Nastaliq+Urdu:wght@400;700&display=swap"
+          rel="stylesheet"
+        />
+      </head>
       <body className={`${poppins.className} bg-accentColorLight w-full`}>
         {/* <body className="font-poppins bg-accentColorLight"> */}
         <Provider store={store}>{children}</Provider>

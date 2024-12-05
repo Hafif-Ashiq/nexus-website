@@ -6,11 +6,13 @@ import { useDispatch } from 'react-redux';
 import adminReducer from './slices/adminSlice';
 import userReducer from './slices/userSlice';
 import libraryReducer from './slices/librarySlice';
+import aiModelsReducer from './slices/aiModelsSlice';
 export const store = configureStore({
   reducer: {
-    adminReducer: adminReducer, // Add your slice reducers here
-    userReducer: userReducer, // Add your slice reducers here
-    libraryReducer: libraryReducer, // Add your slice reducers here
+    adminReducer: adminReducer,
+    userReducer: userReducer,
+    libraryReducer: libraryReducer,
+    aiModelsReducer: aiModelsReducer,
   },
 });
 

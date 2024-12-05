@@ -2,32 +2,36 @@ import { AiModelInterface } from "@/services/AiModelsInterface";
 import { db } from "@/services/firebase";
 import { collection, doc, getDocs, updateDoc } from "firebase/firestore";
 
-export async function getAllModels() {
+import { onSnapshot } from 'firebase/firestore';
+
+export const listenToAllModels = (setModels: React.Dispatch<React.SetStateAction<AiModelInterface[]>>) => {
     try {
         // Get reference to the 'model' collection
         const modelCollectionRef = collection(db, 'models');
 
-        // Fetch all documents from the collection
-        const querySnapshot = await getDocs(modelCollectionRef);
-        console.log(querySnapshot);
+        // Subscribe to updates
+        const unsubscribe = onSnapshot(modelCollectionRef, (querySnapshot) => {
+            const models: AiModelInterface[] = querySnapshot.docs.map((doc) => ({
+                model_id: doc.data().model_id,
+                model_name: doc.data().model_name,
+                endpoint: doc.data().endpoint,
+                languages: doc.data().languages,
+                active_status: doc.data().active_status,
+                total_up_votes: doc.data().total_up_votes,
+                total_down_votes: doc.data().total_down_votes,
+            }));
 
-        // Map through documents and format them to AiModelInterface
-        const models: AiModelInterface[] = querySnapshot.docs.map((doc) => ({
-            model_id: doc.data().model_id,
-            model_name: doc.data().model_name,
-            endpoint: doc.data().endpoint,
-            languages: doc.data().languages,
-            active_status: doc.data().active_status,
-            total_up_votes: doc.data().total_up_votes,
-            total_down_votes: doc.data().total_down_votes,
-        }));
+            console.log(models);
+            setModels(models);
+        }, (error) => {
+            console.error("Error fetching models: ", error);
+            setModels([]); // Set empty array on error
+        });
 
-        console.log(models);
-
-        return models;
+        return unsubscribe; // Return the unsubscribe function
     } catch (error) {
-        console.error("Error fetching models: ", error);
-        return [];
+        console.error("Error setting up model listener: ", error);
+        return () => { }; // Return empty function if setup fails
     }
 }
 

@@ -4,6 +4,7 @@ import { db } from '@/services/firebase';
 import { AiModelInterface } from '@/services/AiModelsInterface';
 import { SummarizationConfig } from '@/services/Configs';
 import { TranslationConfig } from '@/services/Configs';
+import { AiChatMessageInterface } from "@/services/AiChatInterface";
 
 export const listenToAiChatHistory = (
     userId: string,
@@ -157,6 +158,80 @@ export const updateAiChatConfig = async (chatType: string, newConfig: Summarizat
 
     } catch (error) {
         console.error('Error updating config:', error);
+        throw error;
+    }
+};
+
+
+export const addOriginalMessage = async (userId: string, chatId: string, originalText: string) => {
+    try {
+        const chatRef = doc(db, 'users', userId, 'chat', chatId);
+        const chatDoc = await getDoc(chatRef);
+
+        if (!chatDoc.exists()) {
+            throw new Error('Chat document does not exist');
+        }
+
+        const chatData = chatDoc.data();
+        const currentConversation = chatData.conversation || [];
+
+        // Create original message
+        const originalMessage: AiChatMessageInterface = {
+            text: originalText,
+            message_type: "original",
+            datetime: new Date().toISOString(),
+
+        };
+
+        // Add message to conversation
+        const updatedConversation = [...currentConversation, originalMessage];
+
+        await updateDoc(chatRef, {
+            conversation: updatedConversation
+        });
+
+        return updatedConversation.length - 1; // Return index of added message
+
+    } catch (error) {
+        console.error('Error adding original message:', error);
+        throw error;
+    }
+};
+
+export const addResponseMessage = async (userId: string, chatId: string, responseText: string) => {
+    try {
+        const chatRef = doc(db, 'users', userId, 'chat', chatId);
+        const chatDoc = await getDoc(chatRef);
+
+        if (!chatDoc.exists()) {
+            throw new Error('Chat document does not exist');
+        }
+
+        const chatData = chatDoc.data();
+        const currentConversation = chatData.conversation || [];
+
+        // Create translated message
+        const translatedMessage: AiChatMessageInterface = {
+            text: responseText,
+            message_type: "response",
+            datetime: new Date().toISOString(),
+            response_status: {
+                is_liked: false,
+                is_disliked: false
+            }
+        };
+
+        // Add message to conversation
+        const updatedConversation = [...currentConversation, translatedMessage];
+
+        await updateDoc(chatRef, {
+            conversation: updatedConversation
+        });
+
+        return updatedConversation.length - 1; // Return index of added message
+
+    } catch (error) {
+        console.error('Error adding response message:', error);
         throw error;
     }
 };

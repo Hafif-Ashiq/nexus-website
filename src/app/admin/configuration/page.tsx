@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import Header from '../../../components/Header'
 import LargeButton from '../_components/LargeButton'
 import ModelsGraph from './_components/ModelsGraph'
-import { getAllModels, updateModel } from '@/firebaseFunctions/admin/aiModels'
+import { listenToAllModels, updateModel } from '@/firebaseFunctions/admin/aiModels'
 import { AiModelInterface } from '@/services/AiModelsInterface'
 import ModelsEndpointModal from './_components/ModelsEndpointModal'
 
@@ -25,9 +25,10 @@ const page = () => {
     }, [])
 
     const getModels = () => {
-        getAllModels().then(res => {
-            setTiles(res)
-        })
+        const unsubscribe = listenToAllModels((models: AiModelInterface[] | ((prevModels: AiModelInterface[]) => AiModelInterface[])) => {
+            setTiles(models as AiModelInterface[])
+        });
+        return unsubscribe; // Return the unsubscribe function
     }
 
     const getGraphData = (tile: AiModelInterface) => {

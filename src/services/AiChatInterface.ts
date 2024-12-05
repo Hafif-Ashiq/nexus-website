@@ -4,7 +4,7 @@ export interface AiChatMessageInterface {
     text: string,
     message_type: string,
     datetime: string,
-    response_status: {
+    response_status?: {
         is_liked: boolean,
         is_disliked: boolean
     }

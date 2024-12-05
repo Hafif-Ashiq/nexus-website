@@ -37,6 +37,7 @@ const config: Config = {
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],
+        urdu: ['"Noto Nastaliq Urdu"', 'serif'],
       },
       linearGradientColors: {
         'transparent-left': 'transparent, #F7F7F7',
