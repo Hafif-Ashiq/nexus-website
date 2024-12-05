@@ -8,26 +8,21 @@ interface TranslationConfigModalProps {
 
 const TranslationConfigModal = ({ config, onConfigChange }: TranslationConfigModalProps) => {
 
-    const [selectedSourceLanguage, setSelectedSourceLanguage] = useState<string>(config.source_language)
-    const [selectedTargetLanguage, setSelectedTargetLanguage] = useState<string>(config.target_language)
-
-
-    const sourceLanguages = ["English",]
-    const targetLanguages = ["Urdu"]
-
+    const [selectedSourceLanguage, setSelectedSourceLanguage] = useState<string>(config.source_languages[0])
+    const [selectedTargetLanguage, setSelectedTargetLanguage] = useState<string>(config.target_languages[0])
 
 
 
     const handleConfigChange = () => {
         let newConfig = {
-            source_language: selectedSourceLanguage,
-            target_language: selectedTargetLanguage
+            source_languages: [selectedSourceLanguage],
+            target_languages: [selectedTargetLanguage]
         }
         onConfigChange(newConfig)
     }
 
     useEffect(() => {
-        if (selectedSourceLanguage !== config.source_language || selectedTargetLanguage !== config.target_language) {
+        if (!config.source_languages.includes(selectedSourceLanguage) || !config.target_languages.includes(selectedTargetLanguage)) {
             handleConfigChange()
         }
     }, [selectedSourceLanguage, selectedTargetLanguage])
@@ -44,7 +39,7 @@ const TranslationConfigModal = ({ config, onConfigChange }: TranslationConfigMod
                         onChange={(e) => setSelectedSourceLanguage(e.target.value)}
                         className="flex-1 min-w-[300px] px-[35px] py-[10px] rounded-[10px] text-[14px] font-semibold bg-accentColorLight"
                     >
-                        {sourceLanguages.map((lang) => (
+                        {config.source_languages.map((lang) => (
                             <option key={lang} value={lang} className={`text-[14px] font-semibold ${selectedSourceLanguage === lang ? "bg-primaryColorLight text-white" : "bg-transparent text-primaryColorLight"}`}>
                                 {lang}
                             </option>
@@ -63,7 +58,7 @@ const TranslationConfigModal = ({ config, onConfigChange }: TranslationConfigMod
                         onChange={(e) => setSelectedTargetLanguage(e.target.value)}
                         className="flex-1 min-w-[300px] px-[35px] py-[10px] rounded-[10px] text-[14px] font-semibold bg-accentColorLight"
                     >
-                        {targetLanguages.map((lang) => (
+                        {config.target_languages.map((lang) => (
                             <option key={lang} value={lang} className={`text-[14px] font-semibold ${selectedTargetLanguage === lang ? "bg-primaryColorLight text-white" : "bg-transparent text-primaryColorLight"}`}>
                                 {lang}
                             </option>

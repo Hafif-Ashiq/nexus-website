@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import ProfileModal from './modals/ProfileModal';
+import UploadFilesModal from './modals/UploadFilesModal';
 
 interface HeaderProps {
     title: string;
@@ -9,6 +10,7 @@ interface HeaderProps {
 const Header: React.FC<HeaderProps> = ({ title, subtitle }) => {
     // const router = useRouter()
     const [showProfileModal, setShowProfileModal] = useState(false)
+    const [showUploadFilesModal, setShowUploadFilesModal] = useState(false)
     return (
         <div className='flex items-center justify-between'>
             <div className='flex flex-col gap-[5px]'>
@@ -18,7 +20,9 @@ const Header: React.FC<HeaderProps> = ({ title, subtitle }) => {
                 <p className='text-[16px] opacity-[50%] font-medium'>{subtitle}</p>
             </div>
             <div className='flex items-center gap-[15px] relative'>
-                <button className='bg-primaryColorLight text-white pl-[15px] pr-[20px] py-[10px] rounded-[15px] font-medium text-[14px] flex items-center gap-[5px]'>
+                <button onClick={() => {
+                    setShowUploadFilesModal(!showUploadFilesModal)
+                }} className='bg-primaryColorLight text-white pl-[15px] pr-[20px] py-[10px] rounded-[15px] font-medium text-[14px] flex items-center gap-[5px]'>
                     <img src="/assets/add.svg" alt="upload icon" />
                     <span>Upload</span>
                 </button>
@@ -31,6 +35,11 @@ const Header: React.FC<HeaderProps> = ({ title, subtitle }) => {
                     <div className='absolute top-[60px] right-[0px] '>
                         <ProfileModal />
                     </div>
+                }
+                {showUploadFilesModal &&
+                    <UploadFilesModal onClose={() => {
+                        setShowUploadFilesModal(false)
+                    }} />
                 }
             </div>
 

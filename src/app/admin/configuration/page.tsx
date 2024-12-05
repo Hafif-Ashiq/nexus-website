@@ -70,7 +70,7 @@ const page = () => {
                 <div className='basis-[70%] flex flex-col gap-[20px]'>
                     <div className='flex justify-end'>
                         <button onClick={() => setShowEndpointModal(true)} className='bg-primaryColorLight text-white px-[20px] py-[10px] rounded-[10px]'>
-                            Update Modal Endpoint
+                            Update Ai Models Endpoint
                         </button>
                         {showEndpointModal && <ModelsEndpointModal onClose={() => setShowEndpointModal(false)} />}
                     </div>

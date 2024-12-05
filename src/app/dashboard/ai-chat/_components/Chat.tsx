@@ -32,6 +32,11 @@ const Chat = ({ selectedChat }: ChatProps) => {
         )
     }
 
+    useEffect(() => {
+        console.log("selected chat changed")
+        console.log(selectedChat)
+    }, [selectedChat])
+
     const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
 
     const userId = useSelector((state: RootState) => state.userReducer.userId)
@@ -69,7 +74,7 @@ const Chat = ({ selectedChat }: ChatProps) => {
         if (!currentModel) {
             return
         }
-        const response = await translate(inputText, selectedChat.translation_config.source_language, selectedChat.translation_config.target_language, currentModel.endpoint)
+        const response = await translate(inputText, selectedChat.translation_config.source_languages[0], selectedChat.translation_config.target_languages[0], currentModel.endpoint)
         console.log(response)
         return response
     }
@@ -214,7 +219,9 @@ const Chat = ({ selectedChat }: ChatProps) => {
 
                 <div className='flex-1 flex justify-start items-center'>
                     <p
-                        className={`p-[16px] font-medium text-[16px] rounded-[15px] bg-accentColorLight text-black max-w-[52%] ${selectedChat.chat_type === "Translation" && selectedChat.translation_config?.target_language === "Urdu" ? "font-urdu leading-10 text-right " : ""
+                        className={`p-[16px] font-medium text-[16px] rounded-[15px] bg-accentColorLight text-black max-w-[52%] ${selectedChat.chat_type === "Translation"
+                            ?
+                            "font-urdu leading-10 text-right " : ""
                             }`}>
                         {message.text}
                     </p>
@@ -344,23 +351,36 @@ const Chat = ({ selectedChat }: ChatProps) => {
 
                 <div className='w-full h-[1px] border-borderColorLight border-[1px] border-solid '></div>
 
-                <div className='flex justify-end items-center gap-[15px] px-[20px]'>
+                <div className=' flex justify-end items-center gap-[15px] px-[20px]'>
                     {/* buttons */}
                     {/* Text input */}
-                    <input
+                    <textarea
+                        onInput={(e) => {
+                            e.currentTarget.style.height = 'auto'; // Reset height
+                            e.currentTarget.style.height = `${e.currentTarget.scrollHeight}px`; // Set height to scrollHeight
+                        }}
                         onKeyDown={(event) => {
                             if (event.key === 'Enter' && !event.shiftKey) {
-                                // sendTextMessage()
+                                if (selectedChat.chat_type == "Translation") {
+                                    handleTranslateMessage()
+                                }
+                                else if (selectedChat.chat_type == "Summarization") {
+                                    handleSummarizeMessage()
+                                }
                             }
                         }}
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
                         placeholder='Write a message...'
-                        className='p-[13px] font-semibold text-[16px] flex-1 border-borderColor border-[3px] border-solid rounded-[15px] text-primaryColorLight placeholder:text-primaryColorLight placeholder:opacity-50 focus:outline-primaryColorLight resize-none '
+                        className='p-[13px] font-semibold text-[16px] flex-1 border-borderColor border-[3px] border-solid rounded-[15px] text-primaryColorLight placeholder:text-primaryColorLight placeholder:opacity-50 focus:outline-primaryColorLight resize-none'
                         style={{
-                            scrollbarWidth: "none"
+                            scrollbarWidth: "none",
+                            overflow: 'hidden',
+                            minHeight: '40px',
+                            maxHeight: '240px',
+                            height: 'auto',
                         }}
-
+                        rows={1} // Start with one row
                     />
                     {/* Send button */}
                     <IconButton icon='/assets/arrow-up-white.svg' disabled={inputText == ""} filled

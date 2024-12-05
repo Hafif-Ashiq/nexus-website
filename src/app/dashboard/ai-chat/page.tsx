@@ -24,7 +24,6 @@ const page = () => {
             dispatch(setChats(result))
 
         });
-        console.log("after effect");
 
         return () => aiChats();
     }, [userId])

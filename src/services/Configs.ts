@@ -4,6 +4,6 @@ export interface SummarizationConfig {
 }
 
 export interface TranslationConfig {
-    source_language: string,
-    target_language: string
+    source_languages: string[],
+    target_languages: string[]
 }
