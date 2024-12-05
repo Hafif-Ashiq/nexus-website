@@ -109,6 +109,79 @@ const Chat = ({ selectedChat }: ChatProps) => {
         updateMessageResponseStatus(userId, selectedChat.chat_id, index, currentModel?.model_id, response_status)
     }
 
+
+
+
+    const handleConfigChange = (newConfig: SummarizationConfig | TranslationConfig) => {
+        console.log(newConfig)
+        updateAiChatConfig(selectedChat.chat_type, newConfig, userId, selectedChat.chat_id)
+
+    }
+
+
+    const getModelId = () => {
+        const type = selectedChat.chat_type
+        if (type == "Summarization") {
+            if (selectedChat.summarization_config.type == "extractive") {
+                return "FNJAQivoRd7ouJOcQesX"
+            }
+            else if (selectedChat.summarization_config.type == "abstractive") {
+                return "FigG5uIMlUEw1IAlSsBr"
+            }
+        }
+        else if (type == "Translation") {
+            return "zkb0ysUiZpKSFcnoaoQD"
+        }
+    }
+
+
+
+
+    const handleTranslateMessage = async () => {
+        if (!currentModel) {
+            alert("No model selected")
+            return
+        }
+        // if (inputText.length < 40) {
+        //     alert("Input text is too short")
+        //     return
+        // }
+        addOriginalMessage(userId, selectedChat.chat_id, inputText)
+        setInputText("")
+        getTranslationFromModel().then((res: any) => {
+            console.log(res)
+            if (res.text) {
+                addResponseMessage(userId, selectedChat.chat_id, res.text)
+            }
+        })
+    }
+
+    const handleSummarizeMessage = () => {
+        if (!currentModel) {
+            alert("No model selected")
+            return
+        }
+        // if (inputText.length < 40) {
+        //     alert("Input text is too short")
+        //     return
+        // }
+        addOriginalMessage(userId, selectedChat.chat_id, inputText)
+        setInputText("")
+        sendSummarizationMessage().then((res: any) => {
+            console.log(res)
+            if (res.text) {
+                addResponseMessage(userId, selectedChat.chat_id, res.text)
+            }
+        })
+    }
+
+
+
+
+    // Render Message
+
+
+
     const getMessage = (message: AiChatMessageInterface, index: number) => {
 
 
@@ -180,69 +253,6 @@ const Chat = ({ selectedChat }: ChatProps) => {
 
     }
 
-
-    const handleConfigChange = (newConfig: SummarizationConfig | TranslationConfig) => {
-        console.log(newConfig)
-        updateAiChatConfig(selectedChat.chat_type, newConfig, userId, selectedChat.chat_id)
-
-    }
-
-
-    const getModelId = () => {
-        const type = selectedChat.chat_type
-        if (type == "Summarization") {
-            if (selectedChat.summarization_config.type == "extractive") {
-                return "FNJAQivoRd7ouJOcQesX"
-            }
-            else if (selectedChat.summarization_config.type == "abstractive") {
-                return "FigG5uIMlUEw1IAlSsBr"
-            }
-        }
-        else if (type == "Translation") {
-            return "zkb0ysUiZpKSFcnoaoQD"
-        }
-    }
-
-
-
-
-    const handleTranslateMessage = async () => {
-        if (!currentModel) {
-            alert("No model selected")
-            return
-        }
-        // if (inputText.length < 40) {
-        //     alert("Input text is too short")
-        //     return
-        // }
-        addOriginalMessage(userId, selectedChat.chat_id, inputText)
-        setInputText("")
-        getTranslationFromModel().then((res: any) => {
-            console.log(res)
-            if (res.text) {
-                addResponseMessage(userId, selectedChat.chat_id, res.text)
-            }
-        })
-    }
-
-    const handleSummarizeMessage = () => {
-        if (!currentModel) {
-            alert("No model selected")
-            return
-        }
-        // if (inputText.length < 40) {
-        //     alert("Input text is too short")
-        //     return
-        // }
-        addOriginalMessage(userId, selectedChat.chat_id, inputText)
-        setInputText("")
-        sendSummarizationMessage().then((res: any) => {
-            console.log(res)
-            if (res.text) {
-                addResponseMessage(userId, selectedChat.chat_id, res.text)
-            }
-        })
-    }
 
     return (
         <div className='flex flex-col gap-[20px] h-[80vh] basis-[70%]'>
