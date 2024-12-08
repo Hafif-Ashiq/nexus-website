@@ -5,11 +5,17 @@ import { FolderInterface } from '@/services/FoldersInterface';
 import { createSlice } from '@reduxjs/toolkit';
 
 export interface AiModelsSliceReducer {
-    allModels: AiModelInterface[]
+    allModels: AiModelInterface[],
+    translationModelId: string,
+    abstractiveSummarizationModelId: string,
+    extractiveSummarizationModelId: string,
 }
 
 const initialState: AiModelsSliceReducer = {
-    allModels: []
+    allModels: [],
+    translationModelId: "zkb0ysUiZpKSFcnoaoQD",
+    abstractiveSummarizationModelId: "FigG5uIMlUEw1IAlSsBr",
+    extractiveSummarizationModelId: "FNJAQivoRd7ouJOcQesX",
 };
 
 const aiModelsSlice = createSlice({
@@ -18,6 +24,9 @@ const aiModelsSlice = createSlice({
     reducers: {
         setAllModels: (state, action) => {
             state.allModels = action.payload;
+        },
+        setTranslationModelId: (state, action) => {
+            state.translationModelId = action.payload;
         },
     },
 });

@@ -8,6 +8,8 @@ import { setCurrentUser } from '@/redux/slices/adminSlice'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
+import { deleteUser, updateUserAccountStatus } from '@/firebaseFunctions/admin/users'
+import { mockUser } from '@/constants/data'
 
 interface recentUsersProps {
     users: UserProfile[],
@@ -73,15 +75,15 @@ const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, show
         return [
             {
                 title: deactivated ? "Activate Account" : "Deactivate Account",
-                onClick: () => { }
-            },
-            {
-                title: "Delete Account",
-                onClick: () => { }
+                onClick: () => {
+                    updateUserAccountStatus(users[index].user_id, !deactivated)
+                }
             },
             {
                 title: "Open Support",
-                onClick: () => { }
+                onClick: () => {
+
+                }
             },
         ]
     }
@@ -143,12 +145,12 @@ const UsersList: React.FC<recentUsersProps> = ({ users, showSelect = false, show
                                     dispatch(setCurrentUser(user))
                                 }
                             }}
-                            key={index} className={` font-semibold flex justify-between text-left pl-[25px] pr-[50px] py-[25px] rounded-[15px]  border-[1.5px] border-solid  ${clickEnabled ? "cursor-pointer" : ""} ${user.id == currentUser.id ? "border-primaryColorLight" : "border-white hover:border-borderColor"}`}>
+                            key={index} className={` font-semibold flex justify-between text-left pl-[25px] pr-[50px] py-[25px] rounded-[15px]  border-[1.5px] border-solid  ${clickEnabled ? "cursor-pointer" : ""} ${user.user_id == currentUser?.user_id ? "border-primaryColorLight" : "border-white hover:border-borderColor"}`}>
                             {showSelect && <td className='w-[30px]'>
                                 <Select selected={selectedUsers[index] || allSelected} onSelect={() => selectUser(index)} color='#CBD5E4' />
                             </td>}
-                            <td className='w-[20px]'>{index < 10 ? `0${index + 1}` : index + 1}</td>
-                            <td className='w-[200px] text-ellipsis overflow-hidden'>{user.id}</td>
+                            <td className='w-[20px]'>{index < 9 ? `0${index + 1}` : index + 1}</td>
+                            <td className='w-[200px] text-ellipsis overflow-hidden'>{user.user_id}</td>
                             <td className='w-[200px] text-ellipsis overflow-hidden'>{user.email}</td>
                             <td className='w-[200px] text-ellipsis overflow-hidden'>{user.first_name + " " + user.last_name} </td>
                             <td className={`w-[130px] text-ellipsis overflow-hidden 

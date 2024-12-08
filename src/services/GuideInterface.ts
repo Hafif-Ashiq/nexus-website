@@ -3,6 +3,7 @@ export interface GuideInterface {
     guide_id: string,
     is_visible: boolean,
     title: string,
+    type: "image" | "video",
     description: string,
     liked_by: string[],
     viewed_by: string[],

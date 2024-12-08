@@ -5,7 +5,7 @@ import { title } from 'process'
 import { addGuideToFirebase } from '@/firebaseFunctions/admin/guide'
 import { getCurrentTimeFormatted } from '@/utils/datetime'
 import { UserProfile } from '@/services/UserInterface'
-import { addNewUser, handleProfileFileUpload } from '@/firebaseFunctions/admin/users'
+import { addNewUser, handleProfileFileUpload, updateUserImages } from '@/firebaseFunctions/admin/users'
 
 interface GuideModalProps {
     onCloseClick: () => void,
@@ -118,19 +118,9 @@ const AddUserModal = ({ onCloseClick }: GuideModalProps) => {
         setLoadingSuccess(true);
 
         try {
-            // Upload profile and cover files if they exist
-            const [profilePicUrl, coverPicUrl] = await Promise.all([
-                profileFile ? handleProfileFileUpload(profileFile) : Promise.resolve(""), // Fallback to empty string if no file
-                coverFile ? handleProfileFileUpload(coverFile) : Promise.resolve("") // Fallback to empty string if no file
-            ]);
-
-            // Set the uploaded URLs in the state
-            setFirebaseProfileSrc(coverPicUrl);
-            setFirebaseCoverSrc(profilePicUrl);
-
-            // Create user object
+            // First create user object without images
             const user: UserProfile = {
-                id: "",
+                user_id: "",
                 email: newUser.email,
                 password: newUser.password,
                 first_name: newUser.first_name,
@@ -139,8 +129,8 @@ const AddUserModal = ({ onCloseClick }: GuideModalProps) => {
                     is_premium: false,
                     is_deactivated: false,
                 },
-                profile_pic: profilePicUrl, // Use uploaded profile pic URL
-                background_pic: coverPicUrl, // Use uploaded cover pic URL
+                profile_pic: "", // Will update after upload
+                background_pic: "", // Will update after upload
                 biography: newUser.biography,
                 app_customization: {
                     is_dark: false,
@@ -156,10 +146,29 @@ const AddUserModal = ({ onCloseClick }: GuideModalProps) => {
                 guides: {
                     viewed_guides: [],
                 },
+                start_date: new Date().toISOString(),
+                last_payment_date: "",
+                subscription_plan: "Free",
+                billing_infos: [],
             };
 
-            // Add the new user to the database
-            await addNewUser(user);
+            // Add user to database first to get the ID
+            const userId = await addNewUser(user);
+
+            // Now upload images with the user ID
+            const [profilePicUrl, coverPicUrl] = await Promise.all([
+                profileFile ? handleProfileFileUpload(profileFile, userId, true) : Promise.resolve(""),
+                coverFile ? handleProfileFileUpload(coverFile, userId, false) : Promise.resolve("")
+            ]);
+
+            // Update the user document with the image URLs
+            if (profilePicUrl || coverPicUrl) {
+                await updateUserImages(userId, profilePicUrl, coverPicUrl);
+            }
+
+            // Set the uploaded URLs in the state
+            setFirebaseProfileSrc(profilePicUrl);
+            setFirebaseCoverSrc(coverPicUrl);
 
             // Reset states after successful creation
             setLoadingSuccess(false);
@@ -174,6 +183,7 @@ const AddUserModal = ({ onCloseClick }: GuideModalProps) => {
             setProfileSrc("");
             setCoverFile(null);
             setCoverSrc("");
+            onCloseClick(); // Close the modal after successful creation
 
         } catch (error) {
             console.error("Error during user creation:", error);

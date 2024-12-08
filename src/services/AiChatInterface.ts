@@ -7,7 +7,8 @@ export interface AiChatMessageInterface {
     response_status?: {
         is_liked: boolean,
         is_disliked: boolean
-    }
+    },
+    response_message_id?: string
 }
 
 export interface AiChatInterface {
@@ -16,5 +17,5 @@ export interface AiChatInterface {
     conversation: AiChatMessageInterface[],
     chat_type: string,
     summarization_config: SummarizationConfig,
-    translation_config: TranslationConfig
+    translation_config: TranslationConfig,
 }

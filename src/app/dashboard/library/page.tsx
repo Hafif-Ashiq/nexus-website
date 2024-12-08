@@ -37,9 +37,15 @@ const page = () => {
             return content
         }
 
-        const contentList: ContentInterface[] = content.filter(
-            cont => cont.title.toLowerCase().includes(searchText.toLowerCase())
-        )
+        const contentList: ContentInterface[] = content.filter(cont => {
+            const titleMatch = cont.title.toLowerCase().includes(searchText.toLowerCase());
+            const tagMatch = cont.tags.some(tag =>
+                tag.toLowerCase().includes(searchText.toLowerCase())
+            );
+            console.log(titleMatch, tagMatch);
+
+            return titleMatch || tagMatch;
+        });
 
         return contentList
     }

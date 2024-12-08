@@ -11,7 +11,11 @@
   "dependencies": {
     "@faker-js/faker": "^8.4.1",
     "@ffmpeg/ffmpeg": "^0.12.10",
+    "@ffmpeg/util": "^0.12.1",
     "@reduxjs/toolkit": "^2.2.7",
+    "@tailwindcss/line-clamp": "^0.4.4",
+    "@wavesurfer/react": "^1.0.7",
+    "browser-image-compression": "^2.0.2",
     "chart.js": "^4.4.3",
     "firebase": "^10.12.0",
     "mammoth": "^1.8.0",
@@ -22,7 +26,8 @@
     "react-dom": "^18",
     "react-redux": "^9.1.2",
     "redux": "^5.0.1",
-    "uuid": "^10.0.0"
+    "uuid": "^10.0.0",
+    "wavesurfer.js": "^7.8.10"
   },
   "devDependencies": {
     "@svgr/webpack": "^8.1.0",

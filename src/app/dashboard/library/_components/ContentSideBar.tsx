@@ -1,6 +1,9 @@
 
 import HeaderButton from '@/components/HeaderButton'
 import IconButton from '@/components/IconButton'
+import AudioModal from '@/components/modals/AudioModal'
+import ImageModal from '@/components/modals/ImageModal'
+import VideoModal from '@/components/modals/VideoModal'
 import { updateContent } from '@/firebaseFunctions/user/content'
 import { listenToUserFolders } from '@/firebaseFunctions/user/folder'
 import { setAllFolders } from '@/redux/slices/librarySlice'
@@ -18,7 +21,7 @@ interface ContentSideBarProps {
 const ContentSideBar = ({ content }: ContentSideBarProps) => {
 
     const [title, setTitle] = useState<string>("")
-    const [folder, setFolder] = useState<string>("")
+    const [folder, setFolder] = useState<string>("None")
     const [tagInput, setTagInput] = useState<string>("")
     const [changed, setChanged] = useState(false)
 
@@ -27,6 +30,8 @@ const ContentSideBar = ({ content }: ContentSideBarProps) => {
     const folders = useSelector((state: RootState) => state.libraryReducer.allFolders)
 
     const userId = useSelector((state: RootState) => state.userReducer.userId)
+
+    const [showModal, setShowModal] = useState<"audio" | "image" | "video" | null>(null)
 
     useEffect(() => {
         if (folders.length == 0) {
@@ -89,14 +94,42 @@ const ContentSideBar = ({ content }: ContentSideBarProps) => {
         updateContent(userId, content.content_id, updates)
     }
 
+    const assetIcons = {
+        "document": "/assets/contentTypes/document-white.svg",
+        "image": "/assets/contentTypes/image-white.svg",
+        "video": "/assets/contentTypes/video-white.svg",
+        "audio": "/assets/contentTypes/audio-white.svg",
+    }
+
+    const handleViewContent = () => {
+        if (content.type == "document") {
+            window.open(content.link, "_blank")
+        }
+        else if (content.type == "image") {
+            setShowModal("image")
+        }
+        else if (content.type == "video") {
+            setShowModal("video")
+        }
+        else if (content.type == "audio") {
+            setShowModal("audio")
+        }
+    }
+
     return (
         <div className='basis-[30%] bg-white rounded-2xl'>
             <div className='shadow-normal bg-white h-full rounded-[15px] p-[20px] flex flex-col gap-[15px]'>
 
-                <div className='relative overflow-hidden min-h-[200px] rounded-[15px] w-full'>
+                <div className='relative overflow-hidden min-h-[200px] rounded-[15px] w-full flex justify-end items-end p-[10px]'>
                     {/* View  */}
                     <img className='absolute inset-0 w-full h-full' src="/book.png" alt="background-content" />
-                    <div>View Doc</div>
+                    <button onClick={handleViewContent} className='relative text-[16px] font-semibold text-white bg-black/50 p-[10px] rounded-[10px] w-full flex justify-between items-center'>
+                        <span>View {content.type}</span>
+                        <img src={assetIcons[content.type]} alt="arrow-up" />
+                    </button>
+                    {showModal == "image" && <ImageModal imageSelected={content.link} onClose={() => setShowModal(null)} />}
+                    {showModal == "video" && <VideoModal videoSelected={content.link} onClose={() => setShowModal(null)} />}
+                    {showModal == "audio" && <AudioModal audioSelected={content.link} onClose={() => setShowModal(null)} />}
                 </div>
 
                 <div className='flex-1 flex flex-col gap-[20px]'>
@@ -118,12 +151,12 @@ const ContentSideBar = ({ content }: ContentSideBarProps) => {
                             name='folderSelected'
                             className={`input-field w-full `}
                             style={{
-                                opacity: content?.folder_id == "" ? "50%" : "100%"
+                                opacity: content?.folder_id == "None" ? "50%" : "100%"
                             }}
                             value={folder}
                             onChange={(e) => { setFolder(e.target.value) }}
                         >
-                            <option value={""} className='text-primaryColorLight font-semibold opacity-50'>Select Folder</option>
+                            <option value={"None"} className='text-primaryColorLight font-semibold opacity-50'>Select Folder</option>
                             {
                                 folders.map(fol => (
                                     <option key={fol.folder_id} value={fol.folder_id} className='text-primaryColorLight font-semibold'>{fol.title}</option>

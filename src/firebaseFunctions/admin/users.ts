@@ -16,7 +16,7 @@ export const listenToUsersList = (
                 const data = docSnapshot.data();
 
                 const chat: Partial<UserProfile> = {
-                    id: data.id,
+                    user_id: data.user_id,
                     email: data.email,
                     password: data.password,
                     first_name: data.first_name,
@@ -28,6 +28,11 @@ export const listenToUsersList = (
                     community: data.community,
                     guides: data.guides,
                     app_customization: data.app_customization,
+                    billing_infos: data.billing_infos,
+                    start_date: data.start_date,
+                    last_payment_date: data.last_payment_date,
+                    subscription_plan: data.subscription_plan,
+
                 };
 
                 // if (!chat.user_id || !chat.issue_id || !chat.issue_opened_time || !chat.conversation) {
@@ -39,7 +44,7 @@ export const listenToUsersList = (
 
                 return {
                     ...chat,
-                    id: docSnapshot.id,
+                    user_id: docSnapshot.id,
                 } as UserProfile;
             })
         );
@@ -52,18 +57,23 @@ export const listenToUsersList = (
     return unsubscribe;
 };
 
-
-
 export const addNewUser = async (user: UserProfile) => {
-
     try {
         const docRef = await addDoc(collection(db, "users"), user);
-        console.log("Document written with ID: ", docRef.id);
-        alert("User added")
+        const userId = docRef.id;
+
+        // Update the document with the ID
+        await updateDoc(docRef, {
+            user_id: userId
+        });
+
+        console.log("Document written with ID: ", userId);
+        alert("User added");
+        return userId;
     } catch (e) {
         console.error("Error adding document: ", e);
+        throw e; // Re-throw to handle error in calling code
     }
-
 }
 
 export const deleteUser = async (userId: string) => {
@@ -93,16 +103,56 @@ export const updateUser = async (userId: string, updatedData: Partial<Pick<UserP
     }
 };
 
-
-export const handleProfileFileUpload = async (file: File) => {
-
+export const handleProfileFileUpload = async (file: File, userId: string, isProfilePic: boolean) => {
     try {
-        const downloadURL = await uploadFileToStorage(file, "userProfile");
-        console.log('File uploaded successfully:', downloadURL);
-        return downloadURL
+        // Upload file to storage with user-specific path and fixed filename
+        const downloadURL = await uploadFileToStorage(
+            file,
+            `users/${userId}/${isProfilePic ? "picture" : "background"}`
+        );
+        console.log(`${isProfilePic ? "Profile" : "Cover"} picture uploaded successfully:`, downloadURL);
+        return downloadURL;
     } catch (error) {
-        console.error('Error uploading file:', error);
-        return ""
+        console.error(`Error uploading ${isProfilePic ? "profile" : "cover"} picture:`, error);
+        return "";
     }
-
 };
+
+export const updateUserImages = async (userId: string, profilePicUrl: string, coverPicUrl: string) => {
+    const updates: Partial<UserProfile> = {};
+    if (profilePicUrl) updates.profile_pic = profilePicUrl;
+    if (coverPicUrl) updates.background_pic = coverPicUrl;
+
+    await updateDoc(doc(db, 'users', userId), updates);
+};
+
+
+
+export const updateUserAccountStatus = async (userId: string, isDeactivated: boolean) => {
+    try {
+        const userDocRef = doc(db, "users", userId);
+        await updateDoc(userDocRef, {
+            "account_status.is_deactivated": isDeactivated
+        });
+        console.log(`User account ${isDeactivated ? "deactivated" : "activated"} successfully`);
+        // alert(`User ${isDeactivated ? "deactivated" : "activated"} successfully`);
+    } catch (e) {
+        console.error("Error updating account status: ", e);
+        throw e;
+    }
+};
+
+export const updateUserSubscriptionPlan = async (userId: string, planId: string) => {
+    try {
+        const userDocRef = doc(db, "users", userId);
+        await updateDoc(userDocRef, {
+            subscription_plan: planId
+        });
+        console.log("User subscription plan updated successfully");
+        alert("Subscription plan updated successfully");
+    } catch (e) {
+        console.error("Error updating subscription plan: ", e);
+        throw e;
+    }
+};
+

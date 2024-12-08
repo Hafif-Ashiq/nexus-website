@@ -122,7 +122,7 @@ const UserSupportChat = () => {
 
                     {/* For text */}
                     {
-                        message.message_type == "text" ? <div className='flex-1 flex justify-end'> <p className={`p-[16px] inline-block  font-semibold text-[16px] rounded-[15px] 
+                        message.message_type == "text" ? <div className='flex-1 max-w-[60%] flex justify-end'> <p className={`p-[16px] inline-block  font-semibold text-[16px] rounded-[15px] 
                          bg-primaryColorLight text-white
                         `}>{message.text}</p> </div> : <></>
                     }
@@ -151,7 +151,7 @@ const UserSupportChat = () => {
                 {/* For text */}
                 {
                     message.message_type == "text" ?
-                        <div className='flex-1 flex justify-start'>
+                        <div className='flex-1 max-w-[60%] flex justify-start'>
                             <p className={`p-[16px]  font-semibold text-[16px]  rounded-[15px] 
                 bg-accentColorLight text-black 
                     `}>{message.text}</p> </div> : <></>

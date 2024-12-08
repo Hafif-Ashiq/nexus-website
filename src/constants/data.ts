@@ -34,7 +34,7 @@ export const folderIcons: any[] = [
 
 
 export const mockUser: UserProfile = {
-    "id": "",
+    "user_id": "",
     "email": "",
     "password": "",
     "first_name": "",

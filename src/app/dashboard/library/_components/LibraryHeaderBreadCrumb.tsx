@@ -4,6 +4,7 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import ProfileModal from '@/components/modals/ProfileModal'
+import UploadFilesModal from '@/components/modals/UploadFilesModal'
 
 const LibraryHeaderBreadCrumb = ({ subtitle }: { subtitle: string }) => {
     const router = useRouter()
@@ -17,6 +18,7 @@ const LibraryHeaderBreadCrumb = ({ subtitle }: { subtitle: string }) => {
     const contentId = isContent ? pathSegments[pathSegments.indexOf('content') + 1] : null
 
     const [showProfileModal, setShowProfileModal] = useState(false)
+    const [showUploadModal, setShowUploadModal] = useState(false)
     return (
         <div className='flex items-center justify-between'>
             <div className='flex flex-col gap-[5px]'>
@@ -47,7 +49,7 @@ const LibraryHeaderBreadCrumb = ({ subtitle }: { subtitle: string }) => {
                 <p className='text-[16px] opacity-[50%] font-medium'>{subtitle}</p>
             </div>
             <div className='flex items-center gap-[15px]'>
-                <button className='bg-primaryColorLight text-white pl-[15px] pr-[20px] py-[10px] rounded-[15px] font-medium text-[14px] flex items-center gap-[5px]'>
+                <button onClick={() => setShowUploadModal(true)} className='bg-primaryColorLight text-white pl-[15px] pr-[20px] py-[10px] rounded-[15px] font-medium text-[14px] flex items-center gap-[5px]'>
                     <img src="/assets/add.svg" alt="upload icon" />
                     <span>Upload</span>
                 </button>
@@ -59,6 +61,11 @@ const LibraryHeaderBreadCrumb = ({ subtitle }: { subtitle: string }) => {
                 {showProfileModal &&
                     <div className='absolute top-[60px] right-[0px] '>
                         <ProfileModal />
+                    </div>
+                }
+                {showUploadModal &&
+                    <div className='absolute top-[60px] right-[0px] '>
+                        <UploadFilesModal onClose={() => setShowUploadModal(false)} />
                     </div>
                 }
             </div>

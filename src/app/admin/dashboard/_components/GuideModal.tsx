@@ -121,6 +121,7 @@ const GuideModal = ({ onCloseClick }: GuideModalProps) => {
             total_likes: 0,
             liked_by: [],
             viewed_by: [],
+            type: videoSrc == null ? "image" : "video",
             is_visible: status == "Visible",
             date_posted: getCurrentTimeFormatted()
         }).then(res => {

@@ -40,7 +40,12 @@ const Chat = ({ selectedChat }: ChatProps) => {
     const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
 
     const userId = useSelector((state: RootState) => state.userReducer.userId)
-    const allModels = useSelector((state: RootState) => state.aiModelsReducer.allModels)
+    const allModels = useSelector((state: RootState) => state.aiModelsReducer.allModels) as AiModelInterface[]
+
+    const translationModelId = useSelector((state: RootState) => state.aiModelsReducer.translationModelId)
+    const abstractiveSummarizationModelId = useSelector((state: RootState) => state.aiModelsReducer.abstractiveSummarizationModelId)
+    const extractiveSummarizationModelId = useSelector((state: RootState) => state.aiModelsReducer.extractiveSummarizationModelId)
+
     // State
     const [inputText, setInputText] = useState("")
     const [showSummarizationConfigModal, setShowSummarizationConfigModal] = useState<boolean>(false)
@@ -99,7 +104,7 @@ const Chat = ({ selectedChat }: ChatProps) => {
         if (!currentModel) {
             return
         }
-        updateMessageResponseStatus(userId, selectedChat.chat_id, index, currentModel?.model_id, response_status)
+        updateMessageResponseStatus(userId, selectedChat.chat_id, index, selectedChat.conversation[index].response_message_id ?? "", response_status)
     }
 
     const dislikeMessage = (disliked: boolean, index: number) => {
@@ -111,7 +116,7 @@ const Chat = ({ selectedChat }: ChatProps) => {
         if (!currentModel) {
             return
         }
-        updateMessageResponseStatus(userId, selectedChat.chat_id, index, currentModel?.model_id, response_status)
+        updateMessageResponseStatus(userId, selectedChat.chat_id, index, selectedChat.conversation[index].response_message_id ?? "", response_status)
     }
 
 
@@ -128,14 +133,14 @@ const Chat = ({ selectedChat }: ChatProps) => {
         const type = selectedChat.chat_type
         if (type == "Summarization") {
             if (selectedChat.summarization_config.type == "extractive") {
-                return "FNJAQivoRd7ouJOcQesX"
+                return extractiveSummarizationModelId
             }
             else if (selectedChat.summarization_config.type == "abstractive") {
-                return "FigG5uIMlUEw1IAlSsBr"
+                return abstractiveSummarizationModelId
             }
         }
         else if (type == "Translation") {
-            return "zkb0ysUiZpKSFcnoaoQD"
+            return translationModelId
         }
     }
 
@@ -147,16 +152,16 @@ const Chat = ({ selectedChat }: ChatProps) => {
             alert("No model selected")
             return
         }
-        // if (inputText.length < 40) {
-        //     alert("Input text is too short")
-        //     return
-        // }
+        if (inputText.split(" ").length < 15) {
+            alert("Input text is too short")
+            return
+        }
         addOriginalMessage(userId, selectedChat.chat_id, inputText)
         setInputText("")
         getTranslationFromModel().then((res: any) => {
             console.log(res)
             if (res.text) {
-                addResponseMessage(userId, selectedChat.chat_id, res.text)
+                addResponseMessage(userId, selectedChat.chat_id, res.text, currentModel?.model_id)
             }
         })
     }
@@ -166,16 +171,16 @@ const Chat = ({ selectedChat }: ChatProps) => {
             alert("No model selected")
             return
         }
-        // if (inputText.length < 40) {
-        //     alert("Input text is too short")
-        //     return
-        // }
+        if (inputText.split(" ").length < 15) {
+            alert("Input text is too short")
+            return
+        }
         addOriginalMessage(userId, selectedChat.chat_id, inputText)
         setInputText("")
         sendSummarizationMessage().then((res: any) => {
             console.log(res)
             if (res.text) {
-                addResponseMessage(userId, selectedChat.chat_id, res.text)
+                addResponseMessage(userId, selectedChat.chat_id, res.text, currentModel?.model_id)
             }
         })
     }

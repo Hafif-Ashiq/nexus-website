@@ -86,7 +86,7 @@ const AccountDetailsSide: React.FC<DetailProps> = ({ user_id, firstName, lastNam
         }
 
         const user: UserProfile = {
-            id: "",
+            user_id: "",
             email: mail,
             password: pass,
             first_name: first,
@@ -111,8 +111,11 @@ const AccountDetailsSide: React.FC<DetailProps> = ({ user_id, firstName, lastNam
             },
             guides: {
                 viewed_guides: []
-            }
-
+            },
+            start_date: new Date().toISOString(),
+            last_payment_date: new Date().toISOString(),
+            subscription_plan: "Free",
+            billing_infos: []
         }
         onAddClick(user)
         setFirst("")

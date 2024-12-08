@@ -5,13 +5,18 @@ interface GuideTileProps {
     title: string;
     onDeleteClick: () => void;
     image: string;
-    editEnabled: boolean
-
+    editEnabled: boolean;
+    onClick: () => void;
 }
 
-const GuideTile: React.FC<GuideTileProps> = ({ title, onDeleteClick, image, editEnabled }) => {
+const GuideTile: React.FC<GuideTileProps> = ({ title, onDeleteClick, image, editEnabled, onClick }) => {
+
+    const onOuterClick = () => {
+        onClick()
+    }
+
     return (
-        <div className=' min-w-[485px] min-h-[155px] relative rounded-[15px] overflow-hidden px-[20px] py-[15px] flex flex-col justify-between items-start bg-accentColorLight'>
+        <button onClick={onOuterClick} className=' min-w-[485px] min-h-[155px] relative rounded-[15px] overflow-hidden px-[20px] py-[15px] flex flex-col justify-between items-start bg-accentColorLight'>
             <img src={image} alt="" className='absolute inset-0 w-full h-full object-cover ' />
             <div className='bg-black opacity-25 absolute inset-0 z-1'></div>
             {/* : <video src={image} className='absolute z-[-1] inset-0 w-full h-full object-cover ' />} */}
@@ -28,7 +33,7 @@ const GuideTile: React.FC<GuideTileProps> = ({ title, onDeleteClick, image, edit
             <div className='text-[24px] font-semibold text-white relative z-2'>
                 <p className='w-[200px]'>{title}</p>
             </div>
-        </div>
+        </button>
     )
 }
 

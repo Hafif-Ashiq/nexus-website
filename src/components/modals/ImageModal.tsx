@@ -4,8 +4,8 @@ import Loader from '../Loader';
 interface ImageModalProps {
     imageSelected: string | undefined,
     onClose: () => void,
-    onPreviousClick: () => void,
-    onNextClick: () => void
+    onPreviousClick?: () => void,
+    onNextClick?: () => void
 }
 
 const ImageModal = ({ imageSelected, onClose, onPreviousClick, onNextClick }: ImageModalProps) => {
@@ -24,24 +24,24 @@ const ImageModal = ({ imageSelected, onClose, onPreviousClick, onNextClick }: Im
     return (
         <div className='fixed inset-0 bg-[#00000090] w-screen h-screen overflow-hidden flex justify-center items-center z-50'>
             <div className='w-[1000px] h-[800px] bg-white p-[25px] rounded-[25px]'>
-                <div className='relative w-full h-full bg-black flex justify-between items-center rounded-[15px]'>
+                <div className={`relative w-full h-full bg-black flex  items-center rounded-[15px] ${onPreviousClick && onNextClick ? "justify-between" : "justify-center"}`}>
                     {/* Cross */}
                     <button onClick={onClose} className='absolute right-[10px] top-[10px] '>
                         <img className='w-[45px] h-[45px]' src="/assets/cancel-white.svg" alt='cancel' />
                     </button>
                     {/* Previous Button */}
-                    <button onClick={onPreviousClick}>
+                    {onPreviousClick && <button onClick={onPreviousClick}>
                         <img src="/assets/arrow-left-white.svg" alt="" />
-                    </button>
+                    </button>}
                     {loading ? (
                         <Loader />
                     ) : (
                         <img className="object-contain max-h-full max-w-[80%]" src={imageSelected} alt={"input file"} />
                     )}
                     {/* Next Button */}
-                    <button onClick={onNextClick}>
+                    {onNextClick && <button onClick={onNextClick}>
                         <img src="/assets/arrow-left-white.svg" className='rotate-180' alt="" />
-                    </button>
+                    </button>}
                 </div>
             </div>
         </div>

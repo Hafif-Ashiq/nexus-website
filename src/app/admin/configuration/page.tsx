@@ -65,7 +65,7 @@ const page = () => {
 
     return (
         <div className="flex flex-col gap-[30px] flex-1 ">
-            <Header title='Configuration' subtitle='' />
+            <Header title='Configuration' subtitle='' showUpload={false} />
             <div className="flex gap-[40px] flex-1">
                 <div className='basis-[70%] flex flex-col gap-[20px]'>
                     <div className='flex justify-end'>

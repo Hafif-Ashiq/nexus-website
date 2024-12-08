@@ -20,10 +20,7 @@ const HeaderBreadCrumb = () => {
                 </div>
             ))}</h2>
             <div className='flex items-center gap-[15px]'>
-                <button className='bg-primaryColorLight text-white pl-[15px] pr-[20px] py-[10px] rounded-[15px] font-medium text-[14px] flex items-center gap-[5px]'>
-                    <img src="/assets/add.svg" alt="upload icon" />
-                    <span>Upload</span>
-                </button>
+
                 <button onClick={() => {
                     setShowProfileModal(!showProfileModal)
                 }} className='w-[55px] h-[55px] rounded-full overflow-hidden'>

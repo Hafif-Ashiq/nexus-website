@@ -61,8 +61,8 @@ export async function updateEndpointPrefix(newPrefix: string) {
             // Update the endpoint by replacing the base URL while preserving the path
             const url = new URL(currentEndpoint);
             const updatedEndpoint = `${newPrefix}${url.pathname}`;
-            await updateDoc(doc.ref, { endpoint: updatedEndpoint });
-            console.log(`Updated endpoint for model ID ${modelData.model_id}: ${updatedEndpoint}`);
+            await updateDoc(doc.ref, { endpoint: updatedEndpoint.trim() });
+            console.log(`Updated endpoint for model ID ${modelData.model_id}: ${updatedEndpoint.trim()}`);
 
         });
 

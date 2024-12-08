@@ -5,6 +5,8 @@ import { title } from 'process'
 import GuideModal from '../app/admin/dashboard/_components/GuideModal'
 import { GuideInterface } from '@/services/GuideInterface'
 import { deleteGuideFromFirebase } from '@/firebaseFunctions/admin/guide'
+import ImageModal from './modals/ImageModal'
+import VideoModal from './modals/VideoModal'
 
 interface GuidesProps {
     guides: GuideInterface[],
@@ -14,7 +16,7 @@ interface GuidesProps {
 const Guides = ({ guides, editEnabled }: GuidesProps) => {
 
     const [guideOpen, setGuideOpen] = useState(false)
-
+    const [viewGuideIndex, setViewGuideIndex] = useState<number | null>(null)
     const scrollContainerRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [dragStartX, setDragStartX] = useState(0);
@@ -40,6 +42,13 @@ const Guides = ({ guides, editEnabled }: GuidesProps) => {
         setIsDragging(false);
     };
 
+    const onGuideClick = (index: number) => {
+        if (editEnabled) {
+            return
+        }
+        setViewGuideIndex(index)
+    }
+
     return (
         <div className='flex gap-[20px] overflow-x-hidden'>
             {
@@ -59,7 +68,7 @@ const Guides = ({ guides, editEnabled }: GuidesProps) => {
                 onMouseUp={handleMouseUp}
                 onMouseLeave={handleMouseLeave}>
                 {guides.map((tile, index) => (
-                    <GuideTile key={index} title={tile.title} onDeleteClick={() => {
+                    <GuideTile key={index} title={tile.title} onClick={() => { onGuideClick(index) }} onDeleteClick={() => {
                         if (confirm("Are you sure you want to delete the guide?") && editEnabled) {
                             deleteGuideFromFirebase(tile.guide_id).then(res => {
                                 if (res) {
@@ -74,6 +83,8 @@ const Guides = ({ guides, editEnabled }: GuidesProps) => {
                 ))}
             </div>
             {editEnabled && guideOpen && <GuideModal onCloseClick={() => setGuideOpen(false)} />}
+            {viewGuideIndex !== null && guides[viewGuideIndex].type === "image" && <ImageModal imageSelected={guides[viewGuideIndex].link} onClose={() => setViewGuideIndex(null)} />}
+            {viewGuideIndex !== null && guides[viewGuideIndex].type === "video" && <VideoModal videoSelected={guides[viewGuideIndex].link} onClose={() => setViewGuideIndex(null)} />}
         </div>
     )
 }

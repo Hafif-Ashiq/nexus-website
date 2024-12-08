@@ -85,6 +85,7 @@ const page = () => {
             <Header
                 title='Help & Support'
                 subtitle='Manage and fix users issues.'
+                showUpload={false}
             />
 
             <div className="flex gap-[40px] flex-1">

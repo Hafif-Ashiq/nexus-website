@@ -1,18 +1,24 @@
+import { RootState } from '@/redux/store';
+import { UserProfile } from '@/services/UserInterface';
 import React, { useEffect, useState } from 'react'
+import { useSelector } from 'react-redux';
 
 
 interface billingDetailsProps {
     onBack: () => void;
+    user: UserProfile
 }
 
 
-const BillingDetails: React.FC<billingDetailsProps> = ({ onBack }) => {
+const BillingDetails: React.FC<billingDetailsProps> = ({ onBack, user }) => {
+
     const [name, setName] = useState("")
 
     const [cardNumber, setCardNumber] = useState("")
     const [expiry, setExpiry] = useState("")
     const [cvv, setCVV] = useState("")
 
+    const [hasBillingDetails, setHasBillingDetails] = useState(false)
 
     interface billingCard {
         cardType: string,
@@ -34,6 +40,13 @@ const BillingDetails: React.FC<billingDetailsProps> = ({ onBack }) => {
     ]
 
 
+    useEffect(() => {
+        if (user.billing_infos.length > 0) {
+            setHasBillingDetails(true)
+            setName(user.billing_infos[0].name)
+        }
+    }, [user])
+
 
     return (
         <div className='flex flex-col gap-[10px] h-full justify-between'>
@@ -44,14 +57,14 @@ const BillingDetails: React.FC<billingDetailsProps> = ({ onBack }) => {
                     </button>
                     <h3 className='text-[20px] font-semibold text-black'>Billing Details</h3>
                 </div>
-                <div className='flex items-center justify-end gap-[20px]'>
+                {/* <div className='flex items-center justify-end gap-[20px]'>
                     <button>
                         <img src="/assets/trash-black.svg" alt="" />
                     </button>
                     <button>
                         <img src="/assets/add-circle.svg" alt="" />
                     </button>
-                </div>
+                </div> */}
             </div>
             <div className='flex flex-col gap-[10px]  '>
                 <label htmlFor="username" className='flex flex-col gap-[10px]'>
@@ -65,6 +78,7 @@ const BillingDetails: React.FC<billingDetailsProps> = ({ onBack }) => {
                         onChange={(event) => setName(event.target.value)}
                         placeholder='Name'
                         autoComplete='off'
+                        disabled
                     />
 
 
@@ -78,7 +92,7 @@ const BillingDetails: React.FC<billingDetailsProps> = ({ onBack }) => {
                         value={cardNumber}
                         onChange={(event) => setCardNumber(event.target.value)}
                         placeholder='1234 5678 9012 3456'
-
+                        disabled
                     />
                 </label>
                 <div className='flex justify-between items-center gap-[15px] '>
@@ -92,6 +106,7 @@ const BillingDetails: React.FC<billingDetailsProps> = ({ onBack }) => {
                             onChange={(event) => setExpiry(event.target.value)}
                             placeholder='December 12, 2028'
                             autoComplete='off'
+                            disabled
                         />
 
                     </label>
@@ -107,7 +122,7 @@ const BillingDetails: React.FC<billingDetailsProps> = ({ onBack }) => {
                             onChange={(event) => setCVV(event.target.value)}
                             placeholder='123'
                             autoComplete='off'
-
+                            disabled
                         />
 
                     </label>
@@ -118,13 +133,13 @@ const BillingDetails: React.FC<billingDetailsProps> = ({ onBack }) => {
             <div className='flex flex-col gap-[10px]'>
                 <p className='text-[16px] font-bold text-primaryColorLight'>Existing Accounts</p>
                 {
-                    cards.length !== 0 ? cards.map((card, index) => (
+                    hasBillingDetails ? user.billing_infos.map((card, index) => (
                         <div key={index} className='px-[15px] py-[13px] text-[16px] text-primaryColorLight border-[1px] border-solid border-[#CBD5E4]  rounded-[15px] font-semibold flex gap-[15px]'>
-                            <img src={`/assets/${card.cardType}.svg`} alt="" />
+                            <img src={`/assets/visa.svg`} alt="" />
                             <div className='w-[1px] flex items-stretch border-borderColorLight border-[1px] border-solid'></div>
                             <div className='flex-1 flex justify-between items-center '>
                                 <p>{card.name}</p>
-                                <p>{card.cardNumber}</p>
+                                <p>**** **** **** {card.card_number ? card.card_number.slice(-4) : "****"}</p>
                             </div>
                         </div>
                     )) : <div className='bg-accentColorLight w-full min-h-[110px] rounded-[10px] shadow-normal'></div>

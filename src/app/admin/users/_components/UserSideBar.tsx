@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import AccountDetailsSide from './AccountDetailsSide'
 import BillingDetails from './BillingDetails'
-import { addDoc, collection, getDocs } from 'firebase/firestore';
-import { db } from '@/services/firebase';
-import { chat, mockUsers } from '@/services/abc';
+
 import SubscriptionPlanSide from './SubscriptionPlanSide';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
@@ -33,24 +31,24 @@ const UserSideBar = () => {
     const [profileImageLoading, setProfileImageLoading] = useState(true);
 
     useEffect(() => {
-        if (user.background_pic) {
+        if (user?.background_pic) {
             setBackgroundImageLoading(true); // Set loading to true when a new image is selected
             const img = new Image();
             img.src = user.background_pic;
             img.onload = () => setBackgroundImageLoading(false);
             img.onerror = () => setBackgroundImageLoading(false); // Handle error case
         }
-    }, [user.background_pic]);
+    }, [user?.background_pic]);
 
     useEffect(() => {
-        if (user.profile_pic) {
+        if (user?.profile_pic) {
             setProfileImageLoading(true); // Set loading to true when a new image is selected
             const img = new Image();
             img.src = user.profile_pic;
             img.onload = () => setProfileImageLoading(false);
             img.onerror = () => setProfileImageLoading(false); // Handle error case
         }
-    }, [user.profile_pic]);
+    }, [user?.profile_pic]);
 
     // useEffect(() => {
     //     setAddUser(false)
@@ -77,7 +75,7 @@ const UserSideBar = () => {
                     <button className='w-full h-[150px] rounded-[10px] overflow-hidden shadow-normal group relative bg-accentColorLight'>
                         {backgroundImageLoading ? <div className='w-full h-full bg-accentColorLight flex justify-center items-center'>
                             <Loader />
-                        </div> : <img src={user.background_pic ? user.background_pic : ""} alt="" className='w-full h-full object-cover' />}
+                        </div> : <img src={user?.background_pic ? user.background_pic : ""} alt="" className='w-full h-full object-cover' />}
                         <div className='absolute p-[9px] bg-[#00000070] left-[50%] top-[50%] translate-x-[-50%] translate-y-[-50%] rounded-full hidden group-hover:block'>
                             <img src="/assets/pencil-filled-white.svg" alt="" className='object-fit' />
                         </div>
@@ -93,7 +91,7 @@ const UserSideBar = () => {
                         <div className='w-[120px] h-[120px] rounded-[18px]'>
                             {profileImageLoading ? <div className='w-full h-full bg-accentColorLight flex justify-center items-center'>
                                 <Loader />
-                            </div> : <img src={user.profile_pic ? user.profile_pic : ""} alt="" className='object-cover w-full h-full' />}
+                            </div> : <img src={user?.profile_pic ? user.profile_pic : ""} alt="" className='object-cover w-full h-full' />}
                         </div>
                         <div className='absolute p-[9px] bg-[#00000070] bottom-[6px] right-[6px] rounded-full hidden group-hover:block'>
                             <img src="/assets/pencil-filled-white.svg" alt="" className='object-fit' />
@@ -111,11 +109,11 @@ const UserSideBar = () => {
                                 if (!(confirm("Are you sure to delete this user?"))) {
                                     return
                                 }
-                                deleteUser(user.id)
+                                deleteUser(user.user_id)
                                 dispatch(setCurrentUser(mockUser))
                             }}
                             onUpdateClick={(first, last, mail, bio) => {
-                                updateUser(user.id, {
+                                updateUser(user.user_id, {
                                     first_name: first,
                                     last_name: last,
                                     email: mail,
@@ -126,7 +124,7 @@ const UserSideBar = () => {
                             onBillingClick={() => setActiveCard(CardDisplay.billingInfo)}
                             onSubsClick={() => setActiveCard(CardDisplay.subscriptionInfo)}
                             addUser={false}
-                            user_id={user.id}
+                            user_id={user.user_id}
                             firstName={user.first_name}
                             lastName={user.last_name}
                             biography={user.biography}
@@ -137,11 +135,11 @@ const UserSideBar = () => {
                     {
                         activeCard == CardDisplay.billingInfo && <BillingDetails
                             onBack={() => setActiveCard(CardDisplay.userInfo)}
-
+                            user={user}
                         />
                     }
                     {
-                        activeCard == CardDisplay.subscriptionInfo && <SubscriptionPlanSide onBack={() => setActiveCard(CardDisplay.userInfo)} />
+                        activeCard == CardDisplay.subscriptionInfo && <SubscriptionPlanSide user={user} onBack={() => setActiveCard(CardDisplay.userInfo)} />
                     }
                     {
                         addUser && <AddUserModal onCloseClick={() => setAddUser(false)} />

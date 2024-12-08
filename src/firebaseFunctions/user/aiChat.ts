@@ -198,7 +198,7 @@ export const addOriginalMessage = async (userId: string, chatId: string, origina
     }
 };
 
-export const addResponseMessage = async (userId: string, chatId: string, responseText: string) => {
+export const addResponseMessage = async (userId: string, chatId: string, responseText: string, responseMessageId?: string) => {
     try {
         const chatRef = doc(db, 'users', userId, 'chat', chatId);
         const chatDoc = await getDoc(chatRef);
@@ -218,7 +218,8 @@ export const addResponseMessage = async (userId: string, chatId: string, respons
             response_status: {
                 is_liked: false,
                 is_disliked: false
-            }
+            },
+            response_message_id: responseMessageId
         };
 
         // Add message to conversation

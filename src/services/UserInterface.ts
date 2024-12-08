@@ -22,8 +22,16 @@ interface AppCustomization {
     notification_settings: NotificationSettings;
 }
 
+interface BillingInfo {
+    card_number: string;
+    expiry_date: string;
+    cvv: string;
+    is_activated: boolean;
+    name: string;
+}
+
 export interface UserProfile {
-    id: string;
+    user_id: string;
     email: string;
     password: string;
     first_name: string;
@@ -35,4 +43,8 @@ export interface UserProfile {
     community: Community;
     guides: Guides;
     app_customization: AppCustomization;
+    start_date: string;
+    last_payment_date: string;
+    subscription_plan: "Free" | "Premium-Monthly" | "Premium-Twice" | "Premium-Yearly";
+    billing_infos: BillingInfo[];
 }

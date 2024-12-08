@@ -38,12 +38,12 @@ const page = () => {
             return
         }
 
-        if (mockUser.id == currentUser.id) {
+        if (mockUser.user_id == currentUser.user_id) {
 
             dispatch(setCurrentUser(allUsersList[0]));
         }
         else {
-            const newSupport = allUsersList.find(user => user.id == currentUser.id)
+            const newSupport = allUsersList.find(user => user.user_id == currentUser.user_id)
             dispatch(setCurrentUser(newSupport));
         }
     }, [allUsersList])
