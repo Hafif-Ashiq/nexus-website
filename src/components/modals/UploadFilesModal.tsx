@@ -87,31 +87,31 @@ const UploadFilesModal = ({ onClose }: UploadFilesModalProps) => {
 
         const extractedText = await getTextFromAudio(audioFile);
         await handleProcess(extractedText, ContentType.VIDEO, file);
-        return extractedText;
+
     };
 
     const processAudioFile = async (file: File) => {
         const extractedText = await getTextFromAudio(file);
         await handleProcess(extractedText, ContentType.AUDIO, file);
-        return extractedText;
+
     };
 
     const processPDFFile = async (file: File) => {
         const extractedText = await extractTextFromPDF(file);
         await handleProcess(extractedText, ContentType.DOCUMENT, file);
-        return extractedText;
+
     };
 
     const processImageFile = async (file: File) => {
         const extractedText = await getTextFromImage(file);
         await handleProcess(extractedText, ContentType.IMAGE, file);
-        return extractedText;
+
     };
 
     const processDOCXFile = async (file: File) => {
         const extractedText = await extractTextFromDOCX(file);
         await handleProcess(extractedText, ContentType.DOCUMENT, file);
-        return extractedText;
+
     };
 
     const processFiles = async () => {
@@ -126,22 +126,22 @@ const UploadFilesModal = ({ onClose }: UploadFilesModalProps) => {
             ));
 
             try {
-                let text = '';
+
                 if (file.type.startsWith('video/')) {
-                    text = await processVideoFile(file);
+                    await processVideoFile(file);
                 } else if (file.type.startsWith('audio/')) {
-                    text = await processAudioFile(file);
+                    await processAudioFile(file);
                 } else if (file.type.startsWith('application/pdf')) {
-                    text = await processPDFFile(file);
+                    await processPDFFile(file);
                 } else if (file.type.startsWith('image/')) {
-                    text = await processImageFile(file);
+                    await processImageFile(file);
                 } else if (file.type.startsWith('application/vnd.openxmlformats-officedocument.wordprocessingml.document')) {
-                    text = await processDOCXFile(file);
+                    await processDOCXFile(file);
                 }
 
-                results.push(text);
+
                 setFileStatuses(prev => prev.map((status, idx) =>
-                    idx === i ? { ...status, status: 'completed', result: text } : status
+                    idx === i ? { ...status, status: 'completed' } : status
                 ));
             } catch (err) {
                 console.error(`Failed to process ${file.name}:`, err);
@@ -154,6 +154,7 @@ const UploadFilesModal = ({ onClose }: UploadFilesModalProps) => {
 
 
         setLoading(false);
+        onClose()
     };
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>, type: string) => {
@@ -184,6 +185,7 @@ const UploadFilesModal = ({ onClose }: UploadFilesModalProps) => {
         } else {
             await handleTextSummarization(extracted_text, content_type, file);
         }
+
     }
 
 
@@ -213,7 +215,7 @@ const UploadFilesModal = ({ onClose }: UploadFilesModalProps) => {
 
             console.log("done");
 
-            return true
+
         }
         else {
             let modelId = extractiveSummarizationModelId
@@ -235,6 +237,7 @@ const UploadFilesModal = ({ onClose }: UploadFilesModalProps) => {
 
             console.log("done");
         }
+
     }
 
     const handleTranslation = async (extracted_text: string, content_type: ContentType, file: File) => {

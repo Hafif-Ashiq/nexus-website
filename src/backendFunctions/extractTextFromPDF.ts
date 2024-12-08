@@ -1,11 +1,11 @@
-import * as pdfjsLib from 'pdfjs-dist'
+import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist';
 
 // Set up the worker
-pdfjsLib.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjsLib.version}/pdf.worker.min.js`;
+GlobalWorkerOptions.workerSrc = 'pdfjs-dist/build/pdf.worker.min.js'; // Adjust the path as needed
 
 export const extractTextFromPDF = async (file: File): Promise<string> => {
     const pdfData = await file.arrayBuffer();
-    const pdf = await pdfjsLib.getDocument(pdfData).promise;
+    const pdf = await getDocument(pdfData).promise;
     let text = '';
 
     for (let i = 1; i <= pdf.numPages; i++) {
