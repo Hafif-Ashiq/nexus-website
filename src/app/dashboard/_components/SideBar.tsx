@@ -1,7 +1,8 @@
 import { adminNavLinks, userNavLinks } from '@/constants/links'
 import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-
+import { usePathname, useRouter } from 'next/navigation'
+import { auth } from '@/services/firebase'
+import { signOut } from 'firebase/auth'
 
 import React from 'react'
 
@@ -9,6 +10,16 @@ import React from 'react'
 
 const SideBar = () => {
     const path = usePathname()
+    const router = useRouter()
+
+    const handleLogout = async () => {
+        try {
+            await signOut(auth)
+            router.push('/login')
+        } catch (error) {
+            console.error('Error logging out:', error)
+        }
+    }
 
     return (
         <div className='fixed h-screen w-[360px] bg-white px-[30px] py-[45px] flex flex-col justify-between'>
@@ -60,20 +71,22 @@ const SideBar = () => {
                 </div>
             </div>
             <div className='flex flex-col justify-center items-start gap-10'>
-                <button className='
-                    w-full
-                    h-[70px] 
-                    text-white
-                    font-medium 
-                    flex 
-                    items-center 
-                    justify-start 
-                    gap-[15px] 
-                    px-[23px] 
-                    bg-primaryColorLight 
-                    rounded-[15px] 
-                    cursor-pointer
-                '>
+                <button
+                    onClick={handleLogout}
+                    className='
+                        w-full
+                        h-[70px] 
+                        text-white
+                        font-medium 
+                        flex 
+                        items-center 
+                        justify-start 
+                        gap-[15px] 
+                        px-[23px] 
+                        bg-primaryColorLight 
+                        rounded-[15px] 
+                        cursor-pointer
+                    '>
                     <img src="/assets/logout.svg" alt="" />
                     <p className='text-[20px] font-medium '>Logout</p>
                 </button>

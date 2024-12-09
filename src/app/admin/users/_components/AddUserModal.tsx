@@ -122,7 +122,6 @@ const AddUserModal = ({ onCloseClick }: GuideModalProps) => {
             const user: UserProfile = {
                 user_id: "",
                 email: newUser.email,
-                password: newUser.password,
                 first_name: newUser.first_name,
                 last_name: newUser.last_name,
                 account_status: {

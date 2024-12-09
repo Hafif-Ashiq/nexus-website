@@ -9,32 +9,17 @@ import { RootState } from '@/redux/store'
 import { useDispatch } from 'react-redux'
 import { listenToPosts } from '@/firebaseFunctions/user/postFunctions/getPosts'
 import { PostInterface } from '@/services/PostInterface'
-import { setUser } from '@/redux/slices/userSlice'
-import { getUserData } from '@/firebaseFunctions/user/userFunctions'
-import Loader from '@/components/Loader'
 import ImageConfirmModal from '../library/_components/ImageConfirmModal'
-import { handleProfileFileUpload, updateUserImages } from '@/firebaseFunctions/admin/users'
-// import ImageConfirmModal from '@/components/ImageConfirmModal'
+import { handleProfileFileUpload, updateUser, updateUserImages } from '@/firebaseFunctions/admin/users'
+import IconButton from '@/components/IconButton'
+import EditProfileModal from './_components/EditProfileModal'
 
 const page = () => {
 
     const userId = useSelector((state: RootState) => state.userReducer.userId)
     const user = useSelector((state: RootState) => state.userReducer.user)
 
-    // useEffect(() => {
-    //     if (!user) {
-    //         getUserData(userId).then((user) => {
-    //             dispatch(setUser(user))
-    //         })
-    //     }
-    // }, [userId])
 
-    // if (!user) {
-
-    //     return <div className='flex justify-center items-center h-screen'>
-    //         <Loader />
-    //     </div>
-    // }
 
     const [posts, setPosts] = useState<PostInterface[]>([])
     const [loadingPosts, setLoadingPosts] = useState(true);
@@ -50,6 +35,8 @@ const page = () => {
     const [showImageModal, setShowImageModal] = useState(false);
     const [isProfilePic, setIsProfilePic] = useState(false);
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+    const [showEditProfileModal, setShowEditProfileModal] = useState(false);
 
     const handleImageSelect = async (isProfile: boolean) => {
         try {
@@ -150,18 +137,23 @@ const page = () => {
 
 
                     </div>
-                    <div className='flex flex-col gap-[10px] mt-[70px] px-[20px]'>
-                        <div className='flex flex-col gap-[10px]'>
-                            <div className='flex items-center gap-[10px]'>
-                                <p className='text-[24px] font-semibold text-black'>{user?.first_name + " " + user?.last_name}</p>
-                                <img src="/assets/tick-circle-blue.svg" alt="" />
+                    <div className='flex justify-between items-center gap-[20px]'>
+                        <div className='flex flex-col gap-[10px] mt-[70px] px-[20px]'>
+                            <div className='flex flex-col gap-[10px]'>
+                                <div className='flex items-center gap-[10px]'>
+                                    <p className='text-[24px] font-semibold text-black'>{user?.first_name + " " + user?.last_name}</p>
+                                    <img src="/assets/tick-circle-blue.svg" alt="" />
+                                </div>
+                                <p className='text-[16px] font-medium text-gray-500'>{user?.biography}</p>
+                                <div className='flex items-center gap-[15px] text-[14px] font-medium text-gray-500'>
+                                    <p>{user?.email}</p>
+                                    <div className='w-[4px] h-[4px] rounded-full bg-gray-500'></div>
+                                    <p>Joined {user?.start_date ? new Date(user?.start_date).toLocaleDateString() : ''}</p>
+                                </div>
                             </div>
-                            <p className='text-[16px] font-medium text-gray-500'>{user?.biography}</p>
-                            <div className='flex items-center gap-[15px] text-[14px] font-medium text-gray-500'>
-                                <p>{user?.email}</p>
-                                <div className='w-[4px] h-[4px] rounded-full bg-gray-500'></div>
-                                <p>Joined {user?.start_date ? new Date(user?.start_date).toLocaleDateString() : ''}</p>
-                            </div>
+                        </div>
+                        <div className='flex justify-end items-end px-[20px]'>
+                            <IconButton icon="/assets/pencil.svg" onClick={() => setShowEditProfileModal(true)} />
                         </div>
                     </div>
                 </div>
@@ -182,6 +174,23 @@ const page = () => {
                     imageSelected={selectedImage || undefined}
                     onClose={() => setShowImageModal(false)}
                     onConfirm={handleImageConfirm}
+                />
+            )}
+            {showEditProfileModal && (
+                <EditProfileModal
+                    initialProfile={{
+                        first_name: user?.first_name || "",
+                        last_name: user?.last_name || "",
+                        biography: user?.biography || ""
+                    }}
+                    onUpdate={(profile) => {
+                        updateUser(userId, {
+                            first_name: profile.first_name,
+                            last_name: profile.last_name,
+                            biography: profile.biography
+                        })
+                    }}
+                    onClose={() => setShowEditProfileModal(false)}
                 />
             )}
 

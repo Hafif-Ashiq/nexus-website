@@ -88,7 +88,7 @@ const AccountDetailsSide: React.FC<DetailProps> = ({ user_id, firstName, lastNam
         const user: UserProfile = {
             user_id: "",
             email: mail,
-            password: pass,
+
             first_name: first,
             last_name: last,
             account_status: {
@@ -253,6 +253,7 @@ const AccountDetailsSide: React.FC<DetailProps> = ({ user_id, firstName, lastNam
                 <label htmlFor="email" className='flex flex-col gap-[10px]'>
                     <p className='text-[16px] font-bold text-primaryColorLight'>Email</p>
                     <input
+                        disabled={true}
                         type="email"
                         name='email'
                         className={`input-field w-full`}

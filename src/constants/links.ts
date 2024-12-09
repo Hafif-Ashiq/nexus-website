@@ -21,11 +21,11 @@ export const adminNavLinks = [
         title: "Users",
         link: "/users"
     },
-    {
-        icon: Chart,
-        title: "Performance",
-        link: "/performance"
-    },
+    // {
+    //     icon: Chart,
+    //     title: "Performance",
+    //     link: "/performance"
+    // },
     {
         icon: Configuration,
         title: "Configuration",

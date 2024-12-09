@@ -52,7 +52,7 @@ const Guides = ({ guides, editEnabled }: GuidesProps) => {
     return (
         <div className='flex gap-[20px] overflow-x-hidden'>
             {
-                editEnabled && <div className='w-[600px]'>
+                editEnabled && <div className='w-[400px]'>
                     <LargeButton activeIcon='note-favorite' inActiveIcon='' text='Create a new Guide' active onClick={() => { setGuideOpen(true) }} />
                 </div>
             }

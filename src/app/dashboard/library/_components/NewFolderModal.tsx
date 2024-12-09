@@ -32,7 +32,7 @@ const NewFolderModal = ({ onCloseClick }: { onCloseClick: () => void }) => {
 
 
     return (
-        <div className='absolute inset-0 bg-[#00000090] overflow-hidden flex justify-center items-center'>
+        <div className='fixed inset-0 bg-[#00000090] overflow-hidden flex justify-center items-center'>
             <div className='w-[900px] h-[450px] bg-white py-[25px] rounded-[25px] overflow-hidden flex flex-col gap-[20px]'>
                 {/* Top Div */}
                 <div className='flex justify-between items-center px-[20px]'>

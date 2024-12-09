@@ -123,8 +123,8 @@ const UserSideBar = () => {
                     <p>Add New User</p>
                 </button>
                 <button className='flex-1 shadow-normal bg-white text-black px-[25px] py-[18px] flex justify-center items-center gap-[7px] text-[16px] font-semibold rounded-[15px]'>
-                    <img src="/assets/arrow-down-black.svg" alt="" />
-                    <p>Download Report</p>
+                    {/* <img src="/assets/arrow-down-black.svg" alt="" /> */}
+                    {/* <p>Download Report</p> */}
                 </button>
             </div>
             <div className='shadow-normal bg-white h-full rounded-[15px] p-[20px] flex flex-col gap-[15px]'>
@@ -173,7 +173,7 @@ const UserSideBar = () => {
                                 updateUser(user.user_id, {
                                     first_name: first,
                                     last_name: last,
-                                    email: mail,
+
                                     biography: bio
                                 })
 
@@ -186,7 +186,7 @@ const UserSideBar = () => {
                             lastName={user.last_name}
                             biography={user.biography}
                             email={user.email}
-                            password={user.password}
+                            password={"12345678"}
                         />
                     }
                     {

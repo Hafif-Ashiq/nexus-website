@@ -1,4 +1,4 @@
-import { collection, query, onSnapshot, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
+import { collection, query, onSnapshot, getDocs, addDoc, updateDoc, doc, deleteDoc, where } from 'firebase/firestore';
 import { FolderInterface } from '../../services/FoldersInterface';
 import { db } from '@/services/firebase';
 
@@ -105,6 +105,18 @@ export const deleteFolder = async (
     folderId: string
 ): Promise<void> => {
     try {
+        // First update all content documents that reference this folder
+        const contentRef = collection(db, 'users', userId, 'content');
+        const contentQuery = query(contentRef, where('folder_id', '==', folderId));
+        const contentSnapshot = await getDocs(contentQuery);
+
+        // Update each content document to set folder_id to "None"
+        const updatePromises = contentSnapshot.docs.map(doc =>
+            updateDoc(doc.ref, { folder_id: "None" })
+        );
+        await Promise.all(updatePromises);
+
+        // Then delete the folder document
         const folderRef = doc(db, 'users', userId, 'folder', folderId);
         await deleteDoc(folderRef);
     } catch (error) {

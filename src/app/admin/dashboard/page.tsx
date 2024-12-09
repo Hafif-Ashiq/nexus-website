@@ -56,9 +56,10 @@ const page = () => {
     };
 
     return (
-        <div className="flex flex-col gap-[40px]">
+        <div className="flex flex-col gap-[40px] max-w-[75vw]">
             <Header />
             <Guides guides={guides} editEnabled />
+
             <div className='flex gap-[20px]'>
                 <GraphInfo data={dataUsers} title='Active Users' value='6245' change='5.4%' increase />
                 <StatPerformance />

@@ -32,6 +32,9 @@ const page = () => {
 
     const [recentContent, setRecentContent] = useState<ContentInterface[]>([])
 
+    const [isSummarizing, setIsSummarizing] = useState(false)
+    const [isTranslating, setIsTranslating] = useState(false)
+
     useEffect(() => {
         listenToUserContent(userId, (content) => dispatch(setAllContent(content)))
         listenToPosts((newPosts) => {
@@ -55,17 +58,21 @@ const page = () => {
 
 
     const startSummarize = async () => {
+        setIsSummarizing(true)
         const chat = await createNewSummarizationChat(userId)
         console.log(chat)
         dispatch(setSelectedChat(chat))
         router.push('/dashboard/ai-chat')
+        setIsSummarizing(false)
     }
 
     const startTranslate = async () => {
+        setIsTranslating(true)
         const chat = await createNewTranslationChat(userId)
         console.log(chat)
         dispatch(setSelectedChat(chat))
         router.push('/dashboard/ai-chat')
+        setIsTranslating(false)
     }
 
     return (
@@ -77,8 +84,8 @@ const page = () => {
             <div className='w-[70%] flex flex-col gap-[20px] '>
                 {/* CTA buttons */}
                 <div className={`p-[20px] bg-white rounded-[15px] min-h-[195px] flex justify-center items-center gap-[20px]`}>
-                    <LargeButton activeIcon='translate' inActiveIcon='' text='Translate' title='Chat with AI' active onClick={startTranslate} />
-                    <LargeButton activeIcon='translate' inActiveIcon='' text='Summarize' title='Chat with AI' active onClick={startSummarize} />
+                    <LargeButton activeIcon='translate' inActiveIcon='' text='Translate' title='Chat with AI' active onClick={startTranslate} disabled={isTranslating} />
+                    <LargeButton activeIcon='translate' inActiveIcon='' text='Summarize' title='Chat with AI' active onClick={startSummarize} disabled={isSummarizing} />
                 </div>
                 {/* Content */}
                 <div className='py-[20px] bg-white rounded-[15px] flex flex-col gap-[20px]'>

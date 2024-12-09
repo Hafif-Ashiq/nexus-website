@@ -9,6 +9,8 @@ import SwitchButton from '../SwitchButton'
 import { useRouter } from 'next/navigation'
 import { RootState } from '@/redux/store'
 import { useSelector } from 'react-redux'
+import { signOut } from 'firebase/auth'
+import { auth } from '@/services/firebase'
 
 const ProfileModal = () => {
     const router = useRouter()
@@ -48,6 +50,15 @@ const ProfileModal = () => {
             }
         }
     ]
+
+    const handleLogout = async () => {
+        try {
+            await signOut(auth)
+            router.push('/login')
+        } catch (error) {
+            console.error('Error logging out:', error)
+        }
+    }
 
     return (
         <div className='w-[330px] bg-white rounded-[15px] border-[1px] border-borderColorLight py-[20px] shadow-md flex flex-col gap-[15px]'>
@@ -102,7 +113,7 @@ const ProfileModal = () => {
             <div className='w-full h-[1px] bg-borderColorLight'></div>
 
             {/* Logout */}
-            <button className='flex items-center gap-[10px] px-[20px]'>
+            <button onClick={handleLogout} className='flex items-center gap-[10px] px-[20px]'>
                 <img src="/assets/logout2.svg" alt="logout" />
                 <span className='text-[#757575] py-[10px] rounded-[15px] text-[16px] font-medium'>Logout</span>
             </button>

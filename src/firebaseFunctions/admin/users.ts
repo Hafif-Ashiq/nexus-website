@@ -1,4 +1,4 @@
-import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, setDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase';
 import { UserProfile } from '@/services/UserInterface';
 import { deleteFileFromStorage, uploadFileToStorage } from '../utils';
@@ -19,7 +19,7 @@ export const listenToUsersList = (
                 const chat: Partial<UserProfile> = {
                     user_id: data.user_id,
                     email: data.email,
-                    password: data.password,
+
                     first_name: data.first_name,
                     last_name: data.last_name,
                     account_status: data.account_status,
@@ -60,17 +60,12 @@ export const listenToUsersList = (
 
 export const addNewUser = async (user: UserProfile) => {
     try {
-        const docRef = await addDoc(collection(db, "users"), user);
-        const userId = docRef.id;
+        // Use the user_id from the user object to create the document
+        const userDocRef = doc(db, "users", user.user_id);
+        await setDoc(userDocRef, user);
 
-        // Update the document with the ID
-        await updateDoc(docRef, {
-            user_id: userId
-        });
-
-        console.log("Document written with ID: ", userId);
-        alert("User added");
-        return userId;
+        console.log("Document written with ID: ", user.user_id);
+        return user.user_id;
     } catch (e) {
         console.error("Error adding document: ", e);
         throw e; // Re-throw to handle error in calling code
@@ -102,8 +97,9 @@ export const deleteUser = async (userId: string) => {
 };
 
 
-export const updateUser = async (userId: string, updatedData: Partial<Pick<UserProfile, 'first_name' | 'last_name' | 'email' | 'biography'>>) => {
+export const updateUser = async (userId: string, updatedData: Partial<Pick<UserProfile, 'first_name' | 'last_name' | 'biography'>>) => {
     try {
+
         const userDocRef = doc(db, "users", userId); // Reference to the user document
         await updateDoc(userDocRef, updatedData); // Update the document with new data
         console.log("Document successfully updated!");
@@ -118,7 +114,7 @@ export const handleProfileFileUpload = async (file: File, userId: string, isProf
         // Delete existing file first
         await deleteFileFromStorage(
             `users/${userId}/${isProfilePic ? "picture" : "background"}`
-        );
+        ).catch(err => console.log("Error deleting existing file:", err));
 
         // Upload new file to storage with user-specific path and fixed filename
         const downloadURL = await uploadFileToStorage(

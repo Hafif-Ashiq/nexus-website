@@ -107,10 +107,10 @@ const Post = ({ post, isOwner = false }: PostProps) => {
             <div className='flex-1 flex flex-col gap-[15px]  w-full'>
                 <div className='flex justify-between items-center px-[20px] pt-[20px] '>
                     <div className='flex items-center gap-[10px] '>
-                        <img src={userData.profile_pic} alt="" className='w-[40px] h-[40px] rounded-full object-cover' />
+                        <img src={userData.profile_pic == "" ? "/assets/admin-image.jpg" : userData.profile_pic} alt="" className='w-[40px] h-[40px] rounded-full object-cover bg-accentColorLight' />
                         <div className="flex flex-col ">
-                            <span className='font-semibold text-[16px]'>{userData.first_name} {userData.last_name}</span>
-                            <span className='font-medium text-[12px] opacity-50'>{userData.email}</span>
+                            <span className='font-semibold text-[16px]'>{userData.first_name ? userData.first_name : "Nexus User"} {userData.last_name}</span>
+                            <span className='font-medium text-[12px] opacity-50'>{userData.email || "nexususer@nexus.com"}</span>
                         </div>
                     </div>
 

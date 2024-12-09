@@ -20,6 +20,7 @@ export interface UserSliceReducer {
 const initialState: UserSliceReducer = {
 
     userId: "Bd4umkyLqOLnMpdOLZ0E",
+    // userId: "",
     user: null,
     selectedChat: null,
     chats: [],
