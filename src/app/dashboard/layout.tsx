@@ -26,7 +26,7 @@ export default function RootLayout({
             dispatch(setAllModels(models as AiModelInterface[]));
         });
         return () => unsubscribe(); // Cleanup subscription on unmount
-    }, [dispatch, userId])
+    }, [])
 
     return (
         <html lang="en">

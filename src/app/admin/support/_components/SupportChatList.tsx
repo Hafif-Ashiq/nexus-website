@@ -1,4 +1,4 @@
-import Link from 'next/link'
+
 import React, { useEffect, useState } from 'react'
 
 import Select from '@/components/Select'
@@ -9,6 +9,7 @@ import { useDispatch } from 'react-redux'
 import { setSupportChat } from '@/redux/slices/adminSlice'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
+import { updateSupportStatus } from '@/firebaseFunctions/admin/support'
 
 interface SupportChatTableProps {
     issues: SupportInterface[],
@@ -70,19 +71,23 @@ const SupportChatLists: React.FC<SupportChatTableProps> = ({ issues, showSelect 
     const getUserDropDownActions = (index: number) => {
         return [
             {
-                title: "Activate Account",
-                onClick: () => { }
+                title: "Mark as Resolved",
+                onClick: () => {
+                    updateSupportStatus(issues[index].issue_id, "Resolved")
+                    setActionsOpen(-1)
+                }
             },
             {
-                title: "Delete Account",
-                onClick: () => { }
-            },
-            {
-                title: "Open Support",
-                onClick: () => { }
-            },
+                title: "Mark as Closed",
+                onClick: () => {
+                    updateSupportStatus(issues[index].issue_id, "Closed")
+                    setActionsOpen(-1)
+                }
+            }
         ]
     }
+
+
 
     return (
         <div className='flex flex-col gap-[15px] h-full flex-1'>
@@ -128,7 +133,7 @@ const SupportChatLists: React.FC<SupportChatTableProps> = ({ issues, showSelect 
                                     dispatch(setSupportChat(issue))
                                 }
                             }}
-                            key={index}
+                            key={issue.issue_id + "_" + index}
                             className={`flex justify-between text-left pl-[25px] pr-[50px] py-[25px] text-ellipsis  font-semibold  rounded-[15px]  border-[1.5px] border-solid  cursor-pointer ${issue.issue_id == currentSupportChat.issue_id ? "border-primaryColorLight" : "hover:border-borderColor border-white"}`}>
                             {showSelect && <td className='w-[30px]'>
                                 <Select selected={selectedUsers[index] || allSelected} onSelect={(e) => {
@@ -147,7 +152,7 @@ const SupportChatLists: React.FC<SupportChatTableProps> = ({ issues, showSelect 
                                 <button onClick={() => index == actionsOpen ? setActionsOpen(-1) : setActionsOpen(index)} className=' py-[5px]'>
                                     <img src="/assets/dots.svg" alt="" />
                                 </button>
-                                {index == actionsOpen && <DropDown actions={getUserDropDownActions(index)} />}
+                                {index == actionsOpen && <DropDown key={issue.issue_id + "_" + index + "_dropdown"} actions={getUserDropDownActions(index)} />}
                             </td>
                         </tr>
                     ))}

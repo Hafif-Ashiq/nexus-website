@@ -56,7 +56,7 @@ const page = () => {
 
     return (
         <div className='flex flex-col gap-[40px]'>
-            <Header title='AI Chat' subtitle='Ask AI to translate or summarize.' />
+            <Header title='Support Chat' subtitle='Contact admin for any issues.' />
             <div className='flex gap-[20px]'>
                 <div className='basis-[70%]'>
                     <Chat />

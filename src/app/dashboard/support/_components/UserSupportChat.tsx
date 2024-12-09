@@ -117,7 +117,7 @@ const UserSupportChat = () => {
 
         if (isUser) {
             return (
-                <div className={`flex gap-[10px] items-start justify-end  ${(nextIsUser && isUser) || isLastMessage ? "mb-[3px]" : "mb-[25px]"}`}>
+                <div key={supportChat.issue_id + "_" + index} className={`flex gap-[10px] items-start justify-end  ${(nextIsUser && isUser) || isLastMessage ? "mb-[3px]" : "mb-[25px]"}`}>
                     <div className='w-[30px] h-[30px]'></div>
 
                     {/* For text */}

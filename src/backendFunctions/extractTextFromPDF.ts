@@ -1,18 +1,12 @@
-import { getDocument, GlobalWorkerOptions } from 'pdfjs-dist';
+export const extractTextFromPDF = async (pdfFile: File): Promise<string> => {
+    const formData = new FormData();
+    formData.append('pdf', pdfFile);
 
-// Set up the worker
-GlobalWorkerOptions.workerSrc = 'pdfjs-dist/build/pdf.worker.min.js'; // Adjust the path as needed
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pdf-to-text/`, {
+        method: 'POST',
+        body: formData
+    });
 
-export const extractTextFromPDF = async (file: File): Promise<string> => {
-    const pdfData = await file.arrayBuffer();
-    const pdf = await getDocument(pdfData).promise;
-    let text = '';
-
-    for (let i = 1; i <= pdf.numPages; i++) {
-        const page = await pdf.getPage(i);
-        const content = await page.getTextContent();
-        text += content.items.map((item: any) => item.str).join(' ') + '\n';
-    }
-
-    return text;
-}; 
+    const data = await response.json();
+    return data.output_text;
+}

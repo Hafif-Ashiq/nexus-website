@@ -1,4 +1,4 @@
-import { collection, query, onSnapshot, getDocs, addDoc, updateDoc } from 'firebase/firestore';
+import { collection, query, onSnapshot, getDocs, addDoc, updateDoc, doc, deleteDoc } from 'firebase/firestore';
 import { FolderInterface } from '../../services/FoldersInterface';
 import { db } from '@/services/firebase';
 
@@ -72,6 +72,43 @@ export const createFolder = async (
         return docRef.id;
     } catch (error) {
         console.error('Error creating folder:', error);
+        throw error;
+    }
+};
+
+
+export const updateFolder = async (
+    userId: string,
+    folderId: string,
+    folderData: {
+        title?: string;
+        icon?: number;
+    }
+): Promise<void> => {
+    try {
+        const folderRef = doc(db, 'users', userId, 'folder', folderId);
+
+        const updateData = {
+            ...folderData,
+            date_updated: new Date().toISOString()
+        };
+
+        await updateDoc(folderRef, updateData);
+    } catch (error) {
+        console.error('Error updating folder:', error);
+        throw error;
+    }
+};
+
+export const deleteFolder = async (
+    userId: string,
+    folderId: string
+): Promise<void> => {
+    try {
+        const folderRef = doc(db, 'users', userId, 'folder', folderId);
+        await deleteDoc(folderRef);
+    } catch (error) {
+        console.error('Error deleting folder:', error);
         throw error;
     }
 };

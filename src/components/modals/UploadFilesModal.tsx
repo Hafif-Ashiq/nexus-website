@@ -13,7 +13,7 @@ import { ContentType } from '@/services/ContentInterface';
 import { SummarizationConfig, TranslationConfig } from '@/services/Configs';
 import { uploadContentFile } from '@/firebaseFunctions/user/contentFunctions/uploadFiles';
 import { translate } from '@/backendFunctions/translation';
-
+import { useRouter } from 'next/navigation';
 
 interface UploadFilesModalProps {
     onClose: () => void
@@ -27,6 +27,7 @@ interface FileStatus {
 
 const UploadFilesModal = ({ onClose }: UploadFilesModalProps) => {
 
+    const router = useRouter()
     const userId = useSelector((state: RootState) => state.userReducer.userId)
 
     const [loading, setLoading] = useState(false);
@@ -155,6 +156,7 @@ const UploadFilesModal = ({ onClose }: UploadFilesModalProps) => {
 
         setLoading(false);
         onClose()
+        router.push("/dashboard/library")
     };
 
     const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>, type: string) => {

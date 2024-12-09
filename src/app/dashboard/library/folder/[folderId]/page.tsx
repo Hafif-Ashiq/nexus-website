@@ -9,9 +9,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import ContentList from '../../_components/ContentList'
 import { useParams, useRouter } from 'next/dist/client/components/navigation'
-import HeaderBreadCrumb from '@/components/HeaderBreadCrumb'
 import LibraryHeaderBreadCrumb from '../../_components/LibraryHeaderBreadCrumb'
-import { setCurrentContent } from '@/redux/slices/librarySlice'
+import { setCurrentContent, setFolderContent } from '@/redux/slices/librarySlice'
+import IconButton from '@/components/IconButton'
+import { deleteFolder } from '@/firebaseFunctions/user/folder'
+import UpdateFolderModal from '../../_components/UpdateFolderModal'
+import { FolderInterface } from '@/services/FoldersInterface'
 
 const page = () => {
     const params = useParams();
@@ -23,10 +26,16 @@ const page = () => {
     const [searchText, setSearchText] = useState('')
 
     const [content, setContent] = useState<ContentInterface[]>([])
+    const [updateFolderModal, setUpdateFolderModal] = useState(false)
 
-
+    const allFolders = useSelector((state: RootState) => state.libraryReducer.allFolders)
+    const folderContent = useSelector((state: RootState) => state.libraryReducer.folderContent)
     useEffect(() => {
         listenToFolderContent(userId, folderId, setContent)
+        const folder = allFolders.find((folder) => folder.folder_id === folderId)
+        if (folder) {
+            dispatch(setFolderContent(folder))
+        }
     }, [userId])
 
     return (
@@ -41,9 +50,14 @@ const page = () => {
                             <div className='flex justify-end items-center gap-[15px] '>
                                 {/* Report Download Button */}
                                 {/* <HeaderButton icon='/assets/arrow-down.svg' title='Report' onClick={() => { }} /> */}
+                                <IconButton icon='/assets/trash-blue.svg' onClick={() => {
+                                    confirm('Are you sure you want to delete this folder?') && deleteFolder(userId, folderId)
+                                    router.push('/dashboard/library')
+                                }} />
+                                <IconButton icon='/assets/pencil.svg' onClick={() => { setUpdateFolderModal(true) }} />
                                 {/* Filter button */}
                                 <HeaderButton icon='/assets/sort.svg' title='Filter' onClick={() => { }} />
-
+                                {updateFolderModal && <UpdateFolderModal folder={folderContent as FolderInterface} onCloseClick={() => { setUpdateFolderModal(false) }} />}
                             </div>
 
                         </div>

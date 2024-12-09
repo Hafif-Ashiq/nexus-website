@@ -5,27 +5,20 @@ import Search from '@/components/Search'
 import { useEffect, useState } from 'react'
 import HeaderButton from '@/components/HeaderButton'
 import { ContentInterface } from '@/services/ContentInterface'
-import { listenToUserContent } from '@/firebaseFunctions/user/content'
 import { useDispatch, useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import LibrarySideBar from './_components/LibrarySideBar'
-import { FolderInterface } from '@/services/FoldersInterface'
-import { listenToUserFolders } from '@/firebaseFunctions/user/folder'
 import { useRouter } from 'next/navigation'
-import { setAllContent, setAllFolders, setCurrentContent, setFolderContent } from '@/redux/slices/librarySlice'
+import { setCurrentContent } from '@/redux/slices/librarySlice'
 
 const page = () => {
-    const userId = useSelector((state: RootState) => state.userReducer.userId)
-
     const router = useRouter()
     const dispatch = useDispatch()
     const [searchText, setSearchText] = useState('')
 
     const folders = useSelector((state: RootState) => state.libraryReducer.allFolders);
     const content = useSelector((state: RootState) => state.libraryReducer.allContent);
-
     const [filteredContent, setFilteredContent] = useState<ContentInterface[]>(content)
-
 
     useEffect(() => {
         const filteredContent = getContent()
@@ -50,11 +43,6 @@ const page = () => {
         return contentList
     }
 
-    useEffect(() => {
-        listenToUserContent(userId, (content) => dispatch(setAllContent(content)))
-        listenToUserFolders(userId, (folders) => dispatch(setAllFolders(folders)))
-    }, [userId, dispatch])
-
     return (
         <div className='flex flex-col gap-[40px]'>
             <Header title='Library' subtitle='Navigate through the library of content' />
@@ -65,14 +53,12 @@ const page = () => {
                             <Search text={searchText} onChange={(text) => { setSearchText(text) }} placeholder="Search Content.." />
 
                             <div className='flex justify-end items-center gap-[15px] '>
-
                                 {/* Filter button */}
                                 <HeaderButton icon='/assets/sort.svg' title='Filter' onClick={() => { }} />
                             </div>
 
                         </div>
-                        <div className='flex-1 h-full min-h-[70vh]'>
-
+                        <div className='flex-1 h-full '>
                             <ContentList content={filteredContent} showSelect onContentClick={(cont) => {
                                 dispatch(setCurrentContent(cont))
                                 router.push(`/dashboard/library/content/${cont.content_id}`)
@@ -83,13 +69,11 @@ const page = () => {
                 </main>
 
                 <LibrarySideBar folders={folders} onFolderClick={(folder) => {
-                    dispatch(setFolderContent(folder))
                     router.push(`/dashboard/library/folder/${folder.folder_id}`)
                 }} />
 
             </div>
         </div>
-
     )
 }
 

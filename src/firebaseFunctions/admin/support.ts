@@ -1,4 +1,4 @@
-import { doc, getDoc } from 'firebase/firestore';
+import { doc, getDoc, updateDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase';
 
 import { SupportInterface } from '@/services/SupportInterface';
@@ -33,7 +33,7 @@ export const listenToSupportChats = (
                         conversation: data.conversation,
                     };
 
-                    if (!chat.user_id || !chat.issue_id || !chat.issue_opened_time || !chat.conversation) {
+                    if (!chat.user_id) {
                         throw new Error("Missing required fields in Firestore document");
                     }
 
@@ -77,3 +77,22 @@ export const fetchUserName = async (user_id: string): Promise<string | null> => 
     }
 };
 
+
+
+// Change status of a support issue
+export const updateSupportStatus = async (issueId: string, newStatus: "Pending" | "Closed" | "Resolved"): Promise<boolean> => {
+    try {
+        const supportDocRef = doc(db, "support", issueId);
+
+        await updateDoc(supportDocRef, {
+            issue_status: newStatus
+        });
+
+        console.log(`Successfully updated status to ${newStatus}`);
+        return true;
+
+    } catch (error) {
+        console.error("Error updating support status: ", error);
+        return false;
+    }
+};

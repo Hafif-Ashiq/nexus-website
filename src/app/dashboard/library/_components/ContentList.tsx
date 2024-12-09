@@ -7,6 +7,7 @@ import { getDateFormatted } from '@/utils/datetime'
 import { deleteContent } from '@/firebaseFunctions/user/contentFunctions/deleteContent'
 import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
+import DropDown from '@/app/admin/_components/DropDown'
 
 interface ContentTableProps {
     content: ContentInterface[],
@@ -63,22 +64,7 @@ const ContentList: React.FC<ContentTableProps> = ({ content, showSelect = false,
         }
     }
 
-    const getUserDropDownActions = (index: number) => {
-        return [
-            {
-                title: "Activate Account",
-                onClick: () => { }
-            },
-            {
-                title: "Delete Account",
-                onClick: () => { }
-            },
-            {
-                title: "Open Support",
-                onClick: () => { }
-            },
-        ]
-    }
+
 
     const deleteSelectedContent = async () => {
         if (!confirm("Are you sure you want to delete these content?")) return
@@ -98,6 +84,18 @@ const ContentList: React.FC<ContentTableProps> = ({ content, showSelect = false,
         }
     }
 
+    const getContentDropDownActions = (index: number) => {
+        return [
+            {
+                title: "Delete",
+                onClick: () => {
+                    if (!confirm("Are you sure you want to delete this content?")) return
+                    deleteContent(userId, content[index].content_id)
+                    setActionsOpen(-1)
+                }
+            },
+        ]
+    }
 
     const getContentType = (type: string) => {
         return (
@@ -171,10 +169,10 @@ const ContentList: React.FC<ContentTableProps> = ({ content, showSelect = false,
                                 <button onClick={(e) => {
                                     e.stopPropagation(); // Prevent tr click
                                     index == actionsOpen ? setActionsOpen(-1) : setActionsOpen(index)
-                                }} className=' py-[5px]'>
+                                }} className=' py-[10px]'>
                                     <img src="/assets/dots.svg" alt="" />
                                 </button>
-                                {/* {index == actionsOpen && <DropDown actions={getUserDropDownActions(index)} />} */}
+                                {index == actionsOpen && <DropDown actions={getContentDropDownActions(index)} />}
                             </td>
                         </tr>
                     ))}
