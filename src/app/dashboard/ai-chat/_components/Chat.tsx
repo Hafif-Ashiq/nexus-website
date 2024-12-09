@@ -24,18 +24,9 @@ interface ChatProps {
 
 const Chat = ({ selectedChat }: ChatProps) => {
 
-    if (!selectedChat) {
-        return (
-            <div className='flex flex-1 justify-center items-center h-[80vh]'>
-                <Loader />
-            </div>
-        )
-    }
+    const allChats = useSelector((state: RootState) => state.userReducer.chats)
 
-    useEffect(() => {
-        console.log("selected chat changed")
-        console.log(selectedChat)
-    }, [selectedChat])
+
 
     const endOfMessagesRef = useRef<HTMLDivElement | null>(null);
 
@@ -56,12 +47,19 @@ const Chat = ({ selectedChat }: ChatProps) => {
 
 
     useEffect(() => {
+        if (!selectedChat) {
+            return
+        }
+
         const modelId = getModelId()
         const model = allModels.find((model) => model.model_id == modelId)
         setCurrentModel(model ?? null)
     }, [allModels, selectedChat])
 
     useEffect(() => {
+        if (!selectedChat) {
+            return
+        }
         // Scroll to the bottom of the chat when messages change
         if (endOfMessagesRef.current) {
             endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -73,7 +71,21 @@ const Chat = ({ selectedChat }: ChatProps) => {
         resetInputTextHeight()
     }, [selectedChat]); // Dependency array includes messages
 
+    if (allChats.length == 0) {
+        return (
+            <div className='flex flex-1 justify-center items-center h-[80vh]'>
+                <p className='text-primaryColorLight text-[16px] font-semibold'>No chats found</p>
+            </div>
+        )
+    }
 
+    if (!selectedChat) {
+        return (
+            <div className='flex flex-1 justify-center items-center h-[80vh]'>
+                <Loader />
+            </div>
+        )
+    }
 
     const resetInputTextHeight = () => {
         const textarea = document.querySelector('textarea')
@@ -287,17 +299,14 @@ const Chat = ({ selectedChat }: ChatProps) => {
                 <div className='flex justify-between items-center px-[20px]'>
                     {/* left */}
                     <div className='flex justify-start items-center gap-[15px]  '>
-                        {/* Back button */}
-                        {/* <button onClick={() => { }} className='w-[10px] h-[20px] rounded-full overflow-hidden flex justify-center items-center'>
-                            <img src='/assets/back-arrow.svg' />
-                        </button> */}
+
                         {/* profile */}
                         <div className='w-[50px] h-[50px] rounded-full overflow-hidden flex justify-center items-center'>
                             <img src="/user-image.jpg" alt="profile picture" className='object-cover' />
                         </div>
                         {/* title */}
                         <div className='flex flex-col items-start justify-center'>
-                            <p className='font-semibold text-[16px]'>AI Something</p>
+                            <p className='font-semibold text-[16px]'>{currentModel?.model_name}</p>
                             <p className='font-semibold text-[14px]' style={{
                                 color: "#2B9F03"
                             }}>Available</p>
@@ -380,12 +389,13 @@ const Chat = ({ selectedChat }: ChatProps) => {
                         }}
                         onKeyDown={(event) => {
                             if (event.key === 'Enter' && !event.shiftKey) {
-                                if (selectedChat.chat_type == "Translation") {
-                                    handleTranslateMessage()
-                                }
-                                else if (selectedChat.chat_type == "Summarization") {
-                                    handleSummarizeMessage()
-                                }
+                                // event.preventDefault()
+                                // if (selectedChat.chat_type == "Translation") {
+                                //     handleTranslateMessage()
+                                // }
+                                // else if (selectedChat.chat_type == "Summarization") {
+                                //     handleSummarizeMessage()
+                                // }
                             }
                         }}
                         value={inputText}

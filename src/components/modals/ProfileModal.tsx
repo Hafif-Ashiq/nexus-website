@@ -7,10 +7,13 @@ import ManageAccountIcon from '../../../public/assets/manage-account-menu.svg'
 import HelpIcon from '../../../public/assets/support-menu.svg'
 import SwitchButton from '../SwitchButton'
 import { useRouter } from 'next/navigation'
+import { RootState } from '@/redux/store'
+import { useSelector } from 'react-redux'
 
 const ProfileModal = () => {
     const router = useRouter()
 
+    const user = useSelector((state: RootState) => state.userReducer.user)
 
     const settings = [
         {
@@ -53,9 +56,9 @@ const ProfileModal = () => {
                 router.push("/dashboard/profile")
             }} className='w-full flex items-center justify-betweeen px-[20px]'>
                 <div className='flex items-center gap-[15px]'>
-                    <img src="/admin-image.jpg" alt='profile' className='w-[40px] h-[40px] rounded-full' />
+                    <img src={user?.profile_pic || "/admin-image.jpg"} alt='profile' className='w-[40px] h-[40px] rounded-full' />
                     <div className='flex flex-col justify-start items-start '>
-                        <p className='text-[16px] font-semibold'>Mehdi</p>
+                        <p className='text-[16px] font-semibold'>{user?.first_name} {user?.last_name}</p>
                         <p className='text-[14px] opacity-50'>View Profile</p>
                     </div>
                 </div>

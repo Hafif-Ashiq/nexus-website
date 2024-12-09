@@ -47,8 +47,8 @@ const page = () => {
                             </div>
 
                         </div>
-                        <div className='flex-1'>
-                            {/* <SupportChatLists issues={chats} showSelect showViewAll={false} /> */}
+                        <div className='flex-1 min-h-[70vh]'>
+
                             <ContentList content={content} showSelect onContentClick={(cont) => {
                                 dispatch(setCurrentContent(cont))
                                 router.push(`/dashboard/library/folder/${folderId}/content/${cont.content_id}`)

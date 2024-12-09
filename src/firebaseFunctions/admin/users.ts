@@ -1,7 +1,8 @@
 import { addDoc, collection, deleteDoc, doc, getDocs, onSnapshot, updateDoc } from 'firebase/firestore';
 import { db } from '@/services/firebase';
 import { UserProfile } from '@/services/UserInterface';
-import { uploadFileToStorage } from './utils';
+import { deleteFileFromStorage, uploadFileToStorage } from '../utils';
+import { deleteContent } from '../user/contentFunctions/deleteContent';
 
 
 export const listenToUsersList = (
@@ -81,13 +82,22 @@ export const deleteUser = async (userId: string) => {
         // Get a reference to the user's document using their userId
         const userDocRef = doc(db, "users", userId);
 
+        // Get all content documents for this user
+        const contentCollectionRef = collection(db, "users", userId, "content");
+        const contentSnapshot = await getDocs(contentCollectionRef);
+
+        // Delete all content documents and their associated files
+        for (const doc of contentSnapshot.docs) {
+            await deleteContent(userId, doc.id);
+        }
+
         // Delete the user document
         await deleteDoc(userDocRef);
 
-        console.log("Document successfully deleted with ID: ", userId);
+        console.log("User and all associated content deleted with ID: ", userId);
         alert("User deleted");
     } catch (e) {
-        console.error("Error deleting document: ", e);
+        console.error("Error deleting user and content: ", e);
     }
 };
 
@@ -105,7 +115,12 @@ export const updateUser = async (userId: string, updatedData: Partial<Pick<UserP
 
 export const handleProfileFileUpload = async (file: File, userId: string, isProfilePic: boolean) => {
     try {
-        // Upload file to storage with user-specific path and fixed filename
+        // Delete existing file first
+        await deleteFileFromStorage(
+            `users/${userId}/${isProfilePic ? "picture" : "background"}`
+        );
+
+        // Upload new file to storage with user-specific path and fixed filename
         const downloadURL = await uploadFileToStorage(
             file,
             `users/${userId}`,

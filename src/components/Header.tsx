@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import ProfileModal from './modals/ProfileModal';
 import UploadFilesModal from './modals/UploadFilesModal';
+import { useSelector } from 'react-redux';
+import { RootState } from '@/redux/store';
 
 interface HeaderProps {
     title: string;
@@ -12,6 +14,7 @@ const Header: React.FC<HeaderProps> = ({ title, subtitle, showUpload = true }) =
     // const router = useRouter()
     const [showProfileModal, setShowProfileModal] = useState(false)
     const [showUploadFilesModal, setShowUploadFilesModal] = useState(false)
+    const user = useSelector((state: RootState) => state.userReducer.user)
     return (
         <div className='flex items-center justify-between'>
             <div className='flex flex-col gap-[5px]'>
@@ -31,7 +34,7 @@ const Header: React.FC<HeaderProps> = ({ title, subtitle, showUpload = true }) =
                 <button onClick={() => {
                     setShowProfileModal(!showProfileModal)
                 }} className='w-[55px] h-[55px] rounded-full overflow-hidden'>
-                    <img src="/admin-image.jpg" alt="admin image" className='object-cover w-full h-full ' />
+                    <img src={user?.profile_pic || "/admin-image.jpg"} alt="admin image" className='object-cover w-full h-full ' />
                 </button>
                 {showProfileModal &&
                     <div className='absolute top-[60px] right-[0px] '>

@@ -6,10 +6,11 @@ import Loader from '../Loader'
 interface PostsSectionProps {
     posts: PostInterface[],
     loading: boolean,
-    onLoadMore: () => void // Callback function to load more posts
+    onLoadMore: () => void, // Callback function to load more posts
+    isOwner?: boolean
 }
 
-const PostsSection = ({ posts, loading, onLoadMore }: PostsSectionProps) => {
+const PostsSection = ({ posts, loading, onLoadMore, isOwner = false }: PostsSectionProps) => {
     const endOfPostsRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
@@ -40,7 +41,7 @@ const PostsSection = ({ posts, loading, onLoadMore }: PostsSectionProps) => {
         <div className='flex flex-col gap-[20px]'>
 
             {posts.map((post) => (
-                <Post key={post.post_id} post={post} />
+                <Post key={post.post_id} post={post} isOwner={isOwner} />
             ))}
 
             <div ref={endOfPostsRef} />

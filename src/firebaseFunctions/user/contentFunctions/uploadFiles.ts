@@ -1,7 +1,7 @@
 import { db } from "@/services/firebase";
 
 import { doc, setDoc, updateDoc } from "firebase/firestore";
-import { uploadFileToStorage } from "@/firebaseFunctions/admin/utils";
+import { uploadFileToStorage } from "@/firebaseFunctions/utils";
 
 
 export const uploadContentFile = async (userId: string, file: File, content_id: string): Promise<string> => {

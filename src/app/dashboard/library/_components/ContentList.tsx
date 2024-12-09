@@ -4,6 +4,9 @@ import Select from '@/components/Select'
 
 import { ContentInterface } from '@/services/ContentInterface'
 import { getDateFormatted } from '@/utils/datetime'
+import { deleteContent } from '@/firebaseFunctions/user/contentFunctions/deleteContent'
+import { useSelector } from 'react-redux'
+import { RootState } from '@/redux/store'
 
 interface ContentTableProps {
     content: ContentInterface[],
@@ -14,15 +17,15 @@ interface ContentTableProps {
 
 const ContentList: React.FC<ContentTableProps> = ({ content, showSelect = false, showHeader = true, onContentClick }) => {
 
-
+    const userId = useSelector((state: RootState) => state.userReducer.userId)
     const [actionsOpen, setActionsOpen] = useState(-1)
     const [allSelected, setAllSelected] = useState(false)
-    const [selectedUsers, setSelectedUsers] = useState<{ [key: number]: boolean }>({})
+    const [selectedContent, setSelectedContent] = useState<{ [key: number]: boolean }>({})
 
     const [anySelected, setAnySelected] = useState(false)
 
     useEffect(() => {
-        const selectedCount = Object.keys(selectedUsers).length
+        const selectedCount = Object.keys(selectedContent).length
         setAnySelected(selectedCount > 0 || allSelected)
 
         if (selectedCount === content.length) {
@@ -30,10 +33,10 @@ const ContentList: React.FC<ContentTableProps> = ({ content, showSelect = false,
         } else if (selectedCount === 0) {
             setAllSelected(false)
         }
-    }, [selectedUsers, allSelected, content.length])
+    }, [selectedContent, allSelected, content.length])
 
     const selectUser = (index: number) => {
-        setSelectedUsers(prev => {
+        setSelectedContent(prev => {
             const updated = { ...prev }
             if (updated[index]) {
                 delete updated[index]
@@ -53,10 +56,10 @@ const ContentList: React.FC<ContentTableProps> = ({ content, showSelect = false,
                 acc[index] = true
                 return acc
             }, {} as { [key: number]: boolean })
-            setSelectedUsers(allIndexes)
+            setSelectedContent(allIndexes)
         } else {
             // Deselect all
-            setSelectedUsers({})
+            setSelectedContent({})
         }
     }
 
@@ -75,6 +78,24 @@ const ContentList: React.FC<ContentTableProps> = ({ content, showSelect = false,
                 onClick: () => { }
             },
         ]
+    }
+
+    const deleteSelectedContent = async () => {
+        if (!confirm("Are you sure you want to delete these content?")) return
+        try {
+            const deletePromises = Object.keys(selectedContent).map(index => {
+                const contentId = content[parseInt(index)].content_id;
+                return deleteContent(userId, contentId);
+            });
+            setSelectedContent({});
+            setAllSelected(false);
+            await Promise.all(deletePromises);
+            alert("Content deleted successfully")
+            // Clear selection after successful deletion
+
+        } catch (error) {
+            console.error("Error deleting content:", error);
+        }
     }
 
 
@@ -97,7 +118,7 @@ const ContentList: React.FC<ContentTableProps> = ({ content, showSelect = false,
                             <th className='flex gap-[30px] items-center justify-start' style={{ width: anySelected ? "200px" : "30px" }}>
                                 {/* All Select */}
                                 <Select selected={allSelected} onSelect={selectAll} />
-                                {anySelected && <div className='font-medium text-[18px]'>{Object.keys(selectedUsers).length} Selected</div>}
+                                {anySelected && <div className='font-medium text-[18px]'>{Object.keys(selectedContent).length} Selected</div>}
                             </th>
                         </>}
                         {!anySelected ?
@@ -112,7 +133,7 @@ const ContentList: React.FC<ContentTableProps> = ({ content, showSelect = false,
                             <>
                                 <th className='flex items-center font-medium gap-[15px]'>
 
-                                    <button className='text-[18px] font-medium flex items-center gap-[10px]'>
+                                    <button onClick={deleteSelectedContent} className='text-[18px] font-medium flex items-center gap-[10px]'>
                                         <img src="/assets/trash.svg" alt="Delete" />
                                         Delete
                                     </button>
@@ -135,7 +156,7 @@ const ContentList: React.FC<ContentTableProps> = ({ content, showSelect = false,
                             key={index}
                             className={`flex justify-between items-center text-left pl-[25px] pr-[50px] py-[10px] text-ellipsis  font-medium  rounded-[15px]  cursor-pointer border-[1px] border-solid border-transparent hover:border-primaryColorLight transition-all duration-200 group`}>
                             {showSelect && <td className='w-[30px]'>
-                                <Select selected={selectedUsers[index] || allSelected} onSelect={(e) => {
+                                <Select selected={selectedContent[index] || allSelected} onSelect={(e) => {
                                     e.stopPropagation(); // Prevent tr click
                                     selectUser(index);
                                 }} color='#CBD5E4' />

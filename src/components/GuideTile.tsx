@@ -22,7 +22,7 @@ const GuideTile: React.FC<GuideTileProps> = ({ title, onDeleteClick, image, edit
             {/* : <video src={image} className='absolute z-[-1] inset-0 w-full h-full object-cover ' />} */}
             {/* <img src={image} alt="" className='absolute z-[-1] inset-0 w-full h-full object-cover ' /> */}
             <div className='flex justify-between w-full relative z-2'>
-                <p className='text-[20px] font-medium text-white'>Guide</p>
+                <p className='text-[20px] font-medium text-white text-left'>Guide</p>
                 {
                     editEnabled &&
                     <button onClick={onDeleteClick} className='p-[7px] bg-[#00000050] rounded-full'>

@@ -6,11 +6,13 @@ import SubscriptionPlanSide from './SubscriptionPlanSide';
 import { useSelector } from 'react-redux';
 import { RootState } from '@/redux/store';
 import { useDispatch } from 'react-redux';
-import { addNewUser, deleteUser, updateUser } from '@/firebaseFunctions/admin/users';
+import { addNewUser, deleteUser, handleProfileFileUpload, updateUser, updateUserImages } from '@/firebaseFunctions/admin/users';
 import { setCurrentUser } from '@/redux/slices/adminSlice';
 import { mockUser } from '@/constants/data';
 import AddUserModal from './AddUserModal';
 import Loader from '@/components/Loader';
+import ImageModal from '@/components/modals/ImageModal';
+import ImageConfirmModal from '@/app/dashboard/library/_components/ImageConfirmModal';
 
 enum CardDisplay {
     userInfo, billingInfo, subscriptionInfo
@@ -54,6 +56,61 @@ const UserSideBar = () => {
     //     setAddUser(false)
     // }, [user])
 
+    const [selectedImage, setSelectedImage] = useState<string | null>(null);
+    const [showImageModal, setShowImageModal] = useState(false);
+    const [isProfilePic, setIsProfilePic] = useState(false);
+    const [selectedFile, setSelectedFile] = useState<File | null>(null);
+
+    const handleImageSelect = async (isProfile: boolean) => {
+        try {
+            const [fileHandle] = await (window as any).showOpenFilePicker({
+                types: [
+                    {
+                        description: 'Images',
+                        accept: {
+                            'image/*': ['.png', '.jpg', '.jpeg'],
+                        },
+                    },
+                ],
+            });
+
+            const file: File = await fileHandle.getFile();
+            const validExtensions = ['png', 'jpg', 'jpeg'];
+            const fileExtension = file.name.split('.').pop()?.toLowerCase();
+
+            if (!fileExtension || !validExtensions.includes(fileExtension)) {
+                alert('Invalid file type selected. Please select an image file.');
+                return;
+            }
+
+            const imageUrl = URL.createObjectURL(file);
+            setSelectedFile(file);
+            setSelectedImage(imageUrl);
+            setIsProfilePic(isProfile);
+            setShowImageModal(true);
+        } catch (error) {
+            console.error('File selection was canceled or failed', error);
+        }
+    };
+
+    const handleImageConfirm = async () => {
+        setShowImageModal(false);
+        setSelectedImage(null);
+
+        if (selectedFile && user?.user_id) {
+            const image_link = await handleProfileFileUpload(selectedFile, user.user_id, isProfilePic);
+            if (isProfilePic) {
+                updateUserImages(user.user_id, image_link, user?.background_pic || "");
+            } else {
+                updateUserImages(user.user_id, user?.profile_pic || "", image_link);
+            }
+        }
+        setSelectedFile(null);
+    };
+
+    const handleProfilePicClick = () => handleImageSelect(true);
+    const handleBackgroundPicClick = () => handleImageSelect(false);
+
 
     return (
         <div className='flex flex-col gap-[20px] h-[80vh]'>
@@ -72,7 +129,7 @@ const UserSideBar = () => {
             </div>
             <div className='shadow-normal bg-white h-full rounded-[15px] p-[20px] flex flex-col gap-[15px]'>
                 <div className='flex flex-col gap-[13px] relative'>
-                    <button className='w-full h-[150px] rounded-[10px] overflow-hidden shadow-normal group relative bg-accentColorLight'>
+                    <button onClick={handleBackgroundPicClick} className='w-full h-[150px] rounded-[10px] overflow-hidden shadow-normal group relative bg-accentColorLight'>
                         {backgroundImageLoading ? <div className='w-full h-full bg-accentColorLight flex justify-center items-center'>
                             <Loader />
                         </div> : <img src={user?.background_pic ? user.background_pic : ""} alt="" className='w-full h-full object-cover' />}
@@ -87,7 +144,7 @@ const UserSideBar = () => {
                         </div>
                         <p className='text-[14px] font-medium text-[#7A7B7C]'>{user.email}</p>
                     </div>
-                    <button className='shadow-normal absolute right-[15px] bottom-0 border-white border-[4px] border-solid rounded-[20px] overflow-hidden group bg-accentColorLight'>
+                    <button onClick={handleProfilePicClick} className='shadow-normal absolute right-[15px] bottom-0 border-white border-[4px] border-solid rounded-[20px] overflow-hidden group bg-accentColorLight'>
                         <div className='w-[120px] h-[120px] rounded-[18px]'>
                             {profileImageLoading ? <div className='w-full h-full bg-accentColorLight flex justify-center items-center'>
                                 <Loader />
@@ -143,6 +200,9 @@ const UserSideBar = () => {
                     }
                     {
                         addUser && <AddUserModal onCloseClick={() => setAddUser(false)} />
+                    }
+                    {
+                        showImageModal && selectedImage && <ImageConfirmModal imageSelected={selectedImage} onClose={() => setShowImageModal(false)} onConfirm={handleImageConfirm} />
                     }
 
                 </div>

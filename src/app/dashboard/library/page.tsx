@@ -71,7 +71,7 @@ const page = () => {
                             </div>
 
                         </div>
-                        <div className='flex-1'>
+                        <div className='flex-1 h-full min-h-[70vh]'>
 
                             <ContentList content={filteredContent} showSelect onContentClick={(cont) => {
                                 dispatch(setCurrentContent(cont))

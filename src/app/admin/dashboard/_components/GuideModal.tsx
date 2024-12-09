@@ -4,6 +4,7 @@ import MediumButton from '../../_components/MediumButton'
 import { title } from 'process'
 import { addGuideToFirebase } from '@/firebaseFunctions/admin/guide'
 import { getCurrentTimeFormatted } from '@/utils/datetime'
+import ImageConfirmModal from '@/app/dashboard/library/_components/ImageConfirmModal'
 
 interface GuideModalProps {
     onCloseClick: () => void,
@@ -30,10 +31,12 @@ const GuideModal = ({ onCloseClick }: GuideModalProps) => {
         description: false
     })
 
+    const [thumbnailSrc, setThumbnailSrc] = useState<string | null>(null);
+    const [thumbnailFile, setThumbnailFile] = useState<File | null>(null);
+    const [showThumbnailConfirm, setShowThumbnailConfirm] = useState(false);
+
     const onImageClick = async () => {
-        if (selectedFileType == "image") {
-            return
-        }
+
         try {
             // Open file picker
             const [fileHandle] = await (window as any).showOpenFilePicker({
@@ -71,9 +74,7 @@ const GuideModal = ({ onCloseClick }: GuideModalProps) => {
 
 
     const onVideoClick = async () => {
-        if (selectedFileType == "video") {
-            return
-        }
+
         try {
             // Open file picker
             const [fileHandle] = await (window as any).showOpenFilePicker({
@@ -107,21 +108,55 @@ const GuideModal = ({ onCloseClick }: GuideModalProps) => {
         }
     };
 
+    const onThumbnailClick = async () => {
+        try {
+            const [fileHandle] = await (window as any).showOpenFilePicker({
+                types: [
+                    {
+                        description: 'Images',
+                        accept: {
+                            'image/*': ['.png', '.jpg', '.jpeg'],
+                        },
+                    },
+                ],
+            });
+
+            const file: File = await fileHandle.getFile();
+            const fileExtension = file.name.split('.').pop()?.toLowerCase();
+
+            if (!fileExtension || !['png', 'jpg', 'jpeg'].includes(fileExtension)) {
+                alert('Invalid file type selected. Please select an image file.');
+                return;
+            }
+
+            const imageUrl = URL.createObjectURL(file);
+            setThumbnailFile(file);
+            setThumbnailSrc(imageUrl);
+            setShowThumbnailConfirm(true);
+        } catch (error) {
+            console.error('File selection was canceled or failed', error);
+        }
+    };
+
+    const onThumbnailConfirm = () => {
+        setShowThumbnailConfirm(false);
+        // Thumbnail is already set, just close the modal
+    };
 
     const onCreateClick = () => {
-        if (title == "" || description == "" || file == null) {
-            alert("Fill in all the fields")
+        if (title == "" || description == "" || file == null || thumbnailFile == null) {
+            alert("Fill in all the fields including thumbnail")
             return
         }
 
         setLoadingSuccess(true)
-        addGuideToFirebase(file, file, {
+        addGuideToFirebase(file, thumbnailFile, {
             title: title,
             description: description,
             total_likes: 0,
             liked_by: [],
             viewed_by: [],
-            type: videoSrc == null ? "image" : "video",
+            type: selectedFileType == "image" ? "image" : "video",
             is_visible: status == "Visible",
             date_posted: getCurrentTimeFormatted()
         }).then(res => {
@@ -138,6 +173,8 @@ const GuideModal = ({ onCloseClick }: GuideModalProps) => {
             setVideoSrc("")
             setStatus("Visible")
             setLoadingSuccess(false)
+            setThumbnailSrc(null);
+            setThumbnailFile(null);
         })
 
     }
@@ -145,7 +182,7 @@ const GuideModal = ({ onCloseClick }: GuideModalProps) => {
 
     return (
 
-        <div className='absolute inset-0 bg-[#00000090] overflow-hidden flex justify-center items-center'>
+        <div className='fixed inset-0 bg-[#00000090] overflow-hidden flex justify-center items-center'>
             <div className='w-[1000px] h-[800px] bg-white p-[25px] rounded-[25px] overflow-hidden flex flex-col'>
 
                 {/* Top Div */}
@@ -169,8 +206,13 @@ const GuideModal = ({ onCloseClick }: GuideModalProps) => {
                             <MediumButton activeIcon='image-large-white' inActiveIcon='image-large-bluw' text='Image' active={selectedFileType == "image"} onClick={onImageClick} />
                             <MediumButton activeIcon='video-large-white' inActiveIcon='video-large-blue' text='Video' active={selectedFileType == "video"} onClick={onVideoClick} />
                         </div>
-                        {/* guide details */}
                         <div>
+
+                        </div>
+
+
+                        {/* guide details */}
+                        <div className='flex flex-col gap-[10px]'>
                             <label htmlFor="title" className='flex flex-col gap-[10px]'>
                                 <p className='text-[16px] font-bold text-primaryColorLight'>Title</p>
                                 <input
@@ -216,6 +258,25 @@ const GuideModal = ({ onCloseClick }: GuideModalProps) => {
                                 </select>
                             </label>
 
+                            {/* Add Thumbnail Button */}
+                            <div className='flex flex-col gap-[10px]'>
+                                <p className='text-[16px] font-bold text-primaryColorLight'>Thumbnail</p>
+                                <div className='flex gap-[20px] items-center'>
+                                    <button
+                                        onClick={onThumbnailClick}
+                                        className='px-4 py-2 bg-accentColorLight text-black rounded-lg hover:bg-primaryColor'
+                                    >
+                                        {thumbnailSrc ? 'Change Thumbnail' : 'Add Thumbnail'}
+                                    </button>
+                                    {thumbnailSrc && (
+                                        <img
+                                            src={thumbnailSrc}
+                                            alt="Thumbnail preview"
+                                            className='h-[50px] w-[50px] object-cover rounded-lg'
+                                        />
+                                    )}
+                                </div>
+                            </div>
 
                         </div>
                         <button
@@ -229,12 +290,12 @@ const GuideModal = ({ onCloseClick }: GuideModalProps) => {
                     </div>
                     <div className='h-full w-[2px] bg-borderColor'></div>
 
-                    <div className='flex-1 overflow-hidden my-[25px] h-full rounded-[15px] bg-accentColorLight'>
+                    <div className='flex-1 overflow-hidden my-[25px] h-full flex justify-center items-center rounded-[15px] bg-accentColorLight '>
                         {
-                            selectedFileType == "image" && imageSrc && <img src={imageSrc} alt="Selected" className='object-cover  h-full rounded-[15px]' />
+                            selectedFileType == "image" && imageSrc && <img src={imageSrc} alt="Selected" className='object-cover max-h-full max-w-full rounded-[15px]' />
                         }
                         {
-                            selectedFileType == "video" && videoSrc && <video src={videoSrc} className='object-cover  h-full rounded-[15px]' />
+                            selectedFileType == "video" && videoSrc && <video src={videoSrc} className='object-cover max-h-full max-w-full rounded-[15px] ' controls />
                         }
                     </div>
 
@@ -243,6 +304,17 @@ const GuideModal = ({ onCloseClick }: GuideModalProps) => {
 
             </div>
 
+            {showThumbnailConfirm && (
+                <ImageConfirmModal
+                    imageSelected={thumbnailSrc || undefined}
+                    onClose={() => {
+                        setShowThumbnailConfirm(false);
+                        setThumbnailSrc(null);
+                        setThumbnailFile(null);
+                    }}
+                    onConfirm={onThumbnailConfirm}
+                />
+            )}
         </div>
     )
 }

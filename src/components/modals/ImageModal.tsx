@@ -5,10 +5,11 @@ interface ImageModalProps {
     imageSelected: string | undefined,
     onClose: () => void,
     onPreviousClick?: () => void,
-    onNextClick?: () => void
+    onNextClick?: () => void,
+    timeout?: number
 }
 
-const ImageModal = ({ imageSelected, onClose, onPreviousClick, onNextClick }: ImageModalProps) => {
+const ImageModal = ({ imageSelected, onClose, onPreviousClick, onNextClick, timeout = 2000 }: ImageModalProps) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -20,6 +21,16 @@ const ImageModal = ({ imageSelected, onClose, onPreviousClick, onNextClick }: Im
             img.onerror = () => setLoading(false); // Handle error case
         }
     }, [imageSelected]);
+
+    useEffect(() => {
+        if (timeout && !loading && imageSelected) {
+            const timer = setTimeout(() => {
+                onClose();
+            }, timeout);
+
+            return () => clearTimeout(timer);
+        }
+    }, [timeout, loading, imageSelected, onClose]);
 
     return (
         <div className='fixed inset-0 bg-[#00000090] w-screen h-screen overflow-hidden flex justify-center items-center z-50'>

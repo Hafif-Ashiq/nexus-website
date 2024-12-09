@@ -3,10 +3,12 @@ import Loader from '../Loader';
 
 interface VideoModalProps {
     videoSelected: string | undefined,
-    onClose: () => void
+    onClose: () => void,
+    autoClose?: boolean,
+    controls?: boolean
 }
 
-const VideoModal = ({ videoSelected, onClose }: VideoModalProps) => {
+const VideoModal = ({ videoSelected, onClose, autoClose = false, controls = true }: VideoModalProps) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
@@ -18,6 +20,14 @@ const VideoModal = ({ videoSelected, onClose }: VideoModalProps) => {
             video.onerror = () => setLoading(false);
         }
     }, [videoSelected]);
+
+    const onVideoEnded = () => {
+        if (autoClose) {
+            setTimeout(() => {
+                onClose();
+            }, 2000);
+        }
+    }
 
     return (
         <div className='fixed inset-0 bg-[#00000090] w-screen h-screen overflow-hidden flex justify-center items-center z-50'>
@@ -31,10 +41,11 @@ const VideoModal = ({ videoSelected, onClose }: VideoModalProps) => {
                         <Loader />
                     ) : (
                         <video
-                            className="object-contain max-h-full max-w-[80%]"
+                            className="object-contain max-h-full max-w-full"
                             src={videoSelected}
-                            controls
+                            controls={controls}
                             autoPlay
+                            onEnded={onVideoEnded}
                         />
                     )}
                 </div>

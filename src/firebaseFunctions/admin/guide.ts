@@ -1,9 +1,9 @@
-import { ref, uploadBytes, getDownloadURL, getStorage } from "firebase/storage";
-import { doc, setDoc, collection, getDocs, addDoc, deleteDoc, updateDoc } from "firebase/firestore";
-import { v4 as uuidv4 } from "uuid";
+import { doc, collection, getDocs, addDoc, deleteDoc, updateDoc, getDoc } from "firebase/firestore";
+
 import { GuideInterface } from "@/services/GuideInterface";
 import { getCurrentTimeFormatted } from "@/utils/datetime";
 import { db } from "@/services/firebase"; // Import the already initialized Firestore
+import { deleteFileFromStorage, uploadFileToStorage } from "../utils";
 
 const addGuideToFirebase = async (
     file: File | null,
@@ -11,73 +11,55 @@ const addGuideToFirebase = async (
     guideData: Omit<GuideInterface, "guide_id" | "link" | "thumbnail">
 ) => {
     try {
-        // Initialize Firebase services
-        const storage = getStorage();
-        // const firestore = getFirestore(); // Removed as Firestore is now imported from @firebase
-
-        // Generate a unique ID for the guide
-        // const guideId = uuidv4();
-
-        // Initialize placeholders for video/image URLs
-        let videoUrl: string | null = null;
-        let thumbnailUrl: string | null = null;
-
-        // Check if a file was provided for the video or image
-        if (file) {
-            const fileExtension = file.name.split(".").pop()?.toLowerCase();
-            const isVideo = ["mp4", "mov", "avi", "webm"].includes(fileExtension!);
-            const fileRef = ref(
-                storage,
-                `guides/${isVideo ? "video" : "image"}.${fileExtension}`
-            );
-
-            // Upload the video or image file
-            await uploadBytes(fileRef, file);
-            const fileUrl = await getDownloadURL(fileRef);
-
-            // Set the link or thumbnail depending on file type
-            if (isVideo) {
-                videoUrl = fileUrl;
-            } else {
-                thumbnailUrl = fileUrl;
-            }
-        }
-
-        // Upload the thumbnail image if provided and not already set
-        if (thumbnailFile) {
-            const thumbnailExtension = thumbnailFile.name.split(".").pop()?.toLowerCase();
-            const thumbnailRef = ref(
-                storage,
-                `guides/thumbnail.${thumbnailExtension}`
-            );
-            await uploadBytes(thumbnailRef, thumbnailFile);
-            thumbnailUrl = await getDownloadURL(thumbnailRef);
-        }
-
-        // Prepare the guide object
-        const guide: Omit<GuideInterface, "guide_id"> = {
+        // Create the guide document first to get the ID
+        const guidesCollectionRef = collection(db, "guides");
+        const docRef = await addDoc(guidesCollectionRef, {
             is_visible: guideData.is_visible,
             title: guideData.title,
+            type: guideData.type,
             description: guideData.description,
             liked_by: guideData.liked_by,
             viewed_by: guideData.viewed_by,
-            link: thumbnailUrl || "", // Empty if no video is provided
-            thumbnail: thumbnailUrl || "", // Empty if no thumbnail is provided
+            link: "",
+            thumbnail: "",
             total_likes: guideData.total_likes,
             date_posted: getCurrentTimeFormatted()
-        };
+        });
 
-        // Save the guide to Firestore (ID will be auto-generated)
-        const guidesCollectionRef = collection(db, "guides"); // Using the imported Firestore instance
-        const docRef = await addDoc(guidesCollectionRef, guide);
+        const guideId = docRef.id;
+        console.log(guideId)
+        let fileUrl: string | null = null;
+        let thumbnailUrl: string | null = null;
 
-        await updateDoc(docRef, { guide_id: docRef.id })
+        // Upload files using the guide ID in the path
+        if (file) {
+            const fileExtension = file.name.split(".").pop()?.toLowerCase();
+            const isVideo = ["mp4", "mov", "avi", "webm"].includes(fileExtension!);
+            const fileName = `${isVideo ? "video" : "image"}.${fileExtension}`;
 
-        console.log("Guide added successfully:", guide);
-        return true
+            fileUrl = await uploadFileToStorage(file, `guides/${guideId}`, fileName);
+            console.log(fileUrl)
+        }
+
+        if (thumbnailFile) {
+            const thumbnailExtension = thumbnailFile.name.split(".").pop()?.toLowerCase();
+            const thumbnailFileName = `thumbnail.${thumbnailExtension}`;
+
+            thumbnailUrl = await uploadFileToStorage(thumbnailFile, `guides/${guideId}`, thumbnailFileName);
+            console.log(thumbnailUrl)
+        }
+
+        // Update the document with the URLs and guide_id
+        await updateDoc(docRef, {
+            guide_id: guideId,
+            link: fileUrl || "",
+            thumbnail: thumbnailUrl || ""
+        });
+
+        return true;
     } catch (error) {
         console.error("Error adding guide to Firebase:", error);
-        return false
+        return false;
     }
 };
 
@@ -105,23 +87,29 @@ const getGuidesFromFirebase = async (): Promise<GuideInterface[]> => {
         return [];
     }
 };
-
 const deleteGuideFromFirebase = async (guideId: string) => {
     try {
-        // Initialize Firestore
-        // const firestore = getFirestore(); // Removed as Firestore is now imported from @firebase
-
         // Reference to the guide document
-        const guideDocRef = doc(db, "guides", guideId); // Using the imported Firestore instance
+        const guideDocRef = doc(db, "guides", guideId);
+
+        // Get the document data before deleting to get file paths
+        const guideDoc = await getDoc(guideDocRef);
+        if (guideDoc.exists()) {
+            // Delete the main guide file
+            await deleteFileFromStorage(`guides/${guideId}/${guideDoc.data().type}`);
+
+            // Delete the thumbnail
+            await deleteFileFromStorage(`guides/${guideId}/thumbnail`);
+        }
 
         // Delete the document
         await deleteDoc(guideDocRef);
 
         console.log(`Guide with ID ${guideId} has been deleted successfully.`);
-        return true
+        return true;
     } catch (error) {
         console.error("Error deleting guide from Firebase:", error);
-        return false
+        return false;
     }
 };
 

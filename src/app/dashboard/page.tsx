@@ -13,10 +13,13 @@ import { ContentInterface } from '@/services/ContentInterface'
 import PostsSection from '@/components/postComponents/PostsSection'
 import { listenToPosts } from '@/firebaseFunctions/user/postFunctions/getPosts'
 import { PostInterface } from '@/services/PostInterface'
+import { setChats, setSelectedChat } from '@/redux/slices/userSlice'
+import { createNewSummarizationChat, createNewTranslationChat, listenToAiChatHistory } from '@/firebaseFunctions/user/aiChat'
 
 
 const page = () => {
     const userId = useSelector((state: RootState) => state.userReducer.userId)
+    const user = useSelector((state: RootState) => state.userReducer.user)
 
     const [isLoading, setIsLoading] = useState(true)
     const [posts, setPosts] = useState<PostInterface[]>([])
@@ -35,6 +38,13 @@ const page = () => {
             setPosts(newPosts);
             setLoadingPosts(false);
         }, 4, undefined, false);
+        let aiChats = listenToAiChatHistory(userId, (result) => {
+            console.log(result);
+            dispatch(setChats(result))
+
+        });
+
+        return () => aiChats();
     }, [userId, dispatch])
 
     useEffect(() => {
@@ -44,17 +54,31 @@ const page = () => {
     }, [content])
 
 
+    const startSummarize = async () => {
+        const chat = await createNewSummarizationChat(userId)
+        console.log(chat)
+        dispatch(setSelectedChat(chat))
+        router.push('/dashboard/ai-chat')
+    }
+
+    const startTranslate = async () => {
+        const chat = await createNewTranslationChat(userId)
+        console.log(chat)
+        dispatch(setSelectedChat(chat))
+        router.push('/dashboard/ai-chat')
+    }
+
     return (
         <div className='flex flex-col gap-[40px]'>
 
-            <Header title='Welcome Back, Mehdi' subtitle="Here's a little bit of everything" />
+            <Header title={`Welcome Back, ${user?.first_name ?? ''} ${user?.last_name ?? ''}`} subtitle="Here's a little bit of everything" />
 
 
             <div className='w-[70%] flex flex-col gap-[20px] '>
                 {/* CTA buttons */}
                 <div className={`p-[20px] bg-white rounded-[15px] min-h-[195px] flex justify-center items-center gap-[20px]`}>
-                    <LargeButton activeIcon='translate' inActiveIcon='' text='Translate' title='Chat with AI' active onClick={() => { }} />
-                    <LargeButton activeIcon='translate' inActiveIcon='' text='Summarize' title='Chat with AI' active onClick={() => { }} />
+                    <LargeButton activeIcon='translate' inActiveIcon='' text='Translate' title='Chat with AI' active onClick={startTranslate} />
+                    <LargeButton activeIcon='translate' inActiveIcon='' text='Summarize' title='Chat with AI' active onClick={startSummarize} />
                 </div>
                 {/* Content */}
                 <div className='py-[20px] bg-white rounded-[15px] flex flex-col gap-[20px]'>

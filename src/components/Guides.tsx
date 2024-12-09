@@ -83,8 +83,8 @@ const Guides = ({ guides, editEnabled }: GuidesProps) => {
                 ))}
             </div>
             {editEnabled && guideOpen && <GuideModal onCloseClick={() => setGuideOpen(false)} />}
-            {viewGuideIndex !== null && guides[viewGuideIndex].type === "image" && <ImageModal imageSelected={guides[viewGuideIndex].link} onClose={() => setViewGuideIndex(null)} />}
-            {viewGuideIndex !== null && guides[viewGuideIndex].type === "video" && <VideoModal videoSelected={guides[viewGuideIndex].link} onClose={() => setViewGuideIndex(null)} />}
+            {viewGuideIndex !== null && guides[viewGuideIndex].type === "image" && <ImageModal imageSelected={guides[viewGuideIndex].link} onClose={() => setViewGuideIndex(null)} timeout={10000} />}
+            {viewGuideIndex !== null && guides[viewGuideIndex].type === "video" && <VideoModal videoSelected={guides[viewGuideIndex].link} onClose={() => setViewGuideIndex(null)} autoClose={true} controls={false} />}
         </div>
     )
 }

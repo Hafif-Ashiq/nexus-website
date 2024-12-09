@@ -1,6 +1,6 @@
 import { doc, updateDoc } from "firebase/firestore";
 import { db } from "@/services/firebase";
-import { uploadFileToStorage } from "@/firebaseFunctions/admin/utils";
+import { uploadFileToStorage } from "@/firebaseFunctions/utils";
 
 // Upload thumbnail file to Firebase Storage
 export const uploadThumbnail = async (userId: string, contentId: string, file: File) => {

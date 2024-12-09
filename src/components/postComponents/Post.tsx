@@ -4,10 +4,11 @@ import Like from "../../../public/assets/heart.svg"
 import Comment from "../../../public/assets/messages.svg"
 import Share from "../../../public/assets/share.svg"
 import Save from "../../../public/assets/save.svg"
+import SaveFilled from "../../../public/assets/save-filled.svg"
 import PostAction from './PostAction'
 import PostComments from './PostComments'
 import PostDisplay from './PostDisplay'
-import { likePost, unlikePost } from '@/firebaseFunctions/user/postFunctions/postInteractions'
+import { likePost, savePost, unlikePost, unsavePost, updatePostPermissions } from '@/firebaseFunctions/user/postFunctions/postInteractions'
 import { PostCommentInterface } from '@/services/PostCommentInterface'
 import { PostInterface } from '@/services/PostInterface'
 import { RootState } from '@/redux/store'
@@ -15,12 +16,14 @@ import { useSelector } from 'react-redux'
 import { listenToPostComments } from '@/firebaseFunctions/user/postFunctions/getPostComments'
 import { UserProfile } from '@/services/UserInterface'
 import { getUserDataForPost } from '@/firebaseFunctions/user/postFunctions/postUsers'
+import UpdatePostPermissions from '@/app/dashboard/profile/_components/UpdatePostPermissions'
 
 interface PostProps {
-    post: PostInterface | null
+    post: PostInterface | null,
+    isOwner?: boolean
 }
 
-const Post = ({ post }: PostProps) => {
+const Post = ({ post, isOwner = false }: PostProps) => {
 
 
     if (!post) return null
@@ -30,15 +33,18 @@ const Post = ({ post }: PostProps) => {
     const [comments, setComments] = useState<PostCommentInterface[]>([])
 
     const [liked, setLiked] = useState(false)
+    const [saved, setSaved] = useState(false)
 
     const [userData, setUserData] = useState<Partial<Pick<UserProfile, 'first_name' | 'last_name' | 'email' | 'profile_pic'>>>({})
 
+    const [showMore, setShowMore] = useState(false)
 
     useEffect(() => {
         setLiked(post.liked_by.includes(userId) || false)
+        setSaved(post.saved_by.includes(userId) || false)
         listenToPostComments(post.post_id, setComments)
         getUserDataForPost(post.user_id).then(res => setUserData(res))
-
+        console.log(post.saved_by)
     }, [])
 
     const handleLikeClick = () => {
@@ -50,9 +56,23 @@ const Post = ({ post }: PostProps) => {
         }
     }
 
+    const handleSaveClick = () => {
+        setSaved(!saved)
+        if (saved) {
+            unsavePost(post.post_id, userId)
+        } else {
+            savePost(post.post_id, userId)
+        }
+    }
+
+    const handleMoreClick = () => {
+        setShowMore(true)
+    }
+
     const postActions = [
         {
             title: "Like",
+            disabled: !post.permissions.like_allowed,
             icon: <Like style={{
                 // color: "#2A4E8F"
                 color: liked ? "#2A4E8F" : "transparent"
@@ -63,6 +83,7 @@ const Post = ({ post }: PostProps) => {
         },
         {
             title: "Comment",
+            disabled: !post.permissions.comment_allowed,
             icon: <Comment style={{
                 color: "transparent"
             }} stroke="black" />,
@@ -72,6 +93,7 @@ const Post = ({ post }: PostProps) => {
         },
         {
             title: "Share",
+            disabled: !post.permissions.share_allowed,
             icon: <Share />,
             text: post ? post.total_shares.toString() : "0",
             primary: false,
@@ -92,9 +114,9 @@ const Post = ({ post }: PostProps) => {
                         </div>
                     </div>
 
-                    <button>
+                    {isOwner && <button onClick={handleMoreClick}>
                         <img src="/assets/more-circle.svg" alt="" />
-                    </button>
+                    </button>}
 
                 </div>
                 <div className='m-w-full h-[2px] bg-borderColorLight'></div>
@@ -115,16 +137,15 @@ const Post = ({ post }: PostProps) => {
 
                         <PostAction
                             primary={false}
-                            icon={<Save style={{
-                                color: "black"
-                            }} />}
-                            onClick={() => { }}
+                            icon={saved ? <SaveFilled /> : <Save />}
+                            onClick={handleSaveClick}
                         />
                     </div>
                 </div>
             </div>
             <div className='m-h-full w-[2px] bg-borderColorLight'></div>
-            <PostComments comments={comments} postId={post.post_id} />
+            <PostComments canAddComment={post.permissions.comment_allowed} comments={comments} postId={post.post_id} />
+            {showMore && <UpdatePostPermissions onClose={() => setShowMore(false)} initialPermissions={post.permissions} onUpdate={(permissions) => updatePostPermissions(post.post_id, userId, permissions)} />}
         </div >
     )
 }
