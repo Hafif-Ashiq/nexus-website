@@ -1,4 +1,4 @@
-import { getFirestore, collection, query, onSnapshot, updateDoc, doc, getDoc } from 'firebase/firestore';
+import { getFirestore, collection, query, onSnapshot, updateDoc, doc, getDoc, addDoc } from 'firebase/firestore';
 import { AiChatInterface } from '../../services/AiChatInterface';
 import { db } from '@/services/firebase';
 import { AiModelInterface } from '@/services/AiModelsInterface';
@@ -24,8 +24,8 @@ export const listenToAiChatHistory = (
                         user_id: chatData.user_id || userId,
                         conversation: chatData.conversation || [],
                         chat_type: chatData.chat_type || 'default',
-                        summarization_config: chatData.summarization_config || { type: '', length: '' },
-                        translation_config: chatData.translation_config || {}
+                        summarization_config: chatData?.summarization_config,
+                        translation_config: chatData?.translation_config
                     };
                 });
 
@@ -233,6 +233,85 @@ export const addResponseMessage = async (userId: string, chatId: string, respons
 
     } catch (error) {
         console.error('Error adding response message:', error);
+        throw error;
+    }
+};
+
+
+export const createNewSummarizationChat = async (userId: string) => {
+    try {
+        const chatRef = collection(db, 'users', userId, 'chat');
+
+        const newChat: AiChatInterface = {
+            chat_id: '', // Will be set by Firestore
+            chat_type: 'Summarization',
+            conversation: [
+                {
+                    datetime: new Date().toISOString(),
+                    message_type: "response",
+                    text: "Here to help you with summarization😊"
+                }
+            ],
+            summarization_config: {
+                length: 'medium',
+                type: 'extractive'
+            },
+            user_id: userId
+        };
+
+        const docRef = await addDoc(chatRef, newChat);
+
+        // Update the chat with the Firestore-generated ID
+        await updateDoc(docRef, {
+            chat_id: docRef.id
+        });
+
+        return {
+            ...newChat,
+            chat_id: docRef.id
+        };
+
+    } catch (error) {
+        console.error('Error creating new summarization chat:', error);
+        throw error;
+    }
+};
+
+export const createNewTranslationChat = async (userId: string) => {
+    try {
+        const chatRef = collection(db, 'users', userId, 'chat');
+
+        const newChat: AiChatInterface = {
+            chat_id: '', // Will be set by Firestore
+            chat_type: 'Translation',
+            conversation: [
+                {
+                    datetime: new Date().toISOString(),
+                    message_type: "response",
+                    text: "😊ترجمہ میں آپ کی مدد کرنے کے لیے حاضر ہوں"
+                }
+            ],
+            translation_config: {
+                source_languages: ['English'],
+                target_languages: ['Urdu']
+            },
+            user_id: userId
+        };
+
+        const docRef = await addDoc(chatRef, newChat);
+
+        // Update the chat with the Firestore-generated ID
+        await updateDoc(docRef, {
+            chat_id: docRef.id
+        });
+
+        return {
+            ...newChat,
+            chat_id: docRef.id
+        };
+
+    } catch (error) {
+        console.error('Error creating new translation chat:', error);
         throw error;
     }
 };

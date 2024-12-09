@@ -16,6 +16,6 @@ export interface AiChatInterface {
     user_id: string,
     conversation: AiChatMessageInterface[],
     chat_type: string,
-    summarization_config: SummarizationConfig,
-    translation_config: TranslationConfig,
+    summarization_config?: SummarizationConfig,
+    translation_config?: TranslationConfig,
 }

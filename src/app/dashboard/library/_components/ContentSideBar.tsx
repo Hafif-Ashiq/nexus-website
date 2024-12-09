@@ -1,4 +1,4 @@
-
+import DropDown from '@/app/admin/_components/DropDown'
 import HeaderButton from '@/components/HeaderButton'
 import IconButton from '@/components/IconButton'
 import AudioModal from '@/components/modals/AudioModal'
@@ -13,13 +13,17 @@ import { FolderInterface } from '@/services/FoldersInterface'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { useSelector } from 'react-redux'
-
+import { uploadThumbnail, updateThumbnailURL } from '@/firebaseFunctions/user/contentFunctions/updateThumbnail'
+import ImageConfirmModal from '@/app/dashboard/library/_components/ImageConfirmModal'
+import Loader from '@/components/Loader'
+import { deleteContent } from '@/firebaseFunctions/user/contentFunctions/deleteContent'
+import { useRouter } from 'next/navigation'
 interface ContentSideBarProps {
     content: ContentInterface,
 }
 
 const ContentSideBar = ({ content }: ContentSideBarProps) => {
-
+    const router = useRouter()
     const [title, setTitle] = useState<string>("")
     const [folder, setFolder] = useState<string>("None")
     const [tagInput, setTagInput] = useState<string>("")
@@ -32,6 +36,12 @@ const ContentSideBar = ({ content }: ContentSideBarProps) => {
     const userId = useSelector((state: RootState) => state.userReducer.userId)
 
     const [showModal, setShowModal] = useState<"audio" | "image" | "video" | null>(null)
+    const [showConfirmModal, setShowConfirmModal] = useState<string | null>(null)
+    const [confirmImage, setConfirmImage] = useState<File | null>(null);
+    const [thumbnailLoading, setThumbnailLoading] = useState(false)
+
+    const [optionsOpen, setOptionsOpen] = useState(false)
+
 
     useEffect(() => {
         if (folders.length == 0) {
@@ -51,8 +61,14 @@ const ContentSideBar = ({ content }: ContentSideBarProps) => {
     }, [title, folder, content.title, content.folder_id])
 
 
-    const deleteContent = () => {
+    const deleteContentFromFirebase = () => {
+        if (confirm("Are you sure you want to delete this content?")) {
+            setOptionsOpen(false)
+            deleteContent(userId, content.content_id).then(() => {
 
+                router.push("/dashboard/library")
+            })
+        }
     }
 
     const updateCurrentContent = () => {
@@ -116,13 +132,74 @@ const ContentSideBar = ({ content }: ContentSideBarProps) => {
         }
     }
 
+
+    const uploadThumbnailImage = async () => {
+        setOptionsOpen(false)
+        try {
+            // Open file picker for thumbnail upload
+            const [fileHandle] = await (window as any).showOpenFilePicker({
+                types: [
+                    {
+                        description: 'Images',
+                        accept: {
+                            'image/*': ['.png', '.jpg', '.jpeg'],
+                        },
+                    },
+                ],
+            });
+
+            const validExtensions = ['png', 'jpg', 'jpeg'];
+            // Get the selected file
+            const file: File = await fileHandle.getFile();
+            console.log(file);
+            const fileExtension = file.name.split('.').pop()?.toLowerCase();
+            if (!fileExtension || !validExtensions.includes(fileExtension)) {
+                alert('Invalid file type selected. Please select an image file.');
+                return;
+            }
+
+            // Show confirmation modal with the selected image
+            const imageUrl = URL.createObjectURL(file); // Create a URL for the selected file
+            setConfirmImage(file); // Set the file to confirm upload
+            setShowConfirmModal(imageUrl); // Set the image URL for the modal
+        } catch (error) {
+            console.error('File selection was canceled or failed', error);
+        }
+    }
+
+    const handleConfirmUpload = async () => {
+        if (confirmImage) {
+            setThumbnailLoading(true)
+            // Upload the thumbnail
+            const thumbnailURL = await uploadThumbnail(userId, content.content_id, confirmImage);
+            setConfirmImage(null); // Reset the confirmation state
+            setShowConfirmModal(null); // Close the modal
+            await updateThumbnailURL(userId, content.content_id, thumbnailURL);
+            setThumbnailLoading(false)
+
+        }
+    }
+
+    const dropDownActions = [
+        {
+            title: "Edit Thumbnail",
+            onClick: uploadThumbnailImage
+        },
+        {
+            title: "Delete Content",
+            onClick: deleteContentFromFirebase
+        }
+    ]
+
     return (
         <div className='basis-[30%] bg-white rounded-2xl'>
             <div className='shadow-normal bg-white h-full rounded-[15px] p-[20px] flex flex-col gap-[15px]'>
 
                 <div className='relative overflow-hidden min-h-[200px] rounded-[15px] w-full flex justify-end items-end p-[10px]'>
                     {/* View  */}
-                    <img className='absolute inset-0 w-full h-full' src="/book.png" alt="background-content" />
+                    <div className='absolute inset-0 w-full h-full flex justify-center items-center object-cover'>
+                        {thumbnailLoading ? <Loader /> : <img className='object-cover w-full h-full' src={content.thumbnail} alt="background-content" />}
+                    </div>
                     <button onClick={handleViewContent} className='relative text-[16px] font-semibold text-white bg-black/50 p-[10px] rounded-[10px] w-full flex justify-between items-center'>
                         <span>View {content.type}</span>
                         <img src={assetIcons[content.type]} alt="arrow-up" />
@@ -133,6 +210,15 @@ const ContentSideBar = ({ content }: ContentSideBarProps) => {
                 </div>
 
                 <div className='flex-1 flex flex-col gap-[20px]'>
+                    <div className='flex justify-between items-center'>
+                        <span className='text-[20px] font-bold text-black'>Edit Details</span>
+                        <div className='flex items-center gap-[10px] relative'>
+                            <button onClick={() => setOptionsOpen(!optionsOpen)}>
+                                <img src="/assets/more-circle.svg" alt="edit icon" />
+                            </button>
+                            {optionsOpen && <DropDown actions={dropDownActions} />}
+                        </div>
+                    </div>
                     <label htmlFor="title" className='flex flex-col gap-[10px]'>
                         <p className='text-[16px] font-bold text-primaryColorLight'>Content Title</p>
                         <input
@@ -202,12 +288,21 @@ const ContentSideBar = ({ content }: ContentSideBarProps) => {
                 <div>
                     <button
 
-                        onClick={changed ? updateCurrentContent : deleteContent}
+                        onClick={changed ? updateCurrentContent : deleteContentFromFirebase}
                         className={`${changed ? "bg-primaryColorLight" : "bg-warningColor"} py-[14px] w-full flex justify-center items-center rounded-[15px] text-[16px] font-semibold text-white disabled:opacity-50`}>
                         {changed ? "Update Content" : "Delete Content"}
                     </button>
                 </div>
+
+
             </div>
+            {showConfirmModal && (
+                <ImageConfirmModal
+                    imageSelected={showConfirmModal}
+                    onClose={() => setShowConfirmModal(null)}
+                    onConfirm={handleConfirmUpload}
+                />
+            )}
         </div>
     )
 }

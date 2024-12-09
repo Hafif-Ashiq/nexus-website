@@ -1,13 +1,19 @@
-import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL, StorageReference } from "firebase/storage";
 
 // Upload file function
-export const uploadFileToStorage = (file: File, path: string): Promise<string> => {
+export const uploadFileToStorage = (file: File, path: string, fileName?: string): Promise<string> => {
     return new Promise((resolve, reject) => {
         // Initialize Firebase Storage
         const storage = getStorage();
-        // Create a storage reference
-        const storageRef = ref(storage, `${path}/${file.name}`); // You can customize the folder path and file name
 
+        let storageRef: StorageReference;
+        if (fileName) {
+            // Create a storage reference
+            storageRef = ref(storage, `${path}/${fileName}`); // You can customize the folder path and file name
+        }
+        else {
+            storageRef = ref(storage, `${path}/${file.name}`); // You can customize the folder path and file name
+        }
         // Create a file upload task
         const uploadTask = uploadBytesResumable(storageRef, file);
 

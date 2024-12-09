@@ -108,7 +108,8 @@ export const handleProfileFileUpload = async (file: File, userId: string, isProf
         // Upload file to storage with user-specific path and fixed filename
         const downloadURL = await uploadFileToStorage(
             file,
-            `users/${userId}/${isProfilePic ? "picture" : "background"}`
+            `users/${userId}`,
+            isProfilePic ? "picture" : "background"
         );
         console.log(`${isProfilePic ? "Profile" : "Cover"} picture uploaded successfully:`, downloadURL);
         return downloadURL;

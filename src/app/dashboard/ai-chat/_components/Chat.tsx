@@ -69,14 +69,23 @@ const Chat = ({ selectedChat }: ChatProps) => {
 
         setShowSummarizationConfigModal(false)
         setShowTranslationConfigModal(false)
+        setInputText("")
+        resetInputTextHeight()
     }, [selectedChat]); // Dependency array includes messages
 
 
 
+    const resetInputTextHeight = () => {
+        const textarea = document.querySelector('textarea')
+        if (textarea) {
+            textarea.style.height = '50px'
+        }
+    }
+
 
 
     const getTranslationFromModel = async () => {
-        if (!currentModel) {
+        if (!(currentModel && selectedChat.translation_config)) {
             return
         }
         const response = await translate(inputText, selectedChat.translation_config.source_languages[0], selectedChat.translation_config.target_languages[0], currentModel.endpoint)
@@ -86,7 +95,7 @@ const Chat = ({ selectedChat }: ChatProps) => {
 
 
     const sendSummarizationMessage = async () => {
-        if (!currentModel) {
+        if (!currentModel || !selectedChat.summarization_config) {
             return
         }
         const response = await summarize(inputText, selectedChat.summarization_config.length, currentModel?.endpoint)
@@ -130,16 +139,19 @@ const Chat = ({ selectedChat }: ChatProps) => {
 
 
     const getModelId = () => {
+        if (!selectedChat.summarization_config && !selectedChat.translation_config) {
+            return null
+        }
         const type = selectedChat.chat_type
-        if (type == "Summarization") {
-            if (selectedChat.summarization_config.type == "extractive") {
+        if (type == "Summarization" && selectedChat.summarization_config) {
+            if (selectedChat.summarization_config?.type == "extractive") {
                 return extractiveSummarizationModelId
             }
-            else if (selectedChat.summarization_config.type == "abstractive") {
+            else if (selectedChat.summarization_config?.type == "abstractive") {
                 return abstractiveSummarizationModelId
             }
         }
-        else if (type == "Translation") {
+        else if (type == "Translation" && selectedChat.translation_config) {
             return translationModelId
         }
     }
@@ -158,6 +170,7 @@ const Chat = ({ selectedChat }: ChatProps) => {
         }
         addOriginalMessage(userId, selectedChat.chat_id, inputText)
         setInputText("")
+        resetInputTextHeight()
         getTranslationFromModel().then((res: any) => {
             console.log(res)
             if (res.text) {
@@ -177,6 +190,7 @@ const Chat = ({ selectedChat }: ChatProps) => {
         }
         addOriginalMessage(userId, selectedChat.chat_id, inputText)
         setInputText("")
+        resetInputTextHeight()
         sendSummarizationMessage().then((res: any) => {
             console.log(res)
             if (res.text) {
@@ -302,8 +316,8 @@ const Chat = ({ selectedChat }: ChatProps) => {
                                 }
                             }} isDropdown={true} />
                             <div className='absolute top-[100%] right-0'>
-                                {showSummarizationConfigModal && <SummarizationConfigModal config={selectedChat.summarization_config} onConfigChange={handleConfigChange} />}
-                                {showTranslationConfigModal && <TranslationConfigModal config={selectedChat.translation_config} onConfigChange={handleConfigChange} />}
+                                {showSummarizationConfigModal && selectedChat.summarization_config && <SummarizationConfigModal config={selectedChat.summarization_config} onConfigChange={handleConfigChange} />}
+                                {showTranslationConfigModal && selectedChat.translation_config && <TranslationConfigModal config={selectedChat.translation_config} onConfigChange={handleConfigChange} />}
                             </div>
                         </div>
                         <IconButton icon='/assets/menu-blue.svg' onClick={() => { }} />
@@ -381,7 +395,7 @@ const Chat = ({ selectedChat }: ChatProps) => {
                         style={{
                             scrollbarWidth: "none",
                             overflow: 'hidden',
-                            minHeight: '40px',
+                            minHeight: '50px',
                             maxHeight: '240px',
                             height: 'auto',
                         }}
