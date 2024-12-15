@@ -9,6 +9,7 @@ export interface AiModelsSliceReducer {
     translationModelId: string,
     abstractiveSummarizationModelId: string,
     extractiveSummarizationModelId: string,
+    otherModelsId: string
 }
 
 const initialState: AiModelsSliceReducer = {
@@ -16,6 +17,7 @@ const initialState: AiModelsSliceReducer = {
     translationModelId: "zkb0ysUiZpKSFcnoaoQD",
     abstractiveSummarizationModelId: "FigG5uIMlUEw1IAlSsBr",
     extractiveSummarizationModelId: "FNJAQivoRd7ouJOcQesX",
+    otherModelsId: "DiSUp3yEVucYO6EPU5r1"
 };
 
 const aiModelsSlice = createSlice({

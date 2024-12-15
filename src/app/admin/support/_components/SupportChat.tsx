@@ -223,7 +223,7 @@ const SupportChat = () => {
                         {/* {getMessage(supportChat.conversation[0])} */}
                         {supportChat.conversation.map(
                             (message, index) => (
-                                <div className='w-full'>
+                                <div key={message.sender_id + " " + index} className='w-full'>
                                     {getMessage(message, index)}
                                 </div>
                             )
@@ -243,7 +243,7 @@ const SupportChat = () => {
                     }}>
                         {imageFiles.map(
                             (file, index) => (
-                                <button onClick={() => {
+                                <button key={file.image_link + " " + index} onClick={() => {
                                     setImageSelected(index)
                                     setImageExpanded(true)
 

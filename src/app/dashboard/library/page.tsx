@@ -11,7 +11,7 @@ import LibrarySideBar from './_components/LibrarySideBar'
 import { useRouter } from 'next/navigation'
 import { setCurrentContent } from '@/redux/slices/librarySlice'
 
-const page = () => {
+const Page = () => {
     const router = useRouter()
     const dispatch = useDispatch()
     const [searchText, setSearchText] = useState('')
@@ -77,4 +77,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

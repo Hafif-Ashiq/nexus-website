@@ -11,7 +11,7 @@ import { useDispatch } from 'react-redux'
 import { setAllUsersList, setCurrentUser } from '@/redux/slices/adminSlice'
 import { mockUser } from '@/constants/data'
 
-const page = () => {
+const Page = () => {
 
     const dispatch = useDispatch()
 
@@ -49,12 +49,12 @@ const page = () => {
             return
         }
 
-        if (mockUser.id == currentUser.id) {
+        if (mockUser.user_id == currentUser.user_id) {
 
             dispatch(setCurrentUser(allUsersList[0]));
         }
         else {
-            const newSupport = allUsersList.find(user => user.id == currentUser.id)
+            const newSupport = allUsersList.find(user => user.user_id == currentUser.user_id)
             dispatch(setCurrentUser(newSupport));
         }
     }, [allUsersList])
@@ -152,4 +152,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

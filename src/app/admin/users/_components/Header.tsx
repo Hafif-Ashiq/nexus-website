@@ -8,7 +8,7 @@ const Header = () => {
     return (
         <div className='flex flex-col gap-[5px]'>
             <HeaderBreadCrumb />
-            <p className='text-[16px] opacity-[50%] font-medium'>Checkout the user's performance</p>
+            <p className='text-[16px] opacity-[50%] font-medium'>Checkout the user&apos;s performance</p>
         </div>
     )
 }

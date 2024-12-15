@@ -16,7 +16,7 @@ import { deleteFolder } from '@/firebaseFunctions/user/folder'
 import UpdateFolderModal from '../../_components/UpdateFolderModal'
 import { FolderInterface } from '@/services/FoldersInterface'
 
-const page = () => {
+const Page = () => {
     const params = useParams();
     const folderId = params.folderId as string;
     const userId = useSelector((state: RootState) => state.userReducer.userId)
@@ -82,4 +82,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

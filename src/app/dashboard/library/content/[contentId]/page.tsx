@@ -18,7 +18,7 @@ import { translate } from '@/backendFunctions/translation'
 import Loader from '@/components/Loader'
 import { updateContentResponseStatus } from '@/firebaseFunctions/user/contentFunctions/statusFunctions'
 
-const page = () => {
+const Page = () => {
     const params = useParams();
     const contentId = params.contentId as string;
 
@@ -201,4 +201,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

@@ -7,26 +7,29 @@ interface PostsSectionProps {
     posts: PostInterface[],
     loading: boolean,
     onLoadMore: () => void, // Callback function to load more posts
-    isOwner?: boolean
+    isOwner?: boolean,
+    concise?: boolean
 }
 
-const PostsSection = ({ posts, loading, onLoadMore, isOwner = false }: PostsSectionProps) => {
+const PostsSection = ({ posts, loading, onLoadMore, isOwner = false, concise = false }: PostsSectionProps) => {
     const endOfPostsRef = useRef<HTMLDivElement | null>(null);
 
     useEffect(() => {
         const observer = new IntersectionObserver((entries) => {
-            if (entries[0].isIntersecting) {
+            const target = endOfPostsRef.current;
+            if (entries[0].isIntersecting && target) {
                 onLoadMore(); // Call the callback function when the last post is visible
             }
         }, { threshold: 1.0 });
 
-        if (endOfPostsRef.current) {
-            observer.observe(endOfPostsRef.current);
+        const currentRef = endOfPostsRef.current;
+        if (currentRef) {
+            observer.observe(currentRef);
         }
 
         return () => {
-            if (endOfPostsRef.current) {
-                observer.unobserve(endOfPostsRef.current);
+            if (currentRef) {
+                observer.unobserve(currentRef);
             }
         };
     }, [endOfPostsRef, onLoadMore]);
@@ -41,7 +44,7 @@ const PostsSection = ({ posts, loading, onLoadMore, isOwner = false }: PostsSect
         <div className='flex flex-col gap-[20px]'>
 
             {posts.map((post) => (
-                <Post key={post.post_id} post={post} isOwner={isOwner} />
+                <Post key={post.post_id} post={post} isOwner={isOwner} concise={concise} />
             ))}
 
             <div ref={endOfPostsRef} />

@@ -1,9 +1,9 @@
 import React from 'react'
 
-const page = () => {
+const Page = () => {
     return (
         <div className="bg-backgroundColorLight text-textColorDark">Hello World</div>
     )
 }
 
-export default page
+export default Page

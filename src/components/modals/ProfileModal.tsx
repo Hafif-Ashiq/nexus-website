@@ -79,7 +79,7 @@ const ProfileModal = () => {
             </button>
             <div className='w-full h-[1px] bg-borderColorLight'></div>
             {/* Settings */}
-            <div className='px-[20px] flex flex-col gap-[10px]'>
+            {/* <div className='px-[20px] flex flex-col gap-[10px]'>
                 <span className='text-[16px] font-medium opacity-50'>Settings</span>
                 <div className='flex flex-col gap-[10px] text-[14px] text-[#757575]'>
                     {settings.map((item, index) => (
@@ -95,7 +95,7 @@ const ProfileModal = () => {
                     ))}
                 </div>
             </div>
-            <div className='w-full h-[1px] bg-borderColorLight'></div>
+            <div className='w-full h-[1px] bg-borderColorLight'></div> */}
             {/* Account */}
             <div className='px-[20px] flex flex-col gap-[10px]'>
                 <span className='text-[16px] font-medium opacity-50'>Account</span>

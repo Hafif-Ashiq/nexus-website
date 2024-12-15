@@ -6,6 +6,7 @@ import { addGuideToFirebase } from '@/firebaseFunctions/admin/guide'
 import { getCurrentTimeFormatted } from '@/utils/datetime'
 import { UserProfile } from '@/services/UserInterface'
 import { addNewUser, handleProfileFileUpload, updateUserImages } from '@/firebaseFunctions/admin/users'
+import { getAuth, createUserWithEmailAndPassword, signOut } from 'firebase/auth';
 
 interface GuideModalProps {
     onCloseClick: () => void,
@@ -118,9 +119,17 @@ const AddUserModal = ({ onCloseClick }: GuideModalProps) => {
         setLoadingSuccess(true);
 
         try {
-            // First create user object without images
+            // First create the user in Firebase Authentication
+            const auth = getAuth();
+            const userCredential = await createUserWithEmailAndPassword(
+                auth,
+                newUser.email,
+                newUser.password
+            );
+
+            // Create user object with the Firebase Auth UID
             const user: UserProfile = {
-                user_id: "",
+                user_id: userCredential.user.uid, // Use the Firebase Auth UID
                 email: newUser.email,
                 first_name: newUser.first_name,
                 last_name: newUser.last_name,
@@ -128,8 +137,8 @@ const AddUserModal = ({ onCloseClick }: GuideModalProps) => {
                     is_premium: false,
                     is_deactivated: false,
                 },
-                profile_pic: "", // Will update after upload
-                background_pic: "", // Will update after upload
+                profile_pic: "",
+                background_pic: "",
                 biography: newUser.biography,
                 app_customization: {
                     is_dark: false,
@@ -151,24 +160,24 @@ const AddUserModal = ({ onCloseClick }: GuideModalProps) => {
                 billing_infos: [],
             };
 
-            // Add user to database first to get the ID
-            const userId = await addNewUser(user);
+            // Add user to Firestore with the same UID
+            await addNewUser(user);
 
             // Now upload images with the user ID
             const [profilePicUrl, coverPicUrl] = await Promise.all([
-                profileFile ? handleProfileFileUpload(profileFile, userId, true) : Promise.resolve(""),
-                coverFile ? handleProfileFileUpload(coverFile, userId, false) : Promise.resolve("")
+                profileFile ? handleProfileFileUpload(profileFile, user.user_id, true) : Promise.resolve(""),
+                coverFile ? handleProfileFileUpload(coverFile, user.user_id, false) : Promise.resolve("")
             ]);
 
             // Update the user document with the image URLs
             if (profilePicUrl || coverPicUrl) {
-                await updateUserImages(userId, profilePicUrl, coverPicUrl);
+                await updateUserImages(user.user_id, profilePicUrl, coverPicUrl);
             }
 
             // Set the uploaded URLs in the state
             setFirebaseProfileSrc(profilePicUrl);
             setFirebaseCoverSrc(coverPicUrl);
-
+            await signOut(auth)
             // Reset states after successful creation
             setLoadingSuccess(false);
             setNewUser({
@@ -178,6 +187,7 @@ const AddUserModal = ({ onCloseClick }: GuideModalProps) => {
                 biography: "",
                 password: "",
             });
+
             setProfileFile(null);
             setProfileSrc("");
             setCoverFile(null);

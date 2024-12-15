@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux'
 import { GuideInterface } from '@/services/GuideInterface'
 import { getGuidesFromFirebase } from '@/firebaseFunctions/admin/guide'
 
-const page = () => {
+const Page = () => {
 
     const dispatch = useDispatch()
 
@@ -70,4 +70,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

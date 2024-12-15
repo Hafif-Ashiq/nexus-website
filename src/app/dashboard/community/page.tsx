@@ -13,7 +13,7 @@ import { PostInterface } from '@/services/PostInterface'
 import PostsSection from '@/components/postComponents/PostsSection'
 import Loader from '@/components/Loader'
 
-const page = () => {
+const Page = () => {
     const userId = useSelector((state: RootState) => state.userReducer.userId)
 
     const router = useRouter()
@@ -80,4 +80,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

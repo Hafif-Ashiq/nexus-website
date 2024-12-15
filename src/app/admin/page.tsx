@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react'
-const page = () => {
+const Page = () => {
     const router = useRouter();
     useEffect(() => {
         router.push('/admin/dashboard'); // Client-side navigation to /another-page
@@ -12,4 +12,4 @@ const page = () => {
     return null;
 }
 
-export default page
+export default Page

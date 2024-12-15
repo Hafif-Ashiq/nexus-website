@@ -36,7 +36,6 @@ export const folderIcons: any[] = [
 export const mockUser: UserProfile = {
     "user_id": "",
     "email": "",
-    "password": "",
     "first_name": "",
     "last_name": "",
     "account_status": {
@@ -59,7 +58,11 @@ export const mockUser: UserProfile = {
             "community_notis_enabled": true,
             "app_notis_enabled": true
         }
-    }
+    },
+    "start_date": "",
+    "last_payment_date": "",
+    "subscription_plan": "Free",
+    "billing_infos": []
 }
 
 

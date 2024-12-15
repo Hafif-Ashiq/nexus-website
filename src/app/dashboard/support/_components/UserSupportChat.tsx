@@ -30,14 +30,11 @@ const UserSupportChat = () => {
     const [lastUserMessageIndex, setLastUserMessageIndex] = useState<number>(0)
 
 
-    if (!supportChat) {
-        return <div className='h-[80vh] flex justify-center items-center'>
-            <Loader />
-        </div>
-    }
+
 
 
     useEffect(() => {
+        if (!supportChat) return
         // Scroll to the bottom of the chat when messages change
         if (endOfMessagesRef.current) {
             endOfMessagesRef.current.scrollIntoView({ behavior: 'smooth' });
@@ -55,16 +52,23 @@ const UserSupportChat = () => {
         }
 
 
-    }, [supportChat, supportChat.conversation]);
+    }, [supportChat, supportChat?.conversation]);
 
 
     useEffect(() => {
+        if (!supportChat) return
 
         const imgs = supportChat.conversation.filter((chat) => chat.message_type == "image")
 
         setImageFiles(imgs)
     }, [supportChat])
 
+
+    if (!supportChat) {
+        return <div className='h-[80vh] flex justify-center items-center'>
+            <Loader />
+        </div>
+    }
 
     const sendTextMessage = () => {
         addTextMessage({ message: inputText, documentId: supportChat.issue_id, senderId: userId })
@@ -225,7 +229,7 @@ const UserSupportChat = () => {
                         {/* {getMessage(supportChat.conversation[0])} */}
                         {supportChat.conversation.map(
                             (message, index) => (
-                                <div className='w-full'>
+                                <div key={message.sender_id + " " + index} className='w-full'>
                                     {getMessage(message, index)}
                                 </div>
                             )
@@ -245,7 +249,7 @@ const UserSupportChat = () => {
                     }}>
                         {imageFiles.map(
                             (file, index) => (
-                                <button onClick={() => {
+                                <button key={file.image_link + " " + index} onClick={() => {
                                     setImageSelected(index)
                                     setImageExpanded(true)
 

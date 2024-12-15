@@ -37,7 +37,7 @@ const Header: React.FC<HeaderProps> = ({ title, subtitle, showUpload = true }) =
                     <img src={user?.profile_pic || "/admin-image.jpg"} alt="admin image" className='object-cover w-full h-full ' />
                 </button>
                 {showProfileModal &&
-                    <div className='absolute top-[60px] right-[0px] '>
+                    <div className='absolute top-[60px] right-[0px] z-50'>
                         <ProfileModal />
                     </div>
                 }

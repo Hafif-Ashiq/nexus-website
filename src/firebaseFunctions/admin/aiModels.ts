@@ -22,6 +22,8 @@ export const listenToAllModels = (setModels: React.Dispatch<React.SetStateAction
             }));
 
             console.log(models);
+            // Filter out the model with ID DiSUp3yEVucYO6EPU5r1
+
             setModels(models);
         }, (error) => {
             console.error("Error fetching models: ", error);

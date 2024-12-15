@@ -59,6 +59,7 @@ const NewAiChatModal = ({ onClose }: { onClose: () => void }) => {
                 {
                     buttons.map((button, index) => (
                         <LargeNewChatButton
+                            key={button.title + " " + index}
                             title={button.title}
                             text={button.text}
                             onClick={button.onClick}

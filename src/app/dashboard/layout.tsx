@@ -2,7 +2,7 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { getAuth, onAuthStateChanged, signOut } from "firebase/auth";
 import SideBar from "./_components/SideBar";
 import { listenToAllModels } from "@/firebaseFunctions/admin/aiModels";
 import { RootState, useAppDispatch } from "@/redux/store";
@@ -34,8 +34,16 @@ export default function DashboardLayout({
 
             dispatch(setUserId(user.uid))
             // Only fetch user data and models if authenticated
-            listenToUserData(user.uid, (user) => {
-                dispatch(setUser(user))
+            listenToUserData(user.uid, async (user) => {
+                console.log(user);
+                if (user) {
+                    dispatch(setUser(user))
+                }
+                else {
+                    await signOut(auth)
+                    router.push('/signup');
+                    alert("User not found")
+                }
             })
 
             const unsubscribeModels = listenToAllModels((models: AiModelInterface[] | ((prevModels: AiModelInterface[]) => AiModelInterface[])) => {

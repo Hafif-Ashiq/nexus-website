@@ -3,7 +3,7 @@
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { onAuthStateChanged } from "firebase/auth";
-import { auth } from "@/services/firebase";
+// import { auth } from "@/services/firebase";
 import SideBar from "./_components/SideBar";
 
 export default function AdminLayout({
@@ -13,15 +13,15 @@ export default function AdminLayout({
 }>) {
     const router = useRouter();
 
-    useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, (user) => {
-            if (!user) {
-                router.push('/login');
-            }
-        });
+    // useEffect(() => {
+    //     const unsubscribe = onAuthStateChanged(auth, (user) => {
+    //         if (!user) {
+    //             router.push('/login');
+    //         }
+    //     });
 
-        return () => unsubscribe();
-    }, [router]);
+    //     return () => unsubscribe();
+    // }, [router]);
 
     return (
         <div className="relative flex w-full">

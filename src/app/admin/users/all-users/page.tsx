@@ -12,7 +12,7 @@ import HeaderButton from '../../../../components/HeaderButton'
 import { UserProfile } from '@/services/UserInterface'
 import { mockUser } from '@/constants/data'
 
-const page = () => {
+const Page = () => {
 
     const dispatch = useDispatch()
 
@@ -85,4 +85,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

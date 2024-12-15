@@ -1,8 +1,8 @@
-export const getTextFromAudio = async (audioFile: File): Promise<string> => {
+export const getTextFromAudio = async (audioFile: File, endpoint: string): Promise<string> => {
     const formData = new FormData();
     formData.append('audio', audioFile);
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/audio-to-text/`, {
+    const response = await fetch(`${endpoint}/audio-to-text/`, {
         method: 'POST',
         body: formData
     });
@@ -11,11 +11,11 @@ export const getTextFromAudio = async (audioFile: File): Promise<string> => {
     return data.output_text;
 }
 
-export const getTextFromImage = async (imageFile: File): Promise<string> => {
+export const getTextFromImage = async (imageFile: File, endpoint: string): Promise<string> => {
     const formData = new FormData();
     formData.append('image', imageFile);
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/image-to-text/`, {
+    const response = await fetch(`${endpoint}/image-to-text/`, {
         method: 'POST',
         body: formData
     });

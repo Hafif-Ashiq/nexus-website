@@ -12,7 +12,7 @@ import { setAllUserSupportChats, setSelectedUserSupportChat } from '@/redux/slic
 import { listenToSupportChats } from '@/firebaseFunctions/admin/support'
 import { mockSupportChat } from '@/constants/data'
 
-const page = () => {
+const Page = () => {
     const userId = useSelector((state: RootState) => state.userReducer.userId);
     const selectedChat = useSelector((state: RootState) => state.userReducer.selectedUserSupportChat);
     const allSupportChats = useSelector((state: RootState) => state.userReducer.allUserSupportChats);
@@ -68,4 +68,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

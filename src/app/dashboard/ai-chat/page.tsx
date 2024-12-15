@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { listenToAiChatHistory } from '@/firebaseFunctions/user/aiChat'
 import { setChats, setSelectedChat } from '@/redux/slices/userSlice'
 
-const page = () => {
+const Page = () => {
     const userId = useSelector((state: RootState) => state.userReducer.userId);
     const selectedChat = useSelector((state: RootState) => state.userReducer.selectedChat);
     const chats = useSelector((state: RootState) => state.userReducer.chats);
@@ -49,4 +49,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

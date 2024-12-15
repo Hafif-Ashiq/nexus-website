@@ -40,7 +40,7 @@ const UploadFilesModal = ({ onClose }: UploadFilesModalProps) => {
     const abstractiveSummarizationModelId = useSelector((state: RootState) => state.aiModelsReducer.abstractiveSummarizationModelId)
     const extractiveSummarizationModelId = useSelector((state: RootState) => state.aiModelsReducer.extractiveSummarizationModelId)
     const allModels = useSelector((state: RootState) => state.aiModelsReducer.allModels)
-
+    const otherModelsId = useSelector((state: RootState) => state.aiModelsReducer.otherModelsId)
     // const userIsPremium = useSelector((state: RootState) => state.userReducer.user?.is_premium) 
     const userIsPremium = true
 
@@ -85,26 +85,31 @@ const UploadFilesModal = ({ onClose }: UploadFilesModalProps) => {
 
     const processVideoFile = async (file: File) => {
         const { file: audioFile } = await extractAudioFromVideo(file);
+        const endpoint = allModels.find(model => model.model_id === otherModelsId)?.endpoint
 
-        const extractedText = await getTextFromAudio(audioFile);
+        const extractedText = await getTextFromAudio(audioFile, endpoint as string);
         await handleProcess(extractedText, ContentType.VIDEO, file);
 
     };
 
     const processAudioFile = async (file: File) => {
-        const extractedText = await getTextFromAudio(file);
+        const endpoint = allModels.find(model => model.model_id === otherModelsId)?.endpoint
+        const extractedText = await getTextFromAudio(file, endpoint as string);
         await handleProcess(extractedText, ContentType.AUDIO, file);
 
     };
 
     const processPDFFile = async (file: File) => {
-        const extractedText = await extractTextFromPDF(file);
+        const endpoint = allModels.find(model => model.model_id === otherModelsId)?.endpoint
+        console.log(endpoint);
+        const extractedText = await extractTextFromPDF(file, endpoint as string);
         await handleProcess(extractedText, ContentType.DOCUMENT, file);
 
     };
 
     const processImageFile = async (file: File) => {
-        const extractedText = await getTextFromImage(file);
+        const endpoint = allModels.find(model => model.model_id === otherModelsId)?.endpoint
+        const extractedText = await getTextFromImage(file, endpoint as string);
         await handleProcess(extractedText, ContentType.IMAGE, file);
 
     };

@@ -165,7 +165,7 @@ const LoginPage = () => {
                     </button>
 
                     <div className='text-center mt-[15px]'>
-                        <span className='text-gray-500'>Don't have an account?</span>
+                        <span className='text-gray-500'>Don&apos;t have an account?</span>
                         <a
                             href="/signup"
                             className='text-primaryColorLight font-semibold ml-[5px] hover:underline'

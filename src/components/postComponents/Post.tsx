@@ -20,13 +20,14 @@ import UpdatePostPermissions from '@/app/dashboard/profile/_components/UpdatePos
 
 interface PostProps {
     post: PostInterface | null,
-    isOwner?: boolean
+    isOwner?: boolean,
+    concise?: boolean
 }
 
-const Post = ({ post, isOwner = false }: PostProps) => {
+const Post = ({ post, isOwner = false, concise = false }: PostProps) => {
 
 
-    if (!post) return null
+
 
     const userId = useSelector((state: RootState) => state.userReducer.userId)
 
@@ -39,13 +40,18 @@ const Post = ({ post, isOwner = false }: PostProps) => {
 
     const [showMore, setShowMore] = useState(false)
 
+
+
     useEffect(() => {
+        if (!post) return
         setLiked(post.liked_by.includes(userId) || false)
         setSaved(post.saved_by.includes(userId) || false)
         listenToPostComments(post.post_id, setComments)
         getUserDataForPost(post.user_id).then(res => setUserData(res))
         console.log(post.saved_by)
     }, [])
+
+    if (!post) return null
 
     const handleLikeClick = () => {
         setLiked(!liked)
@@ -144,7 +150,7 @@ const Post = ({ post, isOwner = false }: PostProps) => {
                 </div>
             </div>
             <div className='m-h-full w-[2px] bg-borderColorLight'></div>
-            <PostComments canAddComment={post.permissions.comment_allowed} comments={comments} postId={post.post_id} />
+            {!concise && <PostComments canAddComment={post.permissions.comment_allowed} comments={comments} postId={post.post_id} />}
             {showMore && <UpdatePostPermissions onClose={() => setShowMore(false)} initialPermissions={post.permissions} onUpdate={(permissions) => updatePostPermissions(post.post_id, userId, permissions)} />}
         </div >
     )

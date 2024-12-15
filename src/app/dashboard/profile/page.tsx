@@ -14,7 +14,7 @@ import { handleProfileFileUpload, updateUser, updateUserImages } from '@/firebas
 import IconButton from '@/components/IconButton'
 import EditProfileModal from './_components/EditProfileModal'
 
-const page = () => {
+const Page = () => {
 
     const userId = useSelector((state: RootState) => state.userReducer.userId)
     const user = useSelector((state: RootState) => state.userReducer.user)
@@ -198,4 +198,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

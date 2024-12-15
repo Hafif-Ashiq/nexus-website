@@ -1,8 +1,8 @@
-export const extractTextFromPDF = async (pdfFile: File): Promise<string> => {
+export const extractTextFromPDF = async (pdfFile: File, endpoint: string): Promise<string> => {
     const formData = new FormData();
     formData.append('pdf', pdfFile);
 
-    const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/pdf-to-text/`, {
+    const response = await fetch(`${endpoint}/pdf-to-text/`, {
         method: 'POST',
         body: formData
     });

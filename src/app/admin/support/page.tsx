@@ -14,7 +14,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '@/redux/store'
 import { mockSupportChat } from '@/constants/data'
 
-const page = () => {
+const Page = () => {
 
     const [searchText, setSearchText] = useState<string>("")
 
@@ -117,4 +117,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page

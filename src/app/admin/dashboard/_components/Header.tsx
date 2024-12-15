@@ -11,7 +11,7 @@ const Header = () => {
             <div className='flex justify-between items-center'>
                 <div className='flex flex-col gap-[5px]'>
                     <h2 className='text-[28px] font-semibold'>Welcome Back, Admin</h2>
-                    <p className='text-[16px] opacity-[50%] font-medium'>Here's a little bit of everything</p>
+                    <p className='text-[16px] opacity-[50%] font-medium'>Here&apos;s a little bit of everything</p>
                 </div>
                 <div className='flex items-center justify-center gap-[20px] '>
                     <button className="p-[8px] rounded-full bg-white ">

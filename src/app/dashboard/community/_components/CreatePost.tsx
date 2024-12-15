@@ -32,7 +32,7 @@ const CreatePost = ({ userImage }: CreatePostInterface) => {
                         <div
 
                             className='flex-1 focus:outline-none text-[16px] placeholder:text-primaryColorLight font-medium text-primaryColorLight text-left'
-                        >What's on your mind?</div>
+                        >What&apos;s on your mind?</div>
 
                         <div className=' p-[8px]  rounded-full flex justify-center items-center' >
                             <img src='/assets/add-image-outlined.svg' alt="" />

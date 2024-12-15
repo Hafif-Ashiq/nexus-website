@@ -7,7 +7,7 @@ import { listenToAllModels, updateModel } from '@/firebaseFunctions/admin/aiMode
 import { AiModelInterface } from '@/services/AiModelsInterface'
 import ModelsEndpointModal from './_components/ModelsEndpointModal'
 
-const page = () => {
+const Page = () => {
 
     const [showEndpointModal, setShowEndpointModal] = useState(false)
 
@@ -26,7 +26,9 @@ const page = () => {
 
     const getModels = () => {
         const unsubscribe = listenToAllModels((models: AiModelInterface[] | ((prevModels: AiModelInterface[]) => AiModelInterface[])) => {
-            setTiles(models as AiModelInterface[])
+
+            const filteredModels = (models as AiModelInterface[]).filter(model => model.model_id !== 'DiSUp3yEVucYO6EPU5r1');
+            setTiles(filteredModels as AiModelInterface[])
         });
         return unsubscribe; // Return the unsubscribe function
     }
@@ -108,4 +110,4 @@ const page = () => {
     )
 }
 
-export default page
+export default Page
