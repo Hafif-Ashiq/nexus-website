@@ -247,7 +247,7 @@ const AddUserModal = ({ onCloseClick }: GuideModalProps) => {
 
     return (
 
-        <div className='absolute inset-0 bg-[#00000090] overflow-hidden flex justify-center items-center'>
+        <div className='fixed inset-0 bg-[#00000090] overflow-hidden flex justify-center items-center'>
             <div className='w-[1000px] h-[800px] bg-white p-[25px] rounded-[25px] overflow-hidden flex flex-col'>
 
                 {/* Top Div */}
