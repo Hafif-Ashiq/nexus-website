@@ -62,3 +62,27 @@ export const userNavLinks = [
     }
 ]
 
+
+
+export const landingLinks = [
+    {
+        name: "Why Nexus",
+        link: "#why-nexus"
+    },
+    {
+        name: "Features",
+        link: "#features"
+    },
+    {
+        name: "Support",
+        link: "#support"
+    },
+    {
+        name: "FAQs",
+        link: "#faqs"
+    },
+    {
+        name: "About",
+        link: "#about"
+    }
+]

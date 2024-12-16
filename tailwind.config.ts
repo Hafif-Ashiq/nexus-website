@@ -8,6 +8,7 @@ const config: Config = {
   ],
   theme: {
     extend: {
+
       // Custom utilities for hiding scrollbars
       scrollbar: {
         hide: {
@@ -17,6 +18,9 @@ const config: Config = {
         },
       },
       // Other
+      backgroundImage: {
+        "landingBackground": "url('/landingPage/bg-svg.svg')",
+      },
       colors: {
         primaryColorLight: "#2A4E8F",
         backgroundColorLight: "#FFFFFF",
@@ -33,7 +37,12 @@ const config: Config = {
 
         textColorDark: "#000000",
         textColorLight: "#FFFFFF",
-        textColorDarkBlue: "#1E1B39"
+        textColorDarkBlue: "#1E1B39",
+
+        landingPrimaryBg: "#1A1E1C",
+        landingPrimaryColor: "#3D71CF",
+        landingSecondaryColor: "#3D544D",
+        landingSecondaryColorLight: "#ADB2B1",
       },
       fontFamily: {
         poppins: ["Poppins", "sans-serif"],

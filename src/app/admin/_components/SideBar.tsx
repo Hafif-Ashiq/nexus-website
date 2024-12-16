@@ -13,9 +13,7 @@ const SideBar = () => {
         <div className='fixed h-screen w-[360px] bg-white px-[30px] py-[45px] flex flex-col justify-between'>
             <div className='flex flex-col gap-[70px]' >
                 <div className='flex justify-start  items-center gap-[15px]'>
-                    <div className="logo w-[50px] h-[50px] bg-[#D9D9D9]">
-
-                    </div>
+                    <img src="/assets/logo.svg" alt="" />
                     <div className='text-[28px] text-black font-semibold '>
                         Nexus
                     </div>
