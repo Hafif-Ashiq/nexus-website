@@ -16,7 +16,7 @@ const StatsShow = () => {
         }
     ]
     return (
-        <div className='w-[80%] flex justify-center items-center gap-[60px] bg-[#27322f3d] rounded-[32px] p-[64px] mx-auto backdrop-blur-[16px]'>
+        <div id='stats' className='w-[80%] flex justify-center items-center gap-[60px] bg-[#27322f3d] rounded-[32px] p-[64px] mx-auto backdrop-blur-[16px]'>
             {stats.map((stat) => (
                 <div key={stat.description} className='flex flex-col justify-start items-start gap-[8px] px-[56px]'>
                     <h1 className='text-[48px] font-bold leading-[56px] text-white'>{stat.title}</h1>

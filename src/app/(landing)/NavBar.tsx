@@ -6,7 +6,7 @@ const NavBar = () => {
 
 
     return (
-        <div className='w-full flex justify-between items-center'>
+        <div id='home' className='w-full flex justify-between items-center'>
             <Link href="/" className='text-[24px] font-semibold'>
                 <img src="/assets/logo.svg" />
             </Link>

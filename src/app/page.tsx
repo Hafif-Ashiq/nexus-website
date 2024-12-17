@@ -11,7 +11,7 @@ import Footer from "./(landing)/Footer";
 
 export default function Home() {
   return (
-    <main className="relative flex bg-[#1A1E1C] min-h-screen flex-col items-center justify-between gap-[128px] overflow-hidden">
+    <main className="relative flex bg-[#1A1E1C] min-h-screen flex-col items-center justify-between gap-[128px] overflow-hidden scroll-smooth">
       <div className="max-w-[1440px] w-full mx-auto my-[24px] flex flex-col gap-[128px] relative z-[2]">
         <NavBar />
         <HeroSection />

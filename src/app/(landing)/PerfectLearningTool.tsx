@@ -4,7 +4,7 @@ import React from 'react'
 const PerfectLearningTool = () => {
 
     return (
-        <div className='w-full flex justify-center items-center gap-[100px]'>
+        <div id='perfect-learning-tool' className='w-full flex justify-center items-center gap-[100px]'>
 
             <div className='flex-1 flex justify-start'>
                 <img src="/landingPage/perfect-learning.png" alt="" className='w-full h-full' />

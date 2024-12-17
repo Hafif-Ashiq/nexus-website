@@ -24,7 +24,7 @@ const Testimonials = () => {
     ]
 
     return (
-        <div className='w-full flex justify-between items-stretch gap-[32px]'>
+        <div id='testimonials' className='w-full flex justify-between items-stretch gap-[32px]'>
             {
                 testimonials.map((testimonial) => (
                     <div key={testimonial.name} className='flex flex-col justify-between items-start gap-[32px] flex-1 relative backdrop-blur-[16px] bg-[#27322f3d] px-[24px] py-[48px] rounded-[32px] '>

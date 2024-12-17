@@ -8,6 +8,7 @@ import { doc, getDoc } from 'firebase/firestore'
 import { db } from '@/services/firebase'
 import { getInitialUserProfile } from '@/utils/auth'
 import { addNewUser } from '@/firebaseFunctions/admin/users'
+import Carousel from '../_components/Carousel'
 // import { getInitialUserProfile, addNewUser } from '@/utils/user'
 
 const LoginPage = () => {
@@ -91,89 +92,102 @@ const LoginPage = () => {
     }
 
     return (
-        <div className='min-h-screen flex items-center justify-center bg-white p-[25px]'>
-            <div className='w-full max-w-[500px] bg-white p-[25px] rounded-[25px] border-[2px] border-borderColor'>
-                <div className='flex justify-between items-center pb-[20px]'>
-                    <div className='text-[24px] font-semibold'>
-                        Login
-                    </div>
+        <div className='max-w-[1440px] mx-auto min-h-screen flex items-center justify-between bg-accentColor p-[25px] gap-[25px] relative'>
+            <div className='flex flex-col items-stretch justify-between gap-[25px] h-[80vh]'>
+                <div className=''>
+                    <img src="/assets/logo-black.svg" alt="" className=' h-[32px]' />
                 </div>
-
-                <div className='w-full h-[2px] bg-borderColor'></div>
-
-                <form onSubmit={handleSubmit} className='flex flex-col gap-[20px] pt-[25px]'>
-                    {authError && (
-                        <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative'>
-                            {authError}
-                        </div>
-                    )}
-
-                    <label htmlFor="email" className='flex flex-col gap-[10px]'>
-                        <p className='text-[16px] font-bold text-primaryColorLight'>Email</p>
-                        <input
-                            type="email"
-                            name='email'
-                            className='input-field w-full'
-                            style={{
-                                borderColor: errors.email ? '#B50202' : ''
-                            }}
-                            value={email}
-                            placeholder='Enter your email'
-                            onChange={handleEmailChange}
-                        />
-                    </label>
-
-                    <label htmlFor="password" className='flex flex-col gap-[10px]'>
-                        <p className='text-[16px] font-bold text-primaryColorLight'>Password</p>
-                        <input
-                            type="password"
-                            name='password'
-                            className='input-field w-full'
-                            style={{
-                                borderColor: errors.password ? '#B50202' : ''
-                            }}
-                            value={password}
-                            placeholder='Enter your password'
-                            onChange={handlePasswordChange}
-                        />
-                    </label>
-
-                    <button
-                        type="submit"
-                        disabled={!validateEmail(email) || !validatePassword(password) || loading}
-                        className='bg-primaryColorLight py-[14px] w-full flex justify-center items-center rounded-[15px] text-[16px] font-semibold text-white disabled:opacity-50 mt-[10px]'
-                    >
-                        {loading ? 'Signing in...' : 'Sign in'}
-                    </button>
-
-                    <div className='flex items-center gap-[15px] my-[10px]'>
-                        <div className='h-[2px] bg-borderColor flex-1'></div>
-                        <span className='text-gray-500'>or</span>
-                        <div className='h-[2px] bg-borderColor flex-1'></div>
+                <div className='h-[600px] w-[600px] p-[25px] rounded-[25px] '>
+                    <Carousel />
+                </div>
+                <div></div>
+            </div>
+            <div className='w-[500px] h-[80vh] bg-white p-[34px] rounded-[15px] flex flex-col justify-center items-stretch'>
+                <div className='flex flex-col gap-[28px]'>
+                    <div className='flex justify-center items-center'>
+                        <img src="/assets/character.svg" alt="" className='w-[100px] h-[100px]' />
                     </div>
-
-                    <button
-                        type="button"
-                        onClick={handleGoogleSignIn}
-                        disabled={loading}
-                        className='w-full border-[2px] border-borderColor py-[14px] rounded-[15px] flex items-center justify-center gap-[10px] hover:bg-gray-50 transition-colors disabled:opacity-50'
-                    >
-                        <img src="/assets/google.svg" alt="Google" className='w-[20px] h-[20px]' />
-                        <span className='text-[16px] font-semibold'>
-                            {loading ? 'Signing in...' : 'Continue with Google'}
+                    <div className='flex flex-col justify-between items-start gap-[15px]'>
+                        <span className='text-[24px] font-semibold'>
+                            Login
                         </span>
-                    </button>
-
-                    <div className='text-center mt-[15px]'>
-                        <span className='text-gray-500'>Don&apos;t have an account?</span>
-                        <a
-                            href="/signup"
-                            className='text-primaryColorLight font-semibold ml-[5px] hover:underline'
-                        >
-                            Sign up
-                        </a>
+                        <span className='text-[14px] text-[#89898B]'>Login to continue using the app</span>
                     </div>
-                </form>
+
+                    <form onSubmit={handleSubmit} className='flex flex-col gap-[28px]'>
+                        {authError && (
+                            <div className='bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative'>
+                                {authError}
+                            </div>
+                        )}
+
+                        <label htmlFor="email" className='flex flex-col gap-[10px]'>
+                            <p className='text-[16px] font-bold text-primaryColorLight'>Email</p>
+                            <input
+                                type="email"
+                                name='email'
+                                className='input-field w-full'
+                                style={{
+                                    borderColor: errors.email ? '#B50202' : ''
+                                }}
+                                value={email}
+                                placeholder='Enter your email'
+                                onChange={handleEmailChange}
+                            />
+                        </label>
+
+                        <label htmlFor="password" className='flex flex-col gap-[10px]'>
+                            <p className='text-[16px] font-bold text-primaryColorLight'>Password</p>
+                            <input
+                                type="password"
+                                name='password'
+                                className='input-field w-full'
+                                style={{
+                                    borderColor: errors.password ? '#B50202' : ''
+                                }}
+                                value={password}
+                                placeholder='Enter your password'
+                                onChange={handlePasswordChange}
+                            />
+                        </label>
+
+                        <button
+                            type="submit"
+                            disabled={!validateEmail(email) || !validatePassword(password) || loading}
+                            className='bg-primaryColorLight py-[14px] w-full flex justify-center items-center rounded-[15px] text-[16px] font-semibold text-white disabled:opacity-50 mt-[10px]'
+                        >
+                            {loading ? 'Logging in...' : 'Login'}
+                        </button>
+
+                        <div className='flex items-center gap-[15px]'>
+                            <div className='h-[2px] bg-borderColor flex-1'></div>
+                            <span className='text-[#89898B]'>Or Login With</span>
+                            <div className='h-[2px] bg-borderColor flex-1'></div>
+                        </div>
+
+                        <button
+                            type="button"
+                            onClick={handleGoogleSignIn}
+                            disabled={loading}
+                            className='w-full bg-accentColorLight py-[14px] rounded-[15px] flex items-center justify-center gap-[10px] border-[2px] border-transparent hover:border-[#2a4d8f77] transition-colors disabled:opacity-50'
+                        >
+                            <img src="/assets/google.svg" alt="Google" className='w-[20px] h-[20px]' />
+                            <span className='text-[16px] font-semibold'>
+                                {loading ? 'Signing in...' : 'Continue with Google'}
+                            </span>
+                        </button>
+
+                        <div className='text-center mt-[15px]'>
+                            <span className='text-gray-500'>Don&apos;t have an account?</span>
+                            <a
+                                href="/signup"
+                                className='text-primaryColorLight font-semibold ml-[5px] underline'
+                            >
+                                Register
+                            </a>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     )

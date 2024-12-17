@@ -41,7 +41,7 @@ const FAQs = () => {
     };
 
     return (
-        <div className='w-full flex flex-col justify-start items-start gap-[32px]'>
+        <div id='faqs' className='w-full flex flex-col justify-start items-start gap-[32px]'>
             <h2 className='text-[40px] font-semibold leading-[64px] text-white'>FAQs</h2>
             <div className='w-full flex flex-col justify-start items-start gap-[16px]'>
                 {faqs.map((faq, index) => (

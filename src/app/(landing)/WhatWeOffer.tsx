@@ -21,7 +21,7 @@ const WhatWeOffer = () => {
     ]
 
     return (
-        <div className='w-full flex justify-center items-center gap-[64px] flex-col'>
+        <div id='what-we-offer' className='w-full flex justify-center items-center gap-[64px] flex-col'>
             <h2 className='text-[40px] font-bold leading-[56px] text-white'>What We Offer</h2>
             <div className='flex justify-between items-center gap-[32px] w-full'>
                 {
