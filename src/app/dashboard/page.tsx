@@ -116,7 +116,7 @@ const Page = () => {
                                         {
                                             recentFolders.map((folder) => {
                                                 return (
-                                                    <button onClick={() => {
+                                                    <button key={folder.folder_id} onClick={() => {
                                                         router.push(`/dashboard/library/folder/${folder.folder_id}`)
                                                     }} className={`flex max-w-[200px] flex-col justify-start items-start gap-[15px] overflow-hidden p-[15px] rounded-[15px] bg-accentColorLight w-full text-left border-[1px] border-solid border-transparent hover:border-primaryColorLight transition-all duration-200 `}>
                                                         <FolderIcon index={folder.icon} />
