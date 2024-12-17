@@ -4,7 +4,7 @@
 
 
 .input-field{
-    @apply px-[10px] py-[13px] text-[16px] text-primaryColorLight border-[2.5px] border-solid border-[#CBD5E4] focus:border-primaryColorLight rounded-[15px] font-semibold focus:outline-none;
+    @apply px-[10px] py-[13px] text-[16px] text-primaryColorLight border-[2.5px] border-solid border-[#CBD5E4] focus:border-primaryColorLight rounded-[15px] font-semibold focus:outline-none placeholder:text-primaryColorLight;
 }
 
 @layer base {

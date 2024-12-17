@@ -194,7 +194,7 @@ const SignupPage = () => {
                                     borderColor: errors.email ? '#B50202' : ''
                                 }}
                                 value={formData.email}
-                                placeholder='Enter your email'
+                                placeholder='Enter email'
                                 onChange={handleInputChange}
                             />
                         </label>
@@ -209,7 +209,7 @@ const SignupPage = () => {
                                     borderColor: errors.password ? '#B50202' : ''
                                 }}
                                 value={formData.password}
-                                placeholder='Enter your password'
+                                placeholder='Enter password'
                                 onChange={handleInputChange}
                             />
                             <p className='text-sm text-gray-500'>
@@ -227,7 +227,7 @@ const SignupPage = () => {
                                     borderColor: errors.confirmPassword ? '#B50202' : ''
                                 }}
                                 value={formData.confirmPassword}
-                                placeholder='Confirm your password'
+                                placeholder='Re-enter password'
                                 onChange={handleInputChange}
                             />
                         </label>

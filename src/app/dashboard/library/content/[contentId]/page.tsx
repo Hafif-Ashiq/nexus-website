@@ -88,6 +88,15 @@ const Page = () => {
     }
 
     const handleSummarize = async (contentId: string) => {
+        if (content.extracted_text.length < 40) {
+            alert("Please upload a valid file having more than 40 words in to summarize");
+            return;
+        }
+
+        if (content.extracted_text.length > 2000) {
+            alert("Please upload a valid file having less content");
+            return;
+        }
         const model = allModels.find((model) => model.model_id === extractiveSummarizationModelId)
         const response = await summarize(content.extracted_text, "medium", model?.endpoint || "")
         console.log(response)
@@ -97,6 +106,14 @@ const Page = () => {
     }
 
     const handleTranslate = async (contentId: string) => {
+        if (content.extracted_text.length > 2000) {
+            alert("Please upload a valid file having less content");
+            return;
+        }
+        if (content.extracted_text.length < 5) {
+            alert("Please upload a valid file having text");
+            return;
+        }
         const model = allModels.find((model) => model.model_id === translationModelId)
         const response = await translate(content.extracted_text, "English", "Urdu", model?.endpoint || "")
         console.log(response)

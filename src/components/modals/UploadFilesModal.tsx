@@ -187,9 +187,22 @@ const UploadFilesModal = ({ onClose }: UploadFilesModalProps) => {
 
 
     const handleProcess = async (extracted_text: string, content_type: ContentType, file: File) => {
+        if (extracted_text.length < 5) {
+            console.log("extracted_text", extracted_text);
+            alert("Please upload a valid file having text");
+            return;
+        }
+        if (extracted_text.length > 2000) {
+            alert("Please upload a valid file having less content");
+            return;
+        }
         if (processType === 'translation') {
             await handleTranslation(extracted_text, content_type, file);
         } else {
+            if (extracted_text.split(' ').length < 40) {
+                alert("Please upload a valid file having more than 40 words in to summarize");
+                return;
+            }
             await handleTextSummarization(extracted_text, content_type, file);
         }
 

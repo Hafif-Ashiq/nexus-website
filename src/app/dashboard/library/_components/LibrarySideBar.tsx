@@ -10,17 +10,19 @@ interface LibrarySideBarProps {
     onFolderClick: (folder: FolderInterface) => void
 }
 
+export const FolderIcon = ({ index }: { index: number }) => {
+    const CurrentFolderIcon = folderIcons[index].component
+    return <CurrentFolderIcon style={{
+        color: "#000000",
+        width: "32px",
+        height: "32px"
+    }} />
+}
+
 const LibrarySideBar = ({ folders, onFolderClick }: LibrarySideBarProps) => {
     const [showNewFolderModal, setShowNewFolderModal] = useState(false)
 
-    const FolderIcon = ({ index }: { index: number }) => {
-        const CurrentFolderIcon = folderIcons[index].component
-        return <CurrentFolderIcon style={{
-            color: "#000000",
-            width: "32px",
-            height: "32px"
-        }} />
-    }
+
 
     const showFolders = (folder: FolderInterface) => {
         return (

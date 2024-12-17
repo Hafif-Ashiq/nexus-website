@@ -17,6 +17,7 @@ import { listenToPostComments } from '@/firebaseFunctions/user/postFunctions/get
 import { UserProfile } from '@/services/UserInterface'
 import { getUserDataForPost } from '@/firebaseFunctions/user/postFunctions/postUsers'
 import UpdatePostPermissions from '@/app/dashboard/profile/_components/UpdatePostPermissions'
+import { getDateFormatted } from '@/utils/datetime'
 
 interface PostProps {
     post: PostInterface | null,
@@ -120,9 +121,13 @@ const Post = ({ post, isOwner = false, concise = false }: PostProps) => {
                         </div>
                     </div>
 
-                    {isOwner && <button onClick={handleMoreClick}>
-                        <img src="/assets/more-circle.svg" alt="" />
-                    </button>}
+                    <div className='flex justify-center items-end gap-[10px]'>
+                        <span className='text-[14px] font-medium opacity-50'>{getDateFormatted(post.date_created)}</span>
+                        {isOwner && <button onClick={handleMoreClick}>
+                            <img src="/assets/more-circle.svg" alt="" />
+                        </button>}
+                    </div>
+
 
                 </div>
                 <div className='m-w-full h-[2px] bg-borderColorLight'></div>

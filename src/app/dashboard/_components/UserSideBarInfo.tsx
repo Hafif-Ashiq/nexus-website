@@ -5,10 +5,10 @@ import { RootState } from '@/redux/store'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { PostInterface } from '@/services/PostInterface'
+import router from 'next/router'
 
 const UserSideBarInfo = () => {
 
-    const userId = useSelector((state: RootState) => state.userReducer.userId)
     const user = useSelector((state: RootState) => state.userReducer.user)
 
 
@@ -20,12 +20,12 @@ const UserSideBarInfo = () => {
         listenToPosts((newPosts) => {
             setUserPosts(newPosts);
             setLoading(false);
-        }, 3, undefined, true, userId);
-    }, [userId])
+        }, 3, undefined, false);
+    }, [])
 
     return (
-        <div className='basis-[30%] flex flex-col gap-[20px]  rounded-[15px] min-h-[65vh]'>
-            <div className='flex flex-col gap-[20px] bg-white rounded-[15px] pb-[20px] min-h-[75vh]'>
+        <div className='basis-[30%] flex flex-col gap-[20px] rounded-[15px] min-h-[65vh] max-h-[90vh] overflow-y-auto scrollbar-hide'>
+            <div className='flex flex-col gap-[20px] bg-white rounded-[15px] pb-[20px] min-h-[75vh] overflow-y-auto scrollbar-hide'>
                 <div className='flex flex-col gap-[13px] relative'>
                     <div onClick={() => { }} className={`w-full h-[180px] rounded-t-[10px] overflow-hidden shadow-normal group relative bg-accentColorLight`}>
                         <img src={user?.background_pic} alt="" className='w-full h-full object-cover' />
@@ -55,15 +55,13 @@ const UserSideBarInfo = () => {
                             </div>
                         </div>
                     </div>
-                    {/* <div className='flex justify-end items-end px-[20px]'>
-                        <IconButton icon="/assets/pencil.svg" onClick={() => { }} />
-                    </div> */}
                 </div>
                 <div className="w-full h-[2px] bg-borderColorLight"></div>
-                <div className='flex flex-col gap-[20px]' >
-                    <span className='text-primaryColorLight text-[18px] font-semibold px-[20px]'>User Posts</span>
-                    <PostsSection posts={userPosts} loading={loading} onLoadMore={() => { }} isOwner={true} concise={true} />
-
+                <div className='flex flex-col gap-[20px]'>
+                    <PostsSection posts={userPosts} loading={loading} onLoadMore={() => { }} concise={true} />
+                    {userPosts.length > 0 && <button onClick={() => {
+                        router.push('/dashboard/community')
+                    }} className='text-[16px] font-medium text-primaryColorLight underline'>View More Posts</button>}
                 </div>
             </div>
         </div>

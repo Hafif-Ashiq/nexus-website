@@ -49,12 +49,12 @@ const Carousel = () => {
             <span className='text-[18px] font-medium text-[#00000070] text-center'>
                 {carouselItems[currentSlide].description}
             </span>
-            <div className="flex space-x-2">
+            <div className="flex space-x-1">
                 {carouselItems.map((_, index) => (
                     <button
                         key={index}
                         onClick={() => setCurrentSlide(index)}
-                        className={` h-2 rounded-full transition-all duration-500 bg-primaryColorLight ${currentSlide === index ? ' w-8' : 'opacity-50 w-2'
+                        className={` h-[10px] rounded-full transition-all duration-500 bg-primaryColorLight ${currentSlide === index ? ' w-[40px]' : 'opacity-50 w-[10px]'
                             }`}
                         aria-label={`Go to slide ${index + 1}`}
                     />
