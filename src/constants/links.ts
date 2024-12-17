@@ -67,19 +67,19 @@ export const userNavLinks = [
 export const landingLinks = [
     {
         name: "Home",
-        link: "#home"
+        link: ""
     },
     {
         name: "Features",
-        link: "#personalized-experience"
+        link: ""
     },
     {
         name: "Testimonials",
-        link: "#testimonials"
+        link: ""
     },
     {
         name: "FAQs",
-        link: "#faqs"
+        link: ""
     },
 
 ]
