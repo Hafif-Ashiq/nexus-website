@@ -192,7 +192,7 @@ const UploadFilesModal = ({ onClose }: UploadFilesModalProps) => {
             alert("Please upload a valid file having text");
             return;
         }
-        if (extracted_text.length > 2000) {
+        if (extracted_text.length > 200000) {
             alert("Please upload a valid file having less content");
             return;
         }
